@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:32:24 by sgardner          #+#    #+#             */
-/*   Updated: 2018/05/19 08:24:44 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/05/20 13:21:00 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,34 +17,36 @@
 /*
 ** Copies data of valid length to client read buffer if it has space
 **   Otherwise, discards data
+** Increments size by bytes attempted to copy
+**   Sets to 0 if end of command that was too long
 ** Increments ncmds if completed command is of valid length
-** Increments frag_len by bytes attempted to copy
-**   Sets to 0 if end of command
-** Returns -1 if completed command is too long
+** Returns -1 if completed command is too long, otherwise returns 0
 */
 
 static int	buffer_data(t_buff *cbuff, char *sbuff, int n)
 {
 	char	*dst;
-	int		err;
+	int		idx;
 	int		nl;
 
-	dst = cbuff->data[CMD_IDX(cbuff->start, cbuff->ncmds)] + cbuff->frag_len;
-	err = (cbuff->frag_len + n > CMD_MAX_LEN);
-	if (!err)
-		memcpy(dst, sbuff, n);
-	if ((nl = sbuff[n - 1] == '\n'))
+	idx = CMD_TAIL(cbuff);
+	dst = cbuff->data[idx] + cbuff->size[idx];
+	if ((nl = (sbuff[n - 1] == '\n')))
+		--n;
+	cbuff->size[idx] += n;
+	if (cbuff->size[idx] > CMD_MAX_LEN)
 	{
-		if (!err)
+		if (nl)
 		{
-			dst[n - 1] = '\0';
-			++cbuff->ncmds;
+			cbuff->size[idx] = 0;
+			return (-1);
 		}
-		cbuff->frag_len = 0;
+		return (0);
 	}
-	else
-		cbuff->frag_len += n;
-	return ((err && nl) ? -1 : 0);
+	memcpy(dst, sbuff, n);
+	if (nl)
+		++cbuff->ncmds;
+	return (0);
 }
 
 /*
