@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:08:47 by sgardner          #+#    #+#             */
-/*   Updated: 2018/05/23 12:09:49 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/05/24 11:06:15 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,9 @@ typedef struct sockaddr		t_sock;
 typedef struct sockaddr_in	t_sockin;
 typedef struct pollfd		t_poll;
 
-# define PNAME				"server"
+# define FATAL				fatal_error
 
+# define TEAM_MAX_LEN		27
 # define CMD_MAX_LEN		256
 # define CMD_MAX_REQ		10
 # define CMD_TAIL(b)		((b->head + b->ncmds) % CMD_MAX_REQ)
@@ -44,36 +45,59 @@ typedef struct	s_conn
 	t_buff		wbuff;
 }				t_conn;
 
-typedef struct	s_map
+typedef struct	s_team
 {
-	int			*data;
-	int			height;
-	int			width;
-}				t_map;
+	char		name[TEAM_MAX_LEN + 1];
+	int			authorized;
+	int			nclients;
+}				t_team;
+
+typedef struct	s_opt
+{
+	t_sockin	addr;
+	t_team		*teams;
+	int			nteams;
+	int			map_height;
+	int			map_width;
+	int			tick_rate;
+}				t_opt;
 
 typedef struct	s_serv
 {
-	t_sockin	addr;
+	t_opt		opt;
 	t_conn		*conns;
 	t_poll		*polls;
-	int			authorized;
+	int			*map;
 	int			nsockets;
 	int			capacity;
 }				t_serv;
 
 /*
-** main.c
+** error.c
 */
 
-void			fatal_error(void);
+void			fatal_error(char *fmt, ...);
+void			usage_error(char *msg);
+
+/*
+** opt.c
+*/
+
+void			parse_options(t_serv *s, int ac, char *const av[]);
 
 /*
 ** sockets.c
 */
 
 int				add_socket(t_serv *s, int sock);
-void			init_listener(t_serv *s, char *port);
+void			init_listener(t_serv *s);
 void			remove_socket(t_serv *s, int id);
+
+/*
+** teams.c
+*/
+
+void			add_team(t_serv *s, char *name);
 
 /*
 ** write.c
@@ -81,4 +105,6 @@ void			remove_socket(t_serv *s, int id);
 
 int				send_response(t_serv *s, int id, char *msg, int len);
 int				write_buffered(t_serv *s, int id);
+
+extern const char	*g_pname;
 #endif

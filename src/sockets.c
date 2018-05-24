@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/22 07:45:32 by sgardner          #+#    #+#             */
-/*   Updated: 2018/05/23 12:08:58 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/05/24 11:09:02 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,10 @@ static void	scale_capacity(t_serv *s)
 	half = s->capacity;
 	s->capacity *= 2;
 	if (!(s->conns = realloc(s->conns, sizeof(t_conn) * (s->capacity + 1))))
-		fatal_error();
+		fatal_error(NULL);
 	memset(s->conns + half, 0, half);
 	if (!(s->polls = realloc(s->polls, sizeof(t_poll) * (s->capacity + 1))))
-		fatal_error();
+		fatal_error(NULL);
 	memset(s->polls + half, 0, half);
 }
 
@@ -53,30 +53,29 @@ int			add_socket(t_serv *s, int sock)
 }
 
 /*
-** Starts listening at local address on specified port
+** Starts listening on specified port
 ** Adds socket opened to tracked connections
 */
 
-void		init_listener(t_serv *s, char *port)
+void		init_listener(t_serv *s)
 {
-	t_sockin	addr;
+	t_sockin	*addr;
 	int			fd;
 	int			opt;
 
 	opt = 1;
-	addr.sin_family = AF_INET;
-	addr.sin_port = htons((port) ? atoi(port) : 4242);
-	addr.sin_addr.s_addr = INADDR_ANY;
-	printf(PNAME " starting...\n");
+	addr = &s->opt.addr;
+	addr->sin_family = AF_INET;
+	addr->sin_addr.s_addr = INADDR_ANY;
 	fd = socket(PF_INET, SOCK_STREAM, getprotobyname("TCP")->p_proto);
 	if (fd < 0
 		|| setsockopt(fd, SOL_SOCKET, SO_REUSEPORT, &opt, sizeof(int)) < 0
-		|| bind(fd, (t_sock *)&s->addr, sizeof(t_sockin)) < 0
+		|| bind(fd, (t_sock *)addr, sizeof(t_sockin)) < 0
 		|| listen(fd, SOMAXCONN) < 0)
-		fatal_error();
+		fatal_error(NULL);
 	printf("Listening on tcp://%s:%hu\nUse Ctrl-C to stop\n\n",
-		inet_ntoa(addr.sin_addr), ntohs(addr.sin_port));
-	add_client(s, fd);
+		inet_ntoa(addr->sin_addr), ntohs(addr->sin_port));
+	add_socket(s, fd);
 }
 
 /*
