@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/22 07:45:32 by sgardner          #+#    #+#             */
-/*   Updated: 2018/05/24 11:09:02 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/05/24 15:57:42 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,13 @@ static void	scale_capacity(t_serv *s)
 {
 	int	half;
 
-	half = s->capacity;
-	s->capacity *= 2;
-	if (!(s->conns = realloc(s->conns, sizeof(t_conn) * (s->capacity + 1))))
-		fatal_error(NULL);
+	half = s->opt.capacity;
+	s->opt.capacity *= 2;
+	if (!(s->conns = realloc(s->conns, sizeof(t_conn) * (s->opt.capacity + 1))))
+		FATAL(NULL);
 	memset(s->conns + half, 0, half);
-	if (!(s->polls = realloc(s->polls, sizeof(t_poll) * (s->capacity + 1))))
-		fatal_error(NULL);
+	if (!(s->polls = realloc(s->polls, sizeof(t_poll) * (s->opt.capacity + 1))))
+		FATAL(NULL);
 	memset(s->polls + half, 0, half);
 }
 
@@ -45,7 +45,7 @@ static void	scale_capacity(t_serv *s)
 
 int			add_socket(t_serv *s, int sock)
 {
-	if (s->nsockets == s->capacity)
+	if (s->nsockets == s->opt.capacity)
 		scale_capacity(s);
 	s->polls[s->nsockets].fd = sock;
 	s->polls[s->nsockets].events = (POLLIN | POLLOUT);
@@ -72,7 +72,7 @@ void		init_listener(t_serv *s)
 		|| setsockopt(fd, SOL_SOCKET, SO_REUSEPORT, &opt, sizeof(int)) < 0
 		|| bind(fd, (t_sock *)addr, sizeof(t_sockin)) < 0
 		|| listen(fd, SOMAXCONN) < 0)
-		fatal_error(NULL);
+		FATAL(NULL);
 	printf("Listening on tcp://%s:%hu\nUse Ctrl-C to stop\n\n",
 		inet_ntoa(addr->sin_addr), ntohs(addr->sin_port));
 	add_socket(s, fd);

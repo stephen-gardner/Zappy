@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/24 09:34:14 by sgardner          #+#    #+#             */
-/*   Updated: 2018/05/24 09:56:18 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/05/24 16:18:23 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@
 
 void	add_team(t_serv *s, char *name)
 {
-	t_opt	*opt;
 	t_team	*team;
 	int		i;
 
@@ -31,16 +30,15 @@ void	add_team(t_serv *s, char *name)
 	if (strlen(name) > TEAM_MAX_LEN)
 		FATAL("Team name \"%s\" exceeds max length (%d)", name, TEAM_MAX_LEN);
 	i = 0;
-	opt = &s->opt;
-	while (i < opt->nteams)
+	while (i < s->nteams)
 	{
-		if (!strcmp(name, opt->teams[i++].name))
+		if (!strcmp(name, s->opt.teams[i++].name))
 			FATAL("Duplicate team name \"%s\"", name);
 	}
-	opt->teams = realloc(opt->teams, sizeof(t_team) * (opt->nteams + 1));
-	if (!opt->teams)
+	s->opt.teams = realloc(s->opt.teams, sizeof(t_team) * (s->nteams + 1));
+	if (!s->opt.teams)
 		FATAL(NULL);
-	team = &opt->teams[opt->nteams++];
+	team = &s->opt.teams[s->nteams++];
 	stpcpy(team->name, name);
 	team->authorized = 1;
 	team->nclients = 0;

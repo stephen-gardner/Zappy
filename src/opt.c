@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/24 09:57:10 by sgardner          #+#    #+#             */
-/*   Updated: 2018/05/24 11:06:22 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/05/24 16:19:13 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include "zappy.h"
 
-static int	parse_int(char *opt, char *arg)
+static int		parse_int(char *opt, char *arg)
 {
 	char	*endptr;
 	long	n;
@@ -31,17 +31,33 @@ static int	parse_int(char *opt, char *arg)
 	return ((int)n);
 }
 
-static int	parse_short(char *opt, char *arg)
+static t_ushrt	parse_short(char *opt, char *arg)
 {
 	int	n;
 
 	n = parse_int(opt, arg);
 	if (n > USHRT_MAX)
 		FATAL("%s too large: %s", opt, arg);
-	return ((unsigned short)n);
+	return ((t_ushrt)n);
 }
 
-void		parse_options(t_serv *s, int ac, char *const av[])
+static void		validate_options(t_serv *s)
+{
+	int	i;
+	int	authorized;
+
+	if (!s->nteams)
+		usage_error("No teams specified");
+	if (s->opt.capacity % s->nteams)
+		usage_error("Capacity must be a multiple of # teams");
+	i = 0;
+	authorized = s->opt.capacity / s->nteams;
+	while (i < s->nteams)
+		s->opt.teams[i++].authorized = authorized;
+	s->map_size = s->opt.map_height * s->opt.map_width;
+}
+
+void			parse_options(t_serv *s, int ac, char *const av[])
 {
 	const char	*optstring = "c:n:p:t:x:y:";
 	char		f;
@@ -49,7 +65,7 @@ void		parse_options(t_serv *s, int ac, char *const av[])
 	while ((f = getopt(ac, av, optstring)) != -1)
 	{
 		if (f == 'c')
-			s->capacity = parse_int("capacity", optarg);
+			s->opt.capacity = parse_int("capacity", optarg);
 		else if (f == 'n')
 		{
 			--optind;
@@ -67,4 +83,5 @@ void		parse_options(t_serv *s, int ac, char *const av[])
 		else
 			usage_error(NULL);
 	}
+	validate_options(s);
 }

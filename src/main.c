@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/21 05:50:28 by sgardner          #+#    #+#             */
-/*   Updated: 2018/05/24 11:17:29 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/05/24 16:19:38 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,19 @@
 
 const char	*g_pname;
 
+static void	init_server(t_serv *s)
+{
+	t_opt	*opt;
+
+	opt = &s->opt;
+	printf("%s starting...\n", g_pname);
+	if (!(s->conns = calloc(opt->capacity, sizeof(t_conn)))
+		|| !(s->polls = calloc(opt->capacity, sizeof(t_poll)))
+		|| !(s->map = calloc(s->map_size, sizeof(t_uint))))
+		FATAL(NULL);
+	init_listener(s);
+}
+
 int			main(int ac, char *const av[])
 {
 	static t_serv	s;
@@ -24,14 +37,11 @@ int			main(int ac, char *const av[])
 	g_pname = av[0];
 	memset(&s, 0, sizeof(t_serv));
 	s.opt.addr.sin_port = htons(4242);
+	s.opt.capacity = 1;
+	s.opt.tick_rate = 1;
+	s.opt.map_height = 10;
+	s.opt.map_width = 10;
 	parse_options(&s, ac, av);
-	if (!s.opt.nteams)
-		usage_error("No teams specified");
-	printf("%s starting...\n", g_pname);
-	if (!(s.conns = calloc(s.capacity, sizeof(t_conn))))
-		FATAL(NULL);
-	if (!(s.polls = calloc(s.capacity, sizeof(t_poll))))
-		FATAL(NULL);
-	init_listener(&s);
+	init_server(&s);
 	return (0);
 }

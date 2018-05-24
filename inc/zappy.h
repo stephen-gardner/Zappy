@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:08:47 by sgardner          #+#    #+#             */
-/*   Updated: 2018/05/24 11:06:15 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/05/24 16:16:12 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 typedef struct sockaddr		t_sock;
 typedef struct sockaddr_in	t_sockin;
 typedef struct pollfd		t_poll;
+typedef unsigned int		t_uint;
+typedef unsigned short		t_ushrt;
 
 # define FATAL				fatal_error
 
@@ -56,7 +58,7 @@ typedef struct	s_opt
 {
 	t_sockin	addr;
 	t_team		*teams;
-	int			nteams;
+	int			capacity;
 	int			map_height;
 	int			map_width;
 	int			tick_rate;
@@ -67,9 +69,10 @@ typedef struct	s_serv
 	t_opt		opt;
 	t_conn		*conns;
 	t_poll		*polls;
-	int			*map;
+	t_uint		*map;
+	long		map_size;
 	int			nsockets;
-	int			capacity;
+	int			nteams;
 }				t_serv;
 
 /*
