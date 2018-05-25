@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/22 07:45:32 by sgardner          #+#    #+#             */
-/*   Updated: 2018/05/24 15:57:42 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/05/24 16:51:28 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,10 @@ static void	scale_capacity(t_serv *s)
 	s->opt.capacity *= 2;
 	if (!(s->conns = realloc(s->conns, sizeof(t_conn) * (s->opt.capacity + 1))))
 		FATAL(NULL);
-	memset(s->conns + half, 0, half);
+	memset(s->conns + half + 1, 0, half);
 	if (!(s->polls = realloc(s->polls, sizeof(t_poll) * (s->opt.capacity + 1))))
 		FATAL(NULL);
-	memset(s->polls + half, 0, half);
+	memset(s->polls + half + 1, 0, half);
 }
 
 /*

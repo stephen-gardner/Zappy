@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:08:47 by sgardner          #+#    #+#             */
-/*   Updated: 2018/05/24 16:16:12 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/05/25 12:10:21 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,12 @@
 # define ZAPPY_H
 # include <arpa/inet.h>
 # include <poll.h>
+# include <time.h>
 
 typedef struct sockaddr		t_sock;
 typedef struct sockaddr_in	t_sockin;
 typedef struct pollfd		t_poll;
+typedef struct timespec		t_timespec;
 typedef unsigned int		t_uint;
 typedef unsigned short		t_ushrt;
 
@@ -32,6 +34,32 @@ typedef unsigned short		t_ushrt;
 # define SOCK(s, id)		s->polls[id].fd
 # define WRITEABLE(s, id)	(s->polls[id].revents & POLLOUT)
 # define READABLE(s, id)	(s->polls[id].revents & POLLIN)
+
+/*
+** Masks for resource quantity
+** 5 bits per resource for max of 31
+**	TH         PH       ME         SI      DE          LI
+** [THYSTAME] [PHIRAS] [MENDIANE] [SIBUR] [DERAUMERE] [LINEMATE]
+*/
+
+# define NMAX				31
+# define NLI(i)				(i & 0x1F)
+# define NDE(i)				(i & 0x3E0)
+# define NSI(i)				(i & 0x7C00)
+# define NME(i)				(i & 0xF8000)
+# define NPH(i)				(i & 0x1F00000)
+# define NTH(i)				(i & 0x3E000000)
+
+/*
+** Macros to set resource quantity
+*/
+
+# define SLI(i, n)			(i |= n)
+# define SDE(i, n)			(i |= (n << 5))
+# define SSI(i, n)			(i |= (n << 10))
+# define SME(i, n)			(i |= (n << 15))
+# define SPH(i, n)			(i |= (n << 20))
+# define STH(i, n)			(i |= (n << 25))
 
 typedef struct	s_buff
 {
@@ -57,11 +85,11 @@ typedef struct	s_team
 typedef struct	s_opt
 {
 	t_sockin	addr;
+	t_timespec	tickrate;
 	t_team		*teams;
 	int			capacity;
 	int			map_height;
 	int			map_width;
-	int			tick_rate;
 }				t_opt;
 
 typedef struct	s_serv

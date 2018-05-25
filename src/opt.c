@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/24 09:57:10 by sgardner          #+#    #+#             */
-/*   Updated: 2018/05/24 16:19:13 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/05/25 11:58:57 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include "zappy.h"
 
-static int		parse_int(char *opt, char *arg)
+static int			parse_int(char *opt, char *arg)
 {
 	char	*endptr;
 	long	n;
@@ -25,13 +25,13 @@ static int		parse_int(char *opt, char *arg)
 	if (*endptr)
 		FATAL("Invalid %s: %s", opt, arg);
 	if (n < 1)
-		FATAL("%s must be greater than 0: %s", opt, arg);
+		FATAL("%s must be greater than zero: %s", opt, arg);
 	if (n > INT_MAX)
 		FATAL("%s too large: %s", opt, arg);
 	return ((int)n);
 }
 
-static t_ushrt	parse_short(char *opt, char *arg)
+static t_ushrt		parse_short(char *opt, char *arg)
 {
 	int	n;
 
@@ -41,7 +41,26 @@ static t_ushrt	parse_short(char *opt, char *arg)
 	return ((t_ushrt)n);
 }
 
-static void		validate_options(t_serv *s)
+static t_timespec	parse_tickrate(char *arg)
+{
+	t_timespec	tickrate;
+	int			ticks;
+
+	ticks = parse_int("tick rate", arg);
+	if (ticks > 1)
+	{
+		tickrate.tv_sec = 0;
+		tickrate.tv_nsec = 1000000000 / ticks;
+	}
+	else
+	{
+		tickrate.tv_sec = 1;
+		tickrate.tv_nsec = 0;
+	}
+	return (tickrate);
+}
+
+static void			validate_options(t_serv *s)
 {
 	int	i;
 	int	authorized;
@@ -57,7 +76,7 @@ static void		validate_options(t_serv *s)
 	s->map_size = s->opt.map_height * s->opt.map_width;
 }
 
-void			parse_options(t_serv *s, int ac, char *const av[])
+void				parse_options(t_serv *s, int ac, char *const av[])
 {
 	const char	*optstring = "c:n:p:t:x:y:";
 	char		f;
@@ -75,7 +94,7 @@ void			parse_options(t_serv *s, int ac, char *const av[])
 		else if (f == 'p')
 			s->opt.addr.sin_port = htons(parse_short("port", optarg));
 		else if (f == 't')
-			s->opt.tick_rate = parse_int("tick rate", optarg);
+			s->opt.tickrate = parse_tickrate(optarg);
 		else if (f == 'x')
 			s->opt.map_width = parse_int("map width", optarg);
 		else if (f == 'y')
