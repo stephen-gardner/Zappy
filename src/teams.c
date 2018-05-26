@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/24 09:34:14 by sgardner          #+#    #+#             */
-/*   Updated: 2018/05/24 16:18:23 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/05/25 20:30:59 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,14 +32,13 @@ void	add_team(t_serv *s, char *name)
 	i = 0;
 	while (i < s->nteams)
 	{
-		if (!strcmp(name, s->opt.teams[i++].name))
+		if (!strcmp(name, s->teams[i++].name))
 			FATAL("Duplicate team name \"%s\"", name);
 	}
-	s->opt.teams = realloc(s->opt.teams, sizeof(t_team) * (s->nteams + 1));
-	if (!s->opt.teams)
+	s->teams = realloc(s->teams, sizeof(t_team) * (s->nteams + 1));
+	if (!s->teams)
 		FATAL(NULL);
-	team = &s->opt.teams[s->nteams++];
+	team = &s->teams[s->nteams++];
+	memset(team, 0, sizeof(t_team));
 	stpcpy(team->name, name);
-	team->authorized = 1;
-	team->nclients = 0;
 }

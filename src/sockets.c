@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/22 07:45:32 by sgardner          #+#    #+#             */
-/*   Updated: 2018/05/24 16:51:28 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/05/25 19:57:56 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,22 +18,22 @@
 #include "zappy.h"
 
 /*
-** Doubles the size of conns and polls
+** Doubles the size of ents and polls
 ** Zeroes out the memory in the extended memory section
 */
 
-static void	scale_capacity(t_serv *s)
+static void	scale_capacity(t_conn *c)
 {
 	int	half;
 
-	half = s->opt.capacity;
-	s->opt.capacity *= 2;
-	if (!(s->conns = realloc(s->conns, sizeof(t_conn) * (s->opt.capacity + 1))))
+	half = c->capacity;
+	c->capacity *= 2;
+	if (!(c->ents = realloc(c->ents, sizeof(t_ent) * (c->capacity + 1))))
 		FATAL(NULL);
-	memset(s->conns + half + 1, 0, half);
-	if (!(s->polls = realloc(s->polls, sizeof(t_poll) * (s->opt.capacity + 1))))
+	memset(c->ents + half + 1, 0, half);
+	if (!(c->polls = realloc(c->polls, sizeof(t_poll) * (c->capacity + 1))))
 		FATAL(NULL);
-	memset(s->polls + half + 1, 0, half);
+	memset(c->polls + half + 1, 0, half);
 }
 
 /*
@@ -43,13 +43,13 @@ static void	scale_capacity(t_serv *s)
 ** Returns index
 */
 
-int			add_socket(t_serv *s, int sock)
+int			add_socket(t_conn *c, int sock)
 {
-	if (s->nsockets == s->opt.capacity)
-		scale_capacity(s);
-	s->polls[s->nsockets].fd = sock;
-	s->polls[s->nsockets].events = (POLLIN | POLLOUT);
-	return (s->nsockets++);
+	if (c->nsockets == c->capacity)
+		scale_capacity(c);
+	c->polls[c->nsockets].fd = sock;
+	c->polls[c->nsockets].events = (POLLIN | POLLOUT);
+	return (c->nsockets++);
 }
 
 /*
@@ -59,39 +59,36 @@ int			add_socket(t_serv *s, int sock)
 
 void		init_listener(t_serv *s)
 {
-	t_sockin	*addr;
 	int			fd;
 	int			opt;
 
 	opt = 1;
-	addr = &s->opt.addr;
-	addr->sin_family = AF_INET;
-	addr->sin_addr.s_addr = INADDR_ANY;
+	s->addr.sin_family = AF_INET;
+	s->addr.sin_addr.s_addr = INADDR_ANY;
 	fd = socket(PF_INET, SOCK_STREAM, getprotobyname("TCP")->p_proto);
 	if (fd < 0
 		|| setsockopt(fd, SOL_SOCKET, SO_REUSEPORT, &opt, sizeof(int)) < 0
-		|| bind(fd, (t_sock *)addr, sizeof(t_sockin)) < 0
+		|| bind(fd, (t_sock *)&s->addr, sizeof(t_sockin)) < 0
 		|| listen(fd, SOMAXCONN) < 0)
 		FATAL(NULL);
 	printf("Listening on tcp://%s:%hu\nUse Ctrl-C to stop\n\n",
-		inet_ntoa(addr->sin_addr), ntohs(addr->sin_port));
-	add_socket(s, fd);
+		inet_ntoa(s->addr.sin_addr), ntohs(s->addr.sin_port));
+	add_socket(&s->conn, fd);
 }
 
 /*
-** Closes the socket located at provided index, and removes its data from conns
+** Closes the socket located at provided index, and removes its data from ents
 **  and polls
 ** Decreases nsockets by 1
 */
 
-void		remove_socket(t_serv *s, int id)
+void		remove_socket(t_conn *c, int id)
 {
-	close(s->polls[id].fd);
-	// TODO: Remove entity associated with connection ?
-	//       Maybe allow another client to take over until it dies ?
-	memmove(s->conns + id, s->conns + id + 1,
-		sizeof(t_conn) * (s->nsockets - id));
-	memmove(s->polls + id, s->polls + id + 1,
-		sizeof(t_poll) * (s->nsockets - id));
-	--s->nsockets;
+	size_t	size;
+
+	close(SOCK(c, id));
+	size = sizeof(t_ent) * (c->nsockets - id);
+	memmove(c->ents + id, c->ents + id + 1, size);
+	memmove(c->polls + id, c->polls + id + 1, size);
+	--c->nsockets;
 }

@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:08:47 by sgardner          #+#    #+#             */
-/*   Updated: 2018/05/25 12:10:21 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/05/25 20:28:45 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,41 +25,46 @@ typedef unsigned short		t_ushrt;
 
 # define FATAL				fatal_error
 
-# define TEAM_MAX_LEN		27
 # define CMD_MAX_LEN		256
 # define CMD_MAX_REQ		10
 # define CMD_TAIL(b)		((b->head + b->ncmds) % CMD_MAX_REQ)
 # define BUFF_SIZE			(CMD_MAX_LEN * CMD_MAX_REQ)
 
-# define SOCK(s, id)		s->polls[id].fd
-# define WRITEABLE(s, id)	(s->polls[id].revents & POLLOUT)
-# define READABLE(s, id)	(s->polls[id].revents & POLLIN)
+# define SOCK(c, id)		c->polls[id].fd
+# define WRITEABLE(c, id)	(c->polls[id].revents & POLLOUT)
+# define READABLE(c, id)	(c->polls[id].revents & POLLIN)
+
+# define MAX_LEVEL			8
+# define TEAM_MAX_LEN		27
 
 /*
-** Masks for resource quantity
+** Masks for setting/getting resource quantity
 ** 5 bits per resource for max of 31
 **	TH         PH       ME         SI      DE          LI
 ** [THYSTAME] [PHIRAS] [MENDIANE] [SIBUR] [DERAUMERE] [LINEMATE]
 */
 
-# define NMAX				31
-# define NLI(i)				(i & 0x1F)
-# define NDE(i)				(i & 0x3E0)
-# define NSI(i)				(i & 0x7C00)
-# define NME(i)				(i & 0xF8000)
-# define NPH(i)				(i & 0x1F00000)
-# define NTH(i)				(i & 0x3E000000)
+enum	e_resources
+{
+	LI,
+	DE,
+	SI,
+	ME,
+	PH,
+	TH,
+	NRES
+};
 
-/*
-** Macros to set resource quantity
-*/
+# define RES_MAX			31
+# define RES_GET(id)		(i & (0x1F << (id * 5)))
+# define RES_SET(i, id, n)	(i |= (n << (id * 5)))
 
-# define SLI(i, n)			(i |= n)
-# define SDE(i, n)			(i |= (n << 5))
-# define SSI(i, n)			(i |= (n << 10))
-# define SME(i, n)			(i |= (n << 15))
-# define SPH(i, n)			(i |= (n << 20))
-# define STH(i, n)			(i |= (n << 25))
+typedef struct	s_team
+{
+	char		name[TEAM_MAX_LEN + 1];
+	int			members[MAX_LEVEL + 1];
+	int			authorized;
+}				t_team;
 
 typedef struct	s_buff
 {
@@ -69,38 +74,41 @@ typedef struct	s_buff
 	int			ncmds;
 }				t_buff;
 
-typedef struct	s_conn
+typedef struct	s_ent
 {
+	t_team		*team;
+	int			level;
+	int			loc_x;
+	int			loc_y;
+	t_ushrt		inv[NRES];
 	t_buff		rbuff;
 	t_buff		wbuff;
+}				t_ent;
+
+typedef struct	s_conn
+{
+	t_ent		*ents;
+	t_poll		*polls;
+	int			capacity;
+	int			nsockets;
 }				t_conn;
 
-typedef struct	s_team
+typedef struct	s_map
 {
-	char		name[TEAM_MAX_LEN + 1];
-	int			authorized;
-	int			nclients;
-}				t_team;
-
-typedef struct	s_opt
-{
-	t_sockin	addr;
-	t_timespec	tickrate;
-	t_team		*teams;
-	int			capacity;
-	int			map_height;
-	int			map_width;
-}				t_opt;
+	t_uint		*data;
+	int			height;
+	int			width;
+	size_t		size;
+}				t_map;
 
 typedef struct	s_serv
 {
-	t_opt		opt;
-	t_conn		*conns;
-	t_poll		*polls;
-	t_uint		*map;
-	long		map_size;
-	int			nsockets;
+	t_sockin	addr;
+	t_conn		conn;
+	t_map		map;
+	t_team		*teams;
 	int			nteams;
+	t_timespec	tickrate;
 }				t_serv;
 
 /*
@@ -117,12 +125,18 @@ void			usage_error(char *msg);
 void			parse_options(t_serv *s, int ac, char *const av[]);
 
 /*
+** read.c
+*/
+
+int				read_socket(t_conn *c, int id);
+
+/*
 ** sockets.c
 */
 
-int				add_socket(t_serv *s, int sock);
+int				add_socket(t_conn *c, int sock);
 void			init_listener(t_serv *s);
-void			remove_socket(t_serv *s, int id);
+void			remove_socket(t_conn *c, int id);
 
 /*
 ** teams.c
@@ -134,8 +148,8 @@ void			add_team(t_serv *s, char *name);
 ** write.c
 */
 
-int				send_response(t_serv *s, int id, char *msg, int len);
-int				write_buffered(t_serv *s, int id);
+int				send_response(t_conn *c, int id, char *msg, int len);
+int				write_buffered(t_conn *c, int id);
 
 extern const char	*g_pname;
 #endif

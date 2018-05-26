@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/20 04:58:26 by sgardner          #+#    #+#             */
-/*   Updated: 2018/05/23 11:55:50 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/05/25 17:50:56 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <unistd.h>
 #include "zappy.h"
 
-#define WBUFF(s, id)	&s->conns[id].wbuff
+#define WBUFF(c, id)	&c->ents[id].wbuff
 
 /*
 ** Buffers data
@@ -40,20 +40,20 @@ static int	buffer_data(t_buff *wb, char *msg, int len)
 ** Returns # bytes unwritten, 0 if completed, or -1 if an error occurs
 */
 
-int			send_response(t_serv *s, int id, char *msg, int len)
+int			send_response(t_conn *c, int id, char *msg, int len)
 {
 	int	bytes;
 
-	if (WRITEABLE(s, id))
+	if (WRITEABLE(c, id))
 	{
-		if ((bytes = write(SOCK(s, id), msg, len)) < 0)
+		if ((bytes = write(SOCK(c, id), msg, len)) < 0)
 			return (-1);
 		if (bytes == len)
 			return (0);
 		msg += bytes;
 		len -= bytes;
 	}
-	return (buffer_data(WBUFF(s, id), msg, len));
+	return (buffer_data(WBUFF(c, id), msg, len));
 }
 
 /*
@@ -64,16 +64,16 @@ int			send_response(t_serv *s, int id, char *msg, int len)
 ** Returns ncmds if data remains buffered, or -1 if an error occurs
 */
 
-int			write_buffered(t_serv *s, int id)
+int			write_buffered(t_conn *c, int id)
 {
 	t_buff	*wbuff;
 	int		idx;
 	int		bytes;
 
-	wbuff = WBUFF(s, id);
+	wbuff = WBUFF(c, id);
 	while (wbuff->size[(idx = wbuff->head)])
 	{
-		if ((bytes = write(SOCK(s, id), wbuff->data, wbuff->size[idx])) < 0)
+		if ((bytes = write(SOCK(c, id), wbuff->data, wbuff->size[idx])) < 0)
 			return (-1);
 		if (bytes < wbuff->size[idx])
 		{

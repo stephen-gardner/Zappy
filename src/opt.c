@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/24 09:57:10 by sgardner          #+#    #+#             */
-/*   Updated: 2018/05/25 11:58:57 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/05/25 20:33:29 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,18 +62,10 @@ static t_timespec	parse_tickrate(char *arg)
 
 static void			validate_options(t_serv *s)
 {
-	int	i;
-	int	authorized;
-
 	if (!s->nteams)
 		usage_error("No teams specified");
-	if (s->opt.capacity % s->nteams)
+	if (s->conn.capacity % s->nteams)
 		usage_error("Capacity must be a multiple of # teams");
-	i = 0;
-	authorized = s->opt.capacity / s->nteams;
-	while (i < s->nteams)
-		s->opt.teams[i++].authorized = authorized;
-	s->map_size = s->opt.map_height * s->opt.map_width;
 }
 
 void				parse_options(t_serv *s, int ac, char *const av[])
@@ -84,21 +76,21 @@ void				parse_options(t_serv *s, int ac, char *const av[])
 	while ((f = getopt(ac, av, optstring)) != -1)
 	{
 		if (f == 'c')
-			s->opt.capacity = parse_int("capacity", optarg);
+			s->conn.capacity = parse_int("capacity", optarg);
 		else if (f == 'n')
 		{
-			--optind;
+			add_team(s, optarg);
 			while (optind < ac && *av[optind] != '-')
 				add_team(s, av[optind++]);
 		}
 		else if (f == 'p')
-			s->opt.addr.sin_port = htons(parse_short("port", optarg));
+			s->addr.sin_port = htons(parse_short("port", optarg));
 		else if (f == 't')
-			s->opt.tickrate = parse_tickrate(optarg);
+			s->tickrate = parse_tickrate(optarg);
 		else if (f == 'x')
-			s->opt.map_width = parse_int("map width", optarg);
+			s->map.width = parse_int("map width", optarg);
 		else if (f == 'y')
-			s->opt.map_height = parse_int("map height", optarg);
+			s->map.height = parse_int("map height", optarg);
 		else
 			usage_error(NULL);
 	}

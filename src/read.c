@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:32:24 by sgardner          #+#    #+#             */
-/*   Updated: 2018/05/23 11:55:48 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/05/25 17:58:48 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <unistd.h>
 #include "zappy.h"
 
-#define RBUFF(s, id)	&s->conns[id].rbuff
+#define RBUFF(c, id)	&c->ents[id].rbuff
 
 /*
 ** Copies data of valid length to client read buffer if it has space
@@ -57,7 +57,7 @@ static int	buffer_data(t_buff *rbuff, char *sbuff, int n)
 ** Returns bytes read, or -1 if an error occurs or the client disconnects
 */
 
-int			read_socket(t_serv *s, int id)
+int			read_socket(t_conn *c, int id)
 {
 	static char	sbuff[BUFF_SIZE + 1];
 	t_buff		*rbuff;
@@ -65,8 +65,8 @@ int			read_socket(t_serv *s, int id)
 	char		*end;
 	int			bytes;
 
-	rbuff = RBUFF(s, id);
-	if ((bytes = read(SOCK(s, id), sbuff, BUFF_SIZE)) <= 0)
+	rbuff = RBUFF(c, id);
+	if ((bytes = read(SOCK(c, id), sbuff, BUFF_SIZE)) <= 0)
 		return (-1);
 	sbuff[bytes] = '\0';
 	start = sbuff;
