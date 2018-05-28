@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/21 05:50:28 by sgardner          #+#    #+#             */
-/*   Updated: 2018/05/25 20:08:00 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/05/27 21:24:30 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,22 +31,39 @@ static t_timespec	time_diff(struct timespec *t1, struct timespec *t2)
 	return (res);
 }
 
+static void			poll_conns(t_conn *c)
+{
+	int			id;
+	int			sock;
+	t_sock		addr;
+	socklen_t	addr_len;
+
+	if (READABLE(c, 0))
+	{
+		sock = accept(SOCK(c, 0), &addr, &addr_len);
+		add_socket(c, sock);
+	}
+	id = 1;
+	while (id < c->nsockets)
+	{
+		if (WRITEABLE(c, id) && c->ents[id].wbuff.ncmds)
+			write_buffered(c, id);
+		if (READABLE(c, id))
+			read_socket(c, id);
+		++id;
+	}
+}
+
 static void			server_loop(t_serv *s)
 {
 	t_timespec	t1;
 	t_timespec	t2;
-	int			i;
 
-	i = 0;
 	while (1)
 	{
 		clock_gettime(CLOCK_MONOTONIC, &t1);
-		/*
-		**
-		** STUFF HAPPENS HERE
-		**
-		*/
-		printf("i = %d\n", i++);
+		if (poll(s->conn.polls, s->conn.nsockets, 0) > 0)
+			poll_conns(&s->conn);
 		clock_gettime(CLOCK_MONOTONIC, &t2);
 		t2 = time_diff(&t2, &t1);
 		if ((t2 = time_diff(&s->tickrate, &t2)).tv_sec < 0)
