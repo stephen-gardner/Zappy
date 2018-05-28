@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:32:24 by sgardner          #+#    #+#             */
-/*   Updated: 2018/05/25 17:58:48 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/05/27 21:24:15 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,8 @@ int			read_socket(t_conn *c, int id)
 	{
 		end = start;
 		while (*end && *end != '\n')
+			++end;
+		if (*end)
 			++end;
 		if (buffer_data(rbuff, start, end - start))
 			; // TODO: Send overflow error ?
