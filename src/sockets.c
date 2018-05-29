@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/22 07:45:32 by sgardner          #+#    #+#             */
-/*   Updated: 2018/05/25 19:57:56 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/05/28 17:27:34 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,14 @@ static void	scale_capacity(t_conn *c)
 
 	half = c->capacity;
 	c->capacity *= 2;
-	if (!(c->ents = realloc(c->ents, sizeof(t_ent) * (c->capacity + 1))))
+	c->ents = realloc(c->ents, SZ(t_ent, c->capacity + 1));
+	if (!c->ents)
 		FATAL(NULL);
-	memset(c->ents + half + 1, 0, half);
-	if (!(c->polls = realloc(c->polls, sizeof(t_poll) * (c->capacity + 1))))
+	memset(c->ents + half, 0, SZ(t_ent, half + 1));
+	c->polls = realloc(c->polls, SZ(t_poll, c->capacity + 1));
+	if (!c->polls)
 		FATAL(NULL);
-	memset(c->polls + half + 1, 0, half);
+	memset(c->polls + half, 0, SZ(t_poll, half + 1));
 }
 
 /*
@@ -84,11 +86,8 @@ void		init_listener(t_serv *s)
 
 void		remove_socket(t_conn *c, int id)
 {
-	size_t	size;
-
 	close(SOCK(c, id));
-	size = sizeof(t_ent) * (c->nsockets - id);
-	memmove(c->ents + id, c->ents + id + 1, size);
-	memmove(c->polls + id, c->polls + id + 1, size);
+	memmove(&c->ents[id], &c->ents[id + 1], SZ(t_ent, c->nsockets - id));
+	memmove(&c->polls[id], &c->polls[id + 1], SZ(t_poll, c->nsockets - id));
 	--c->nsockets;
 }

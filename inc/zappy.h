@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:08:47 by sgardner          #+#    #+#             */
-/*   Updated: 2018/05/25 20:28:45 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/05/28 17:25:01 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ typedef unsigned int		t_uint;
 typedef unsigned short		t_ushrt;
 
 # define FATAL				fatal_error
+# define SZ(x, n)			(sizeof(x) * (n))
 
 # define CMD_MAX_LEN		256
 # define CMD_MAX_REQ		10
