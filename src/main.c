@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/21 05:50:28 by sgardner          #+#    #+#             */
-/*   Updated: 2018/05/27 21:24:30 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/05/28 18:13:58 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 #include <string.h>
 #include <time.h>
 #include "zappy.h"
+
+#define NCMDS(c, id)	c->ents[id].wbuff.ncmds
 
 const char	*g_pname;
 
@@ -31,6 +33,8 @@ static t_timespec	time_diff(struct timespec *t1, struct timespec *t2)
 	return (res);
 }
 
+// TODO: Team assignment
+
 static void			poll_conns(t_conn *c)
 {
 	int			id;
@@ -41,15 +45,16 @@ static void			poll_conns(t_conn *c)
 	if (READABLE(c, 0))
 	{
 		sock = accept(SOCK(c, 0), &addr, &addr_len);
-		add_socket(c, sock);
+		id = add_socket(c, sock);
+		send_response(c, id, "WELCOME\n", 8);
 	}
 	id = 1;
 	while (id < c->nsockets)
 	{
-		if (WRITEABLE(c, id) && c->ents[id].wbuff.ncmds)
-			write_buffered(c, id);
-		if (READABLE(c, id))
-			read_socket(c, id);
+		if ((c->polls[id].revents & (POLLERR | POLLHUP))
+			|| (WRITEABLE(c, id) && NCMDS(c, id) && write_buffered(c, id) < 0)
+			|| (READABLE(c, id) && read_socket(c, id) < 0))
+			remove_socket(c, id);
 		++id;
 	}
 }
