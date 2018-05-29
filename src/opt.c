@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/24 09:57:10 by sgardner          #+#    #+#             */
-/*   Updated: 2018/05/25 20:33:29 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/05/29 12:26:14 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,20 +60,11 @@ static t_timespec	parse_tickrate(char *arg)
 	return (tickrate);
 }
 
-static void			validate_options(t_serv *s)
+void				parse_opt(t_serv *s, int ac, char *const av[], char *optstr)
 {
-	if (!s->nteams)
-		usage_error("No teams specified");
-	if (s->conn.capacity % s->nteams)
-		usage_error("Capacity must be a multiple of # teams");
-}
-
-void				parse_options(t_serv *s, int ac, char *const av[])
-{
-	const char	*optstring = "c:n:p:t:x:y:";
 	char		f;
 
-	while ((f = getopt(ac, av, optstring)) != -1)
+	while ((f = getopt(ac, av, optstr)) != -1)
 	{
 		if (f == 'c')
 			s->conn.capacity = parse_int("capacity", optarg);
@@ -85,6 +76,8 @@ void				parse_options(t_serv *s, int ac, char *const av[])
 		}
 		else if (f == 'p')
 			s->addr.sin_port = htons(parse_short("port", optarg));
+		else if (f == 's')
+			srand(parse_int("seed", optarg));
 		else if (f == 't')
 			s->tickrate = parse_tickrate(optarg);
 		else if (f == 'x')
@@ -94,5 +87,12 @@ void				parse_options(t_serv *s, int ac, char *const av[])
 		else
 			usage_error(NULL);
 	}
-	validate_options(s);
+}
+
+void				validate_opt(t_serv *s)
+{
+	if (!s->nteams)
+		usage_error("No teams specified");
+	if (s->conn.capacity % s->nteams)
+		usage_error("Capacity must be a multiple of # teams");
 }

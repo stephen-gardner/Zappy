@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:08:47 by sgardner          #+#    #+#             */
-/*   Updated: 2018/05/28 17:25:01 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/05/29 12:06:21 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@ typedef unsigned short		t_ushrt;
 
 # define CMD_MAX_LEN		256
 # define CMD_MAX_REQ		10
-# define CMD_TAIL(b)		((b->head + b->ncmds) % CMD_MAX_REQ)
+# define CMD_POS(b, i)		((b->head + i) % CMD_MAX_REQ)
+# define CMD_TAIL(b)		CMD_POS(b, b->ncmds)
 # define BUFF_SIZE			(CMD_MAX_LEN * CMD_MAX_REQ)
 
 # define SOCK(c, id)		c->polls[id].fd
@@ -53,12 +54,14 @@ enum	e_resources
 	ME,
 	PH,
 	TH,
+	FOOD,
+	EGG,
 	NRES
 };
 
-# define RES_MAX			31
-# define RES_GET(id)		(i & (0x1F << (id * 5)))
-# define RES_SET(i, id, n)	(i |= (n << (id * 5)))
+# define RES_MAX			15
+# define RES_GET(id)		(i & (0x0F << (id * 4)))
+# define RES_SET(i, id, n)	(i |= (n << (id * 4)))
 
 typedef struct	s_team
 {
@@ -113,6 +116,12 @@ typedef struct	s_serv
 }				t_serv;
 
 /*
+** cmd.c
+*/
+
+void			process_commands(t_conn *c, int id);
+
+/*
 ** error.c
 */
 
@@ -123,7 +132,8 @@ void			usage_error(char *msg);
 ** opt.c
 */
 
-void			parse_options(t_serv *s, int ac, char *const av[]);
+void			parse_opt(t_serv *s, int ac, char *const av[], char *optstr);
+void			validate_opt(t_serv *s);
 
 /*
 ** read.c

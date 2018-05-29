@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/23 17:54:47 by sgardner          #+#    #+#             */
-/*   Updated: 2018/05/24 11:13:51 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/05/29 12:29:57 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ void	usage_error(char *msg)
 	fprintf(stderr, "\nOptions:\n");
 	fprintf(stderr, "  -c   # authorized clients at start (default: 1)\n");
 	fprintf(stderr, "  -p   port number (default: 4242)\n");
+	fprintf(stderr, "  -s   seed for resource generation and spawn points\n");
 	fprintf(stderr, "  -t   tick rate (default: 1)\n");
 	fprintf(stderr, "  -x   world width (default: 10)\n");
 	fprintf(stderr, "  -y   world height (default: 10)\n");

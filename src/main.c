@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/21 05:50:28 by sgardner          #+#    #+#             */
-/*   Updated: 2018/05/28 18:13:58 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/05/29 12:26:39 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,6 @@ static t_timespec	time_diff(struct timespec *t1, struct timespec *t2)
 	}
 	return (res);
 }
-
-// TODO: Team assignment
 
 static void			poll_conns(t_conn *c)
 {
@@ -105,11 +103,13 @@ int					main(int ac, char *const av[])
 	memset(&s, 0, sizeof(t_serv));
 	s.addr.sin_port = htons(4242);
 	s.conn.capacity = 1;
+	srand(time(NULL));
 	s.tickrate.tv_sec = 1;
 	s.tickrate.tv_nsec = 0;
 	s.map.height = 10;
 	s.map.width = 10;
-	parse_options(&s, ac, av);
+	parse_opt(&s, ac, av, "c:n:p:s:t:x:y:");
+	validate_opt(&s);
 	init_server(&s);
 	return (0);
 }
