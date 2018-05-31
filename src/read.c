@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:32:24 by sgardner          #+#    #+#             */
-/*   Updated: 2018/05/27 21:24:15 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/05/29 17:21:33 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,10 @@ static int	buffer_data(t_buff *rbuff, char *sbuff, int n)
 	}
 	memcpy(dst, sbuff, n);
 	if (nl)
+	{
+		dst[n] = '\0';
 		++rbuff->ncmds;
+	}
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/21 05:50:28 by sgardner          #+#    #+#             */
-/*   Updated: 2018/05/29 12:26:39 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/05/29 20:16:07 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@
 #include <time.h>
 #include "zappy.h"
 
-#define NCMDS(c, id)	c->ents[id].wbuff.ncmds
+#define R_NCMDS(c, id)	c->ents[id].rbuff.ncmds
+#define W_NCMDS(c, id)	c->ents[id].wbuff.ncmds
 
 const char	*g_pname;
 
@@ -33,27 +34,31 @@ static t_timespec	time_diff(struct timespec *t1, struct timespec *t2)
 	return (res);
 }
 
-static void			poll_conns(t_conn *c)
+static void			poll_conns(t_serv *s)
 {
-	int			id;
-	int			sock;
+	t_conn		*c;
 	t_sock		addr;
 	socklen_t	addr_len;
+	int			id;
 
+	c = &s->conn;
 	if (READABLE(c, 0))
 	{
-		sock = accept(SOCK(c, 0), &addr, &addr_len);
-		id = add_socket(c, sock);
-		send_response(c, id, "WELCOME\n", 8);
+		if ((id = add_socket(c, accept(SOCK(c, 0), &addr, &addr_len))) > 0)
+			send_response(c, id, "WELCOME\n", 8);
 	}
-	id = 1;
-	while (id < c->nsockets)
+	id = 0;
+	while (++id < c->nsockets)
 	{
 		if ((c->polls[id].revents & (POLLERR | POLLHUP))
-			|| (WRITEABLE(c, id) && NCMDS(c, id) && write_buffered(c, id) < 0)
+			|| (WRITEABLE(c, id) && W_NCMDS(c, id) && write_buffered(c, id) < 0)
 			|| (READABLE(c, id) && read_socket(c, id) < 0))
+		{
 			remove_socket(c, id);
-		++id;
+			continue ;
+		}
+		if (R_NCMDS(c, id) && !(c->ents[id].rbuff.countdown--))
+			queue_commands(s, id);
 	}
 }
 
@@ -66,7 +71,7 @@ static void			server_loop(t_serv *s)
 	{
 		clock_gettime(CLOCK_MONOTONIC, &t1);
 		if (poll(s->conn.polls, s->conn.nsockets, 0) > 0)
-			poll_conns(&s->conn);
+			poll_conns(s);
 		clock_gettime(CLOCK_MONOTONIC, &t2);
 		t2 = time_diff(&t2, &t1);
 		if ((t2 = time_diff(&s->tickrate, &t2)).tv_sec < 0)

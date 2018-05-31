@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/22 07:45:32 by sgardner          #+#    #+#             */
-/*   Updated: 2018/05/28 17:27:34 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/05/29 20:20:16 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ static void	scale_capacity(t_conn *c)
 
 int			add_socket(t_conn *c, int sock)
 {
+	if (sock < 0)
+		return (-1);
 	if (c->nsockets == c->capacity)
 		scale_capacity(c);
 	c->polls[c->nsockets].fd = sock;
@@ -86,7 +88,14 @@ void		init_listener(t_serv *s)
 
 void		remove_socket(t_conn *c, int id)
 {
+	t_team	*team;
+
 	close(SOCK(c, id));
+	if ((team = c->ents[id].team))
+	{
+		--team->members[0];
+		--team->members[c->ents[id].level];
+	}
 	memmove(&c->ents[id], &c->ents[id + 1], SZ(t_ent, c->nsockets - id));
 	memmove(&c->polls[id], &c->polls[id + 1], SZ(t_poll, c->nsockets - id));
 	--c->nsockets;

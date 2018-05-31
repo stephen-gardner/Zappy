@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:08:47 by sgardner          #+#    #+#             */
-/*   Updated: 2018/05/29 12:06:21 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/05/30 20:42:02 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ typedef unsigned short		t_ushrt;
 # define FATAL				fatal_error
 # define SZ(x, n)			(sizeof(x) * (n))
 
-# define CMD_MAX_LEN		256
+# define CMD_MAX_LEN		255
 # define CMD_MAX_REQ		10
 # define CMD_POS(b, i)		((b->head + i) % CMD_MAX_REQ)
 # define CMD_TAIL(b)		CMD_POS(b, b->ncmds)
@@ -72,10 +72,11 @@ typedef struct	s_team
 
 typedef struct	s_buff
 {
-	char		data[CMD_MAX_REQ][CMD_MAX_LEN];
+	char		data[CMD_MAX_REQ][CMD_MAX_LEN + 1];
 	int			size[CMD_MAX_REQ];
 	int			head;
 	int			ncmds;
+	int			countdown;
 }				t_buff;
 
 typedef struct	s_ent
@@ -119,7 +120,13 @@ typedef struct	s_serv
 ** cmd.c
 */
 
-void			process_commands(t_conn *c, int id);
+void			queue_commands(t_serv *s, int id);
+
+/*
+** cmd_connect_nbr.c
+*/
+
+void			cmd_connect_nbr(t_serv *s, t_team *team, int id);
 
 /*
 ** error.c
@@ -153,6 +160,7 @@ void			remove_socket(t_conn *c, int id);
 ** teams.c
 */
 
+int				add_player(t_serv *s, char *name, int id);
 void			add_team(t_serv *s, char *name);
 
 /*
