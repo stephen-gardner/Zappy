@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/24 09:57:10 by sgardner          #+#    #+#             */
-/*   Updated: 2018/05/29 12:26:14 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/03 01:29:06 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,11 @@ static int			parse_int(char *opt, char *arg)
 	endptr = NULL;
 	n = strtol(arg, &endptr, 10);
 	if (*endptr)
-		FATAL("Invalid %s: %s", opt, arg);
+		errx(1, "Invalid %s: %s", opt, arg);
 	if (n < 1)
-		FATAL("%s must be greater than zero: %s", opt, arg);
+		errx(1, "%s must be greater than zero: %s", opt, arg);
 	if (n > INT_MAX)
-		FATAL("%s too large: %s", opt, arg);
+		errx(1, "%s too large: %s", opt, arg);
 	return ((int)n);
 }
 
@@ -37,7 +37,7 @@ static t_ushrt		parse_short(char *opt, char *arg)
 
 	n = parse_int(opt, arg);
 	if (n > USHRT_MAX)
-		FATAL("%s too large: %s", opt, arg);
+		errx(1, "%s too large: %s", opt, arg);
 	return ((t_ushrt)n);
 }
 

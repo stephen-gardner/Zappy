@@ -6,39 +6,43 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/21 05:50:28 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/02 18:20:18 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/03 01:21:37 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
 #include "zappy.h"
 
 const char	*g_pname;
 
-static t_timespec	time_diff(struct timespec *t1, struct timespec *t2)
+static void	init_server(t_serv *s)
 {
-	struct timespec	res;
+	int	i;
+	int	authorized;
 
-	res.tv_sec = t1->tv_sec - t2->tv_sec;
-	if ((res.tv_nsec = t1->tv_nsec - t2->tv_nsec) < 0)
-	{
-		--res.tv_sec;
-		res.tv_nsec += 1000000000;
-	}
-	return (res);
+	printf("%s starting...\n", g_pname);
+	i = 0;
+	authorized = s->conn.capacity / s->nteams;
+	while (i < s->nteams)
+		s->teams[i++].authorized = authorized;
+	s->map.size = s->map.height * s->map.width;
+	if (!(s->conn.ents = calloc(s->conn.user_max + 1, sizeof(t_ent)))
+		|| !(s->conn.polls = calloc(s->conn.user_max + 1, sizeof(t_poll)))
+		|| !(s->map.data = calloc(s->map.size, sizeof(t_uint))))
+		err(1, NULL);
+	init_listener(s);
 }
 
-static void			poll_conns(t_serv *s)
+static void	poll_conns(t_serv *s)
 {
 	int			id;
 
 	if (READABLE(s, 0))
 		accept_incoming(s);
 	id = 0;
-	while (++id < s->conn.nsockets)
+	while (id < s->conn.nsockets)
 	{
 		if ((POLL(s, id)->revents & (POLLERR | POLLHUP))
 			|| (READABLE(s, id) && read_socket(s, id) < 0))
@@ -53,10 +57,11 @@ static void			poll_conns(t_serv *s)
 			else
 				process_command(s, id);
 		}
+		++id;
 	}
 }
 
-static void			server_loop(t_serv *s)
+static void	server_loop(t_serv *s)
 {
 	t_timespec	t1;
 	t_timespec	t2;
@@ -75,26 +80,7 @@ static void			server_loop(t_serv *s)
 	}
 }
 
-static void			init_server(t_serv *s)
-{
-	int	i;
-	int	authorized;
-
-	printf("%s starting...\n", g_pname);
-	i = 0;
-	authorized = s->conn.capacity / s->nteams;
-	while (i < s->nteams)
-		s->teams[i++].authorized = authorized;
-	s->map.size = s->map.height * s->map.width;
-	if (!(s->conn.ents = calloc(s->conn.capacity + 1, sizeof(t_ent)))
-		|| !(s->conn.polls = calloc(s->conn.capacity + 1, sizeof(t_poll)))
-		|| !(s->map.data = calloc(s->map.size, sizeof(t_uint))))
-		FATAL(NULL);
-	init_listener(s);
-	server_loop(s);
-}
-
-int					main(int ac, char *const av[])
+int			main(int ac, char *const av[])
 {
 	static t_serv	s;
 
@@ -102,6 +88,7 @@ int					main(int ac, char *const av[])
 	memset(&s, 0, sizeof(t_serv));
 	s.addr.sin_port = htons(4242);
 	s.conn.capacity = 1;
+	s.conn.user_max = 10;
 	srand(time(NULL));
 	s.tickrate.tv_sec = 1;
 	s.tickrate.tv_nsec = 0;
@@ -110,5 +97,6 @@ int					main(int ac, char *const av[])
 	parse_opt(&s, ac, av, "c:n:p:s:t:x:y:");
 	validate_opt(&s);
 	init_server(&s);
+	server_loop(&s);
 	return (0);
 }

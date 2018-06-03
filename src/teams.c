@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/24 09:34:14 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/02 17:32:16 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/03 01:36:04 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ int				add_player(t_serv *s, char *name, int id)
 	cmd_connect_nbr(s, team, id);
 	++team->members[0];
 	++team->members[1];
+	--s->conn.capacity;
 	return (0);
 }
 
@@ -59,12 +60,12 @@ void			add_team(t_serv *s, char *name)
 	if (!*name)
 		return ;
 	if (strlen(name) > TEAM_MAX_LEN)
-		FATAL("Team name exceeds max length (%d): %s", TEAM_MAX_LEN, name);
+		errx(1, "Team name exceeds max length (%d): %s", TEAM_MAX_LEN, name);
 	if (find_team(s, name))
-		FATAL("Duplicate team name: %s", name);
+		errx(1, "Duplicate team name: %s", name);
 	s->teams = realloc(s->teams, SZ(t_team, s->nteams + 1));
 	if (!s->teams)
-		FATAL(NULL);
+		err(1, NULL);
 	team = &s->teams[s->nteams++];
 	memset(team, 0, sizeof(t_team));
 	stpcpy(team->name, name);

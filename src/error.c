@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/23 17:54:47 by sgardner          #+#    #+#             */
-/*   Updated: 2018/05/29 12:29:57 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/03 01:21:49 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,28 +15,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "zappy.h"
-
-/*
-** Prints error message provided in printf format before exiting with status 1
-**   If fmt is NULL, prints message from sys_errlist
-*/
-
-void	fatal_error(char *fmt, ...)
-{
-	va_list	ap;
-
-	if (!fmt)
-		perror(g_pname);
-	else
-	{
-		va_start(ap, fmt);
-		fprintf(stderr, "%s: ", g_pname);
-		vfprintf(stderr, fmt, ap);
-		fprintf(stderr, "\n");
-		va_end(ap);
-	}
-	exit(1);
-}
 
 /*
 ** Prints msg if not NULL, then usage

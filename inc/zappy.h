@@ -6,13 +6,14 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:08:47 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/02 18:24:00 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/03 01:35:14 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef ZAPPY_H
 # define ZAPPY_H
 # include <arpa/inet.h>
+# include <err.h>
 # include <poll.h>
 # include <time.h>
 
@@ -23,7 +24,6 @@ typedef struct timespec		t_timespec;
 typedef unsigned int		t_uint;
 typedef unsigned short		t_ushrt;
 
-# define FATAL				fatal_error
 # define SZ(x, n)			(sizeof(x) * (n))
 
 # define ENT(s, id)			(&s->conn.ents[id])
@@ -125,8 +125,9 @@ typedef struct	s_cmd
 
 typedef struct	s_ent
 {
-	t_team		*team;
+	char		addr[32];
 	t_cmd		cmds;
+	t_team		*team;
 	t_ushrt		inv[NRES];
 	int			level;
 	int			loc_x;
@@ -140,6 +141,7 @@ typedef struct	s_conn
 	t_poll		*polls;
 	int			capacity;
 	int			nsockets;
+	int			user_max;
 }				t_conn;
 
 typedef struct	s_map
@@ -176,7 +178,6 @@ void			cmd_connect_nbr(t_serv *s, t_team *team, int id);
 ** error.c
 */
 
-void			fatal_error(char *fmt, ...);
 void			usage_error(char *msg);
 
 /*
@@ -207,6 +208,12 @@ void			remove_socket(t_serv *s, int id);
 
 int				add_player(t_serv *s, char *name, int id);
 void			add_team(t_serv *s, char *name);
+
+/*
+** util.c
+*/
+
+t_timespec		time_diff(t_timespec *t1, t_timespec *t2);
 
 /*
 ** write.c
