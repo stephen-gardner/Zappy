@@ -6,84 +6,40 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/20 04:58:26 by sgardner          #+#    #+#             */
-/*   Updated: 2018/05/25 17:50:56 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/02 17:19:20 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <string.h>
+#include <sys/uio.h>
 #include <unistd.h>
 #include "zappy.h"
 
-#define WBUFF(c, id)	&c->ents[id].wbuff
-
-/*
-** Buffers data
-** Returns # bytes buffered, or -1 if max # requests are already buffered
-*/
-
-static int	buffer_data(t_buff *wb, char *msg, int len)
+int		send_message(t_serv *s, int id, char *msg, int len)
 {
-	int		idx;
-
-	if (wb->ncmds == CMD_MAX_REQ)
-		return (-1);
-	idx = CMD_TAIL(wb);
-	memcpy(wb->data[idx], msg, len);
-	wb->size[idx] = len;
-	++wb->ncmds;
-	return (len);
+	return (write(SOCK(s, id), msg, len));
 }
 
-/*
-** Writes data to socket
-** Buffers whatever can't be written
-** Returns # bytes unwritten, 0 if completed, or -1 if an error occurs
-*/
-
-int			send_response(t_conn *c, int id, char *msg, int len)
+int		send_response(t_serv *s, int id)
 {
-	int	bytes;
-
-	if (WRITEABLE(c, id))
-	{
-		if ((bytes = write(SOCK(c, id), msg, len)) < 0)
-			return (-1);
-		if (bytes == len)
-			return (0);
-		msg += bytes;
-		len -= bytes;
-	}
-	return (buffer_data(WBUFF(c, id), msg, len));
-}
-
-/*
-** Writes data from client buffers to socket, starting with oldest command.
-** If socket becomes full, moves remainder of current command to the front of
-**  its buffer and updates its size
-** If a full command is written, sets its buffer size to 0 and decrements ncmds
-** Returns ncmds if data remains buffered, or -1 if an error occurs
-*/
-
-int			write_buffered(t_conn *c, int id)
-{
-	t_buff	*wbuff;
-	int		idx;
+	t_cmd	*cmds;
+	t_buff	*buff;
 	int		bytes;
 
-	wbuff = WBUFF(c, id);
-	while (wbuff->size[(idx = wbuff->head)])
+	cmds = GET_CMDS(s, id);
+	buff = &cmds->buffs[cmds->start];
+	bytes = write(SOCK(s, id), buff->resp, buff->resp_len);
+	if (bytes < 0)
+		return (-1);
+	if (bytes != buff->resp_len)
 	{
-		if ((bytes = write(SOCK(c, id), wbuff->data, wbuff->size[idx])) < 0)
-			return (-1);
-		if (bytes < wbuff->size[idx])
-		{
-			wbuff->size[idx] -= bytes;
-			memmove(wbuff->data, wbuff->data + bytes, wbuff->size[idx]);
-			return (wbuff->ncmds);
-		}
-		--wbuff->ncmds;
-		wbuff->size[idx] = 0;
-		wbuff->head = (wbuff->head + 1) % CMD_MAX_REQ;
+		buff->resp_len -= bytes;
+		memmove(buff->resp, buff->resp + bytes, buff->resp_len);
+		return (0);
 	}
+	buff->recv_len = 0;
+	buff->type = UNDEFINED;
+	++cmds->start;
+	--cmds->ncmds;
 	return (0);
 }

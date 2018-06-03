@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/21 05:50:28 by sgardner          #+#    #+#             */
-/*   Updated: 2018/05/29 20:16:07 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/02 18:20:18 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,6 @@
 #include <string.h>
 #include <time.h>
 #include "zappy.h"
-
-#define R_NCMDS(c, id)	c->ents[id].rbuff.ncmds
-#define W_NCMDS(c, id)	c->ents[id].wbuff.ncmds
 
 const char	*g_pname;
 
@@ -36,29 +33,26 @@ static t_timespec	time_diff(struct timespec *t1, struct timespec *t2)
 
 static void			poll_conns(t_serv *s)
 {
-	t_conn		*c;
-	t_sock		addr;
-	socklen_t	addr_len;
 	int			id;
 
-	c = &s->conn;
-	if (READABLE(c, 0))
-	{
-		if ((id = add_socket(c, accept(SOCK(c, 0), &addr, &addr_len))) > 0)
-			send_response(c, id, "WELCOME\n", 8);
-	}
+	if (READABLE(s, 0))
+		accept_incoming(s);
 	id = 0;
-	while (++id < c->nsockets)
+	while (++id < s->conn.nsockets)
 	{
-		if ((c->polls[id].revents & (POLLERR | POLLHUP))
-			|| (WRITEABLE(c, id) && W_NCMDS(c, id) && write_buffered(c, id) < 0)
-			|| (READABLE(c, id) && read_socket(c, id) < 0))
+		if ((POLL(s, id)->revents & (POLLERR | POLLHUP))
+			|| (READABLE(s, id) && read_socket(s, id) < 0))
 		{
-			remove_socket(c, id);
+			remove_socket(s, id);
 			continue ;
 		}
-		if (R_NCMDS(c, id) && !(c->ents[id].rbuff.countdown--))
-			queue_commands(s, id);
+		if (WRITABLE(s, id) && GET_CMDS(s, id)->ncmds)
+		{
+			if (GET_CMDS(s, id)->buffs[0].delay)
+				--GET_CMDS(s, id)->buffs[0].delay;
+			else
+				process_command(s, id);
+		}
 	}
 }
 

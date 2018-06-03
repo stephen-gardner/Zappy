@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:08:47 by sgardner          #+#    #+#             */
-/*   Updated: 2018/05/30 20:42:02 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/02 18:24:00 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,18 +26,29 @@ typedef unsigned short		t_ushrt;
 # define FATAL				fatal_error
 # define SZ(x, n)			(sizeof(x) * (n))
 
+# define ENT(s, id)			(&s->conn.ents[id])
+# define POLL(s, id)		(&s->conn.polls[id])
+
 # define CMD_MAX_LEN		255
 # define CMD_MAX_REQ		10
-# define CMD_POS(b, i)		((b->head + i) % CMD_MAX_REQ)
-# define CMD_TAIL(b)		CMD_POS(b, b->ncmds)
 # define BUFF_SIZE			(CMD_MAX_LEN * CMD_MAX_REQ)
+# define GET_CMDS(s, id)	(&s->conn.ents[id].cmds)
+# define CMD_POS(cmd, i)	(((cmd)->start + i) % CMD_MAX_REQ)
 
-# define SOCK(c, id)		c->polls[id].fd
-# define WRITEABLE(c, id)	(c->polls[id].revents & POLLOUT)
-# define READABLE(c, id)	(c->polls[id].revents & POLLIN)
+# define SOCK(s, id)		s->conn.polls[id].fd
+# define WRITABLE(s, id)	(s->conn.polls[id].revents & POLLOUT)
+# define READABLE(s, id)	(s->conn.polls[id].revents & POLLIN)
 
 # define MAX_LEVEL			8
 # define TEAM_MAX_LEN		27
+
+enum	e_dir
+{
+	NORTH,
+	SOUTH,
+	EAST,
+	WEST
+};
 
 /*
 ** Masks for setting/getting resource quantity
@@ -70,24 +81,57 @@ typedef struct	s_team
 	int			authorized;
 }				t_team;
 
+enum	e_cmdtype
+{
+	UNDEFINED,
+	ADVANCE,
+	BROADCAST,
+	CONNECT_NBR,
+	INCANTATION,
+	INVENTORY,
+	KICK,
+	FORK,
+	LEFT,
+	PUT,
+	RIGHT,
+	SEE,
+	TAKE,
+	NCOMMANDS
+};
+
+typedef struct	s_cmddef
+{
+	char		*label;
+	int			len;
+	int			delay;
+}				t_cmddef;
+
 typedef struct	s_buff
 {
-	char		data[CMD_MAX_REQ][CMD_MAX_LEN + 1];
-	int			size[CMD_MAX_REQ];
-	int			head;
-	int			ncmds;
-	int			countdown;
+	char		recv[CMD_MAX_LEN + 1];
+	char		resp[CMD_MAX_LEN + 1];
+	int			recv_len;
+	int			resp_len;
+	int			type;
+	int			delay;
 }				t_buff;
+
+typedef struct	s_cmd
+{
+	t_buff		buffs[CMD_MAX_REQ];
+	int			start;
+	int			ncmds;
+}				t_cmd;
 
 typedef struct	s_ent
 {
 	t_team		*team;
+	t_cmd		cmds;
+	t_ushrt		inv[NRES];
 	int			level;
 	int			loc_x;
 	int			loc_y;
-	t_ushrt		inv[NRES];
-	t_buff		rbuff;
-	t_buff		wbuff;
+	int			facing;
 }				t_ent;
 
 typedef struct	s_conn
@@ -120,7 +164,7 @@ typedef struct	s_serv
 ** cmd.c
 */
 
-void			queue_commands(t_serv *s, int id);
+void			process_command(t_serv *s, int id);
 
 /*
 ** cmd_connect_nbr.c
@@ -146,15 +190,16 @@ void			validate_opt(t_serv *s);
 ** read.c
 */
 
-int				read_socket(t_conn *c, int id);
+int				read_socket(t_serv *s, int id);
 
 /*
 ** sockets.c
 */
 
-int				add_socket(t_conn *c, int sock);
+void			accept_incoming(t_serv *s);
+int				add_socket(t_serv *s, int sock);
 void			init_listener(t_serv *s);
-void			remove_socket(t_conn *c, int id);
+void			remove_socket(t_serv *s, int id);
 
 /*
 ** teams.c
@@ -167,8 +212,8 @@ void			add_team(t_serv *s, char *name);
 ** write.c
 */
 
-int				send_response(t_conn *c, int id, char *msg, int len);
-int				write_buffered(t_conn *c, int id);
+int				send_message(t_serv *s, int id, char *msg, int len);
+int				send_response(t_serv *s, int id);
 
 extern const char	*g_pname;
 #endif
