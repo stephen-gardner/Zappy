@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/20 04:58:26 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/02 17:19:20 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/03 17:17:57 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int		send_response(t_serv *s, int id)
 	}
 	buff->recv_len = 0;
 	buff->type = UNDEFINED;
-	++cmds->start;
+	cmds->start = CMD_POS(cmds, 1);
 	--cmds->ncmds;
 	return (0);
 }

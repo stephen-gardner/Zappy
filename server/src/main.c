@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/21 05:50:28 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/03 01:21:37 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/03 20:18:18 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,48 +35,56 @@ static void	init_server(t_serv *s)
 	init_listener(s);
 }
 
-static void	poll_conns(t_serv *s)
+static int	process_queue(t_serv *s, int id, int tick)
 {
-	int			id;
+	t_poll	*entpoll;
+	t_cmd	*cmds;
+	t_buff	*buff;
 
-	if (READABLE(s, 0))
-		accept_incoming(s);
-	id = 0;
-	while (id < s->conn.nsockets)
+	entpoll = POLL(s, id);
+	if ((entpoll->revents & (POLLERR | POLLHUP))
+		|| (READABLE(s, id) && read_socket(s, id) < 0))
 	{
-		if ((POLL(s, id)->revents & (POLLERR | POLLHUP))
-			|| (READABLE(s, id) && read_socket(s, id) < 0))
-		{
-			remove_socket(s, id);
-			continue ;
-		}
-		if (WRITABLE(s, id) && GET_CMDS(s, id)->ncmds)
-		{
-			if (GET_CMDS(s, id)->buffs[0].delay)
-				--GET_CMDS(s, id)->buffs[0].delay;
-			else
-				process_command(s, id);
-		}
-		++id;
+		remove_socket(s, id);
+		return (id);
 	}
+	cmds = GET_CMDS(s, id);
+	while (WRITABLE(s, id) && cmds->ncmds)
+	{
+		buff = &cmds->buffs[cmds->start];
+		if (buff->delay)
+		{
+			if (tick)
+				--buff->delay;
+			break ;
+		}
+		process_command(s, id);
+		poll(entpoll, 1, 0);
+	}
+	return (id + 1);
 }
 
 static void	server_loop(t_serv *s)
 {
 	t_timespec	t1;
 	t_timespec	t2;
+	int			tick;
+	int			id;
 
+	clock_gettime(CLOCK_MONOTONIC, &t1);
 	while (1)
 	{
-		clock_gettime(CLOCK_MONOTONIC, &t1);
-		if (poll(s->conn.polls, s->conn.nsockets, 0) > 0)
-			poll_conns(s);
+		poll(s->conn.polls, s->conn.nsockets, 0);
+		if (READABLE(s, 0))
+			accept_incoming(s);
 		clock_gettime(CLOCK_MONOTONIC, &t2);
 		t2 = time_diff(&t2, &t1);
-		if ((t2 = time_diff(&s->tickrate, &t2)).tv_sec < 0)
-			fprintf(stderr, "Server can't keep up!\n");
-		else
-			nanosleep(&t2, NULL);
+		t2 = time_diff(&s->tickrate, &t2);
+		if ((tick = t2.tv_sec < 0 || (!t2.tv_sec && !t2.tv_nsec)))
+			clock_gettime(CLOCK_MONOTONIC, &t1);
+		id = 1;
+		while (id < s->conn.nsockets)
+			id = process_queue(s, id, tick);
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/24 09:34:14 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/03 01:36:04 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/03 18:54:31 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,29 +28,29 @@ static t_team	*find_team(t_serv *s, char *name)
 	return (NULL);
 }
 
-int				add_player(t_serv *s, char *name, int id)
+void			add_player(t_serv *s, char *name, int id)
 {
 	t_team	*team;
 	t_ent	*ent;
 
 	ent = ENT(s, id);
 	if (ent->team || !(team = find_team(s, name)))
-		return (-1);
-	if (team->members[0] == team->authorized)
 	{
-		cmd_connect_nbr(s, team, id);
-		return (-1);
+		send_message(s, id, "ko\n", 3);
+		return (remove_socket(s, id));
 	}
+	cmd_connect_nbr(s, team, id, 1);
+	send_response(s, id);
+	if (team->members[0] == team->authorized)
+		return (remove_socket(s, id));
 	ent->team = team;
 	ent->level = 1;
 	ent->inv[FOOD] = 10;
 	ent->loc_x = rand() % s->map.width;
 	ent->loc_y = rand() % s->map.height;
-	cmd_connect_nbr(s, team, id);
 	++team->members[0];
 	++team->members[1];
 	--s->conn.capacity;
-	return (0);
 }
 
 void			add_team(t_serv *s, char *name)

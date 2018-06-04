@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:08:47 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/03 01:35:14 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/03 20:17:59 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,7 +172,7 @@ void			process_command(t_serv *s, int id);
 ** cmd_connect_nbr.c
 */
 
-void			cmd_connect_nbr(t_serv *s, t_team *team, int id);
+void			cmd_connect_nbr(t_serv *s, t_team *team, int id, int dimen);
 
 /*
 ** error.c
@@ -206,7 +206,7 @@ void			remove_socket(t_serv *s, int id);
 ** teams.c
 */
 
-int				add_player(t_serv *s, char *name, int id);
+void			add_player(t_serv *s, char *name, int id);
 void			add_team(t_serv *s, char *name);
 
 /*

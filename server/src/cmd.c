@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/28 18:46:04 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/02 17:41:19 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/03 19:14:18 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,13 @@
 void	process_command(t_serv *s, int id)
 {
 	t_ent	*ent;
+	t_buff	*buff;
 
 	ent = ENT(s, id);
+	buff = &ent->cmds.buffs[ent->cmds.start];
 	if (!ent->team)
-	{
-		add_player(s, ent->cmds.buffs[0].recv, id);
-		send_response(s, id);
-		if (!ent->team)
-			remove_socket(s, id);
-	}
+		return (add_player(s, buff->recv, id));
+	else if (buff->type == CONNECT_NBR)
+		cmd_connect_nbr(s, ent->team, id, 0);
+	send_response(s, id);
 }
