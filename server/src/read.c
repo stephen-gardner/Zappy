@@ -6,55 +6,13 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:32:24 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/04 00:39:06 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/04 01:37:35 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <string.h>
 #include <unistd.h>
 #include "zappy.h"
-
-const t_cmddef	g_cmddef[] = {
-	{ NULL, 0, 0 },
-	{ "advance", 7, 7 },
-	{ "broadcast", 9, 7 },
-	{ "connect_nbr", 11, 0 },
-	{ "incantation", 11, 300 },
-	{ "inventory", 9, 1 },
-	{ "kick", 4, 7 },
-	{ "fork", 4, 42 },
-	{ "left", 4, 7 },
-	{ "put", 3, 7 },
-	{ "right", 5, 7 },
-	{ "see", 3, 7 },
-	{ "take", 4, 7 }
-};
-
-static void		set_type(t_serv *s, t_buff *buff)
-{
-	const t_cmddef	*def;
-	int				i;
-
-	if (buff->recv_len < CMD_MAX_LEN)
-	{
-		i = 1;
-		while (i < NCOMMANDS)
-		{
-			def = &g_cmddef[i];
-			if (!strncmp(buff->recv, def->label, def->len))
-			{
-				buff->type = i;
-				buff->scheduled = s->time + def->delay;
-				return ;
-			}
-			++i;
-		}
-	}
-	stpcpy(buff->resp, "ko\n");
-	buff->resp_len = 3;
-	buff->type = UNDEFINED;
-	buff->scheduled = s->time;
-}
 
 static void		buffer_data(t_serv *s, t_cmd *cmds, char *sbuff, int n)
 {
@@ -77,7 +35,7 @@ static void		buffer_data(t_serv *s, t_cmd *cmds, char *sbuff, int n)
 	if (nl)
 	{
 		++cmds->ncmds;
-		set_type(s, &cmds->buffs[idx]);
+		set_cmdtype(s, &cmds->buffs[idx]);
 	}
 }
 

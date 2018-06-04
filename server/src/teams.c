@@ -6,10 +6,11 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/24 09:34:14 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/03 18:54:31 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/04 01:33:06 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "zappy.h"
@@ -43,6 +44,7 @@ void			add_player(t_serv *s, char *name, int id)
 	send_response(s, id);
 	if (team->members[0] == team->authorized)
 		return (remove_socket(s, id));
+	printf("<%s> joined team: %s\n", ent->addr, team->name);
 	ent->team = team;
 	ent->level = 1;
 	ent->inv[FOOD] = 10;

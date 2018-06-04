@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:08:47 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/04 00:27:21 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/04 01:38:38 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,6 +167,7 @@ typedef struct	s_serv
 */
 
 void			process_command(t_serv *s, int id);
+void			set_cmdtype(t_serv *s, t_buff *buff);
 
 /*
 ** cmd_connect_nbr.c
