@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:08:47 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/03 20:17:59 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/04 00:27:21 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,23 +24,22 @@ typedef struct timespec		t_timespec;
 typedef unsigned int		t_uint;
 typedef unsigned short		t_ushrt;
 
-# define SZ(x, n)			(sizeof(x) * (n))
-
-# define ENT(s, id)			(&s->conn.ents[id])
-# define POLL(s, id)		(&s->conn.polls[id])
-
 # define CMD_MAX_LEN		255
 # define CMD_MAX_REQ		10
-# define BUFF_SIZE			(CMD_MAX_LEN * CMD_MAX_REQ)
-# define GET_CMDS(s, id)	(&s->conn.ents[id].cmds)
-# define CMD_POS(cmd, i)	(((cmd)->start + i) % CMD_MAX_REQ)
+# define MAX_LEVEL			8
+# define TEAM_MAX_LEN		27
 
+# define SZ(x, n)			(sizeof(x) * (n))
+
+# define POLL(s, id)		(&s->conn.polls[id])
 # define SOCK(s, id)		s->conn.polls[id].fd
 # define WRITABLE(s, id)	(s->conn.polls[id].revents & POLLOUT)
 # define READABLE(s, id)	(s->conn.polls[id].revents & POLLIN)
 
-# define MAX_LEVEL			8
-# define TEAM_MAX_LEN		27
+# define ENT(s, id)			(&s->conn.ents[id])
+# define BUFF_SIZE			(CMD_MAX_LEN * CMD_MAX_REQ)
+# define GET_CMDS(s, id)	(&s->conn.ents[id].cmds)
+# define CMD_POS(cmd, i)	(((cmd)->start + i) % CMD_MAX_REQ)
 
 enum	e_dir
 {
@@ -113,7 +112,7 @@ typedef struct	s_buff
 	int			recv_len;
 	int			resp_len;
 	int			type;
-	int			delay;
+	long		scheduled;
 }				t_buff;
 
 typedef struct	s_cmd
@@ -160,6 +159,7 @@ typedef struct	s_serv
 	t_team		*teams;
 	int			nteams;
 	t_timespec	tickrate;
+	long		time;
 }				t_serv;
 
 /*
@@ -213,7 +213,7 @@ void			add_team(t_serv *s, char *name);
 ** util.c
 */
 
-t_timespec		time_diff(t_timespec *t1, t_timespec *t2);
+t_timespec		time_diff(t_timespec t1, t_timespec t2);
 
 /*
 ** write.c

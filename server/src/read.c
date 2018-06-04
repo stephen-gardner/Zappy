@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:32:24 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/02 17:40:05 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/04 00:39:06 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ const t_cmddef	g_cmddef[] = {
 	{ "take", 4, 7 }
 };
 
-static void		set_type(t_buff *buff)
+static void		set_type(t_serv *s, t_buff *buff)
 {
 	const t_cmddef	*def;
 	int				i;
@@ -44,7 +44,7 @@ static void		set_type(t_buff *buff)
 			if (!strncmp(buff->recv, def->label, def->len))
 			{
 				buff->type = i;
-				buff->delay = def->delay;
+				buff->scheduled = s->time + def->delay;
 				return ;
 			}
 			++i;
@@ -53,10 +53,10 @@ static void		set_type(t_buff *buff)
 	stpcpy(buff->resp, "ko\n");
 	buff->resp_len = 3;
 	buff->type = UNDEFINED;
-	buff->delay = 0;
+	buff->scheduled = s->time;
 }
 
-static void		buffer_data(t_cmd *cmds, char *sbuff, int n)
+static void		buffer_data(t_serv *s, t_cmd *cmds, char *sbuff, int n)
 {
 	char	*dst;
 	int		idx;
@@ -77,7 +77,7 @@ static void		buffer_data(t_cmd *cmds, char *sbuff, int n)
 	if (nl)
 	{
 		++cmds->ncmds;
-		set_type(&cmds->buffs[idx]);
+		set_type(s, &cmds->buffs[idx]);
 	}
 }
 
@@ -101,7 +101,7 @@ int				read_socket(t_serv *s, int id)
 			++end;
 		if (*end)
 			++end;
-		buffer_data(cmds, start, end - start);
+		buffer_data(s, cmds, start, end - start);
 		start = end;
 	}
 	return (bytes);
