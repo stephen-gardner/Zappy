@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/24 09:34:14 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/04 01:33:06 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/04 19:15:04 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,8 @@ void			add_player(t_serv *s, char *name, int id)
 	}
 	cmd_connect_nbr(s, team, id, 1);
 	send_response(s, id);
-	if (team->members[0] == team->authorized)
+	if (!team->authorized)
 		return (remove_socket(s, id));
-	printf("<%s> joined team: %s\n", ent->addr, team->name);
 	ent->team = team;
 	ent->level = 1;
 	ent->inv[FOOD] = 10;
@@ -52,6 +51,7 @@ void			add_player(t_serv *s, char *name, int id)
 	ent->loc_y = rand() % s->map.height;
 	++team->members[0];
 	++team->members[1];
+	--team->authorized;
 	--s->conn.capacity;
 }
 

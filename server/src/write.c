@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/20 04:58:26 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/04 03:28:22 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/04 19:13:44 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int		send_response(t_serv *s, int id)
 	buff = &cmds->buffs[cmds->start];
 	bytes = write(SOCK(s, id), buff->resp, buff->resp_len);
 	printf("<%s> %s\n >> %.*s", ENT(s, id)->addr, buff->recv,
-		(int)(strchr(buff->resp, '\n') - buff->resp + 1), buff->resp);
+		(int)(strchr(buff->resp, '\n') - buff->resp) + 1, buff->resp);
 	buff->recv_len = 0;
 	buff->type = UNDEFINED;
 	cmds->start = CMD_POS(cmds, 1);

@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/29 17:06:19 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/03 19:16:37 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/04 19:29:46 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,9 @@ void	cmd_connect_nbr(t_serv *s, t_team *team, int id, int dimen)
 
 	cmds = GET_CMDS(s, id);
 	buff = &cmds->buffs[cmds->start];
-	buff->resp_len = sprintf(buff->resp, "%d\n",
-		team->authorized - team->members[0]);
-	if (dimen)
-	{
-		buff->resp_len += sprintf(buff->resp + buff->resp_len, "%d %d\n",
-			s->map.width, s->map.height);
-	}
+	buff->resp_len = sprintf(buff->resp, "%d\n", team->authorized);
+	if (!dimen)
+		return ;
+	buff->resp_len += sprintf(buff->resp + buff->resp_len, "%d %d\n",
+		s->map.width, s->map.height);
 }

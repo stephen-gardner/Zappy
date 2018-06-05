@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/22 07:45:32 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/03 01:35:47 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/04 19:20:40 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,12 +117,15 @@ void		remove_socket(t_serv *s, int id)
 	t_team			*team;
 
 	ent = ENT(s, id);
-	close(SOCK(s, id));
 	if ((team = ent->team))
 	{
 		--team->members[0];
 		--team->members[ent->level];
+		if (WRITABLE(s, id))
+			send_message(s, id, "death\n", 6);
+		printf("* %s has died\n", ent->addr);
 	}
+	close(SOCK(s, id));
 	printf("* %s disconnected\n", ent->addr);
 	memmove(ent, ent + 1, SZ(t_ent, s->conn.nsockets - id));
 	memmove(POLL(s, id), POLL(s, id + 1), SZ(t_poll, s->conn.nsockets - id));
