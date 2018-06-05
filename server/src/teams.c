@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/24 09:34:14 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/04 19:15:04 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/04 20:07:53 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ void			add_player(t_serv *s, char *name, int id)
 	ent->inv[FOOD] = 10;
 	ent->loc_x = rand() % s->map.width;
 	ent->loc_y = rand() % s->map.height;
+	ent->facing = rand() % 4;
 	++team->members[0];
 	++team->members[1];
 	--team->authorized;
