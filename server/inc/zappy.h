@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:08:47 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/04 01:38:38 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/04 19:54:37 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ typedef unsigned short		t_ushrt;
 # define ENT(s, id)			(&s->conn.ents[id])
 # define BUFF_SIZE			(CMD_MAX_LEN * CMD_MAX_REQ)
 # define GET_CMDS(s, id)	(&s->conn.ents[id].cmds)
+# define CMD_NEXT(cmd)		&(cmd)->buffs[(cmd)->start]
 # define CMD_POS(cmd, i)	(((cmd)->start + i) % CMD_MAX_REQ)
 
 enum	e_dir
@@ -52,19 +53,19 @@ enum	e_dir
 /*
 ** Masks for setting/getting resource quantity
 ** 5 bits per resource for max of 31
-**	TH         PH       ME         SI      DE          LI
-** [THYSTAME] [PHIRAS] [MENDIANE] [SIBUR] [DERAUMERE] [LINEMATE]
+**	EGG      TH         PH       ME         SI      DE          LI      FOOD
+** [EGG] [THYSTAME] [PHIRAS] [MENDIANE] [SIBUR] [DERAUMERE] [LINEMATE] [FOOD]
 */
 
 enum	e_resources
 {
+	FOOD,
 	LI,
 	DE,
 	SI,
 	ME,
 	PH,
 	TH,
-	FOOD,
 	EGG,
 	NRES
 };
@@ -174,6 +175,12 @@ void			set_cmdtype(t_serv *s, t_buff *buff);
 */
 
 void			cmd_connect_nbr(t_serv *s, t_team *team, int id, int dimen);
+
+/*
+** cmd_inventory.c
+*/
+
+void			cmd_inventory(t_serv *s, int id);
 
 /*
 ** error.c

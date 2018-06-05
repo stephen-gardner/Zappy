@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/28 18:46:04 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/04 01:38:58 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/04 20:00:22 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ void	process_command(t_serv *s, int id)
 		return (add_player(s, buff->recv, id));
 	else if (buff->type == CONNECT_NBR)
 		cmd_connect_nbr(s, ent->team, id, 0);
+	else if (buff->type == INVENTORY)
+		cmd_inventory(s, id);
 	send_response(s, id);
 }
 
