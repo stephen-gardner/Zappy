@@ -6,11 +6,10 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/20 04:58:26 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/04 19:13:44 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/05 18:51:21 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
 #include <string.h>
 #include <sys/uio.h>
 #include <unistd.h>
@@ -25,13 +24,21 @@ int		send_response(t_serv *s, int id)
 {
 	t_cmd	*cmds;
 	t_buff	*buff;
+	char	*pos;
+	char	*nl;
 	int		bytes;
 
 	cmds = GET_CMDS(s, id);
 	buff = &cmds->buffs[cmds->start];
 	bytes = write(SOCK(s, id), buff->resp, buff->resp_len);
-	printf("<%s> %s\n >> %.*s", ENT(s, id)->addr, buff->recv,
-		(int)(strchr(buff->resp, '\n') - buff->resp) + 1, buff->resp);
+	info(s, "<%s> %s", ENT(s, id)->addr, buff->recv);
+	pos = buff->resp;
+	while (*pos)
+	{
+		nl = strchr(pos, '\n');
+		info(s, " >> %.*s", nl - pos, pos);
+		pos = nl + 1;
+	}
 	buff->recv_len = 0;
 	buff->type = UNDEFINED;
 	cmds->start = CMD_POS(cmds, 1);

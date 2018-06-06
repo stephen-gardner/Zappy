@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:08:47 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/04 19:54:37 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/05 20:21:20 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,13 @@ typedef unsigned short		t_ushrt;
 # define BUFF_SIZE			(CMD_MAX_LEN * CMD_MAX_REQ)
 # define GET_CMDS(s, id)	(&s->conn.ents[id].cmds)
 # define CMD_NEXT(cmd)		&(cmd)->buffs[(cmd)->start]
-# define CMD_POS(cmd, i)	(((cmd)->start + i) % CMD_MAX_REQ)
+# define CMD_POS(cmd, i)	(((cmd)->start + i + CMD_MAX_REQ) % CMD_MAX_REQ)
 
 enum	e_dir
 {
 	NORTH,
-	SOUTH,
 	EAST,
+	SOUTH,
 	WEST
 };
 
@@ -168,7 +168,7 @@ typedef struct	s_serv
 */
 
 void			process_command(t_serv *s, int id);
-void			set_cmdtype(t_serv *s, t_buff *buff);
+void			set_cmdtype(t_buff *buff);
 
 /*
 ** cmd_connect_nbr.c
@@ -177,10 +177,23 @@ void			set_cmdtype(t_serv *s, t_buff *buff);
 void			cmd_connect_nbr(t_serv *s, t_team *team, int id, int dimen);
 
 /*
+** cmd_fork.c
+*/
+
+void			cmd_fork(t_serv *s, int id);
+
+/*
 ** cmd_inventory.c
 */
 
 void			cmd_inventory(t_serv *s, int id);
+
+/*
+** cmd_turn.c
+*/
+
+void			cmd_left(t_serv *s, int id);
+void			cmd_right(t_serv *s, int id);
 
 /*
 ** error.c
@@ -221,6 +234,7 @@ void			add_team(t_serv *s, char *name);
 ** util.c
 */
 
+void			info(t_serv *s, char *fmt, ...);
 t_timespec		time_diff(t_timespec t1, t_timespec t2);
 
 /*

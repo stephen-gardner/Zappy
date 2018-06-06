@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/28 18:46:04 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/04 20:00:22 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/05 20:23:33 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,18 @@ void	process_command(t_serv *s, int id)
 		return (add_player(s, buff->recv, id));
 	else if (buff->type == CONNECT_NBR)
 		cmd_connect_nbr(s, ent->team, id, 0);
+	else if (buff->type == FORK)
+		cmd_fork(s, id);
 	else if (buff->type == INVENTORY)
 		cmd_inventory(s, id);
+	else if (buff->type == LEFT)
+		cmd_left(s, id);
+	else if (buff->type == RIGHT)
+		cmd_right(s, id);
 	send_response(s, id);
 }
 
-void	set_cmdtype(t_serv *s, t_buff *buff)
+void	set_cmdtype(t_buff *buff)
 {
 	const t_cmddef	*def;
 	int				i;
@@ -60,7 +66,7 @@ void	set_cmdtype(t_serv *s, t_buff *buff)
 			if (!strncmp(buff->recv, def->label, def->len))
 			{
 				buff->type = i;
-				buff->scheduled = s->time + def->delay;
+				buff->scheduled += def->delay;
 				return ;
 			}
 			++i;
@@ -69,5 +75,4 @@ void	set_cmdtype(t_serv *s, t_buff *buff)
 	stpcpy(buff->resp, "ko\n");
 	buff->resp_len = 3;
 	buff->type = UNDEFINED;
-	buff->scheduled = s->time;
 }

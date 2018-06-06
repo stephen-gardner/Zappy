@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:32:24 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/04 01:37:35 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/05 19:07:12 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,26 +16,28 @@
 
 static void		buffer_data(t_serv *s, t_cmd *cmds, char *sbuff, int n)
 {
+	t_buff	*buff;
 	char	*dst;
-	int		idx;
 	int		nl;
 
-	idx = CMD_POS(cmds, cmds->ncmds);
-	dst = cmds->buffs[idx].recv + cmds->buffs[idx].recv_len;
+	buff = &cmds->buffs[CMD_POS(cmds, cmds->ncmds)];
+	dst = buff->recv + buff->recv_len;
 	if ((nl = (sbuff[n - 1] == '\n')))
 		--n;
-	if ((cmds->buffs[idx].recv_len += n) < CMD_MAX_LEN)
+	if ((buff->recv_len += n) < CMD_MAX_LEN)
 	{
 		memcpy(dst, sbuff, n);
 		if (nl)
 			dst[n] = '\0';
 	}
 	else
-		*cmds->buffs[idx].recv = '\0';
+		*buff->recv = '\0';
 	if (nl)
 	{
+		buff->scheduled = (cmds->ncmds)
+			? cmds->buffs[CMD_POS(cmds, cmds->ncmds - 1)].scheduled : s->time;
+		set_cmdtype(buff);
 		++cmds->ncmds;
-		set_cmdtype(s, &cmds->buffs[idx]);
 	}
 }
 

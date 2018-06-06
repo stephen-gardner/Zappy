@@ -1,37 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   util.c                                             :+:      :+:    :+:   */
+/*   cmd_fork.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/06/03 00:34:00 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/05 18:33:58 by sgardner         ###   ########.fr       */
+/*   Created: 2018/06/05 20:17:58 by sgardner          #+#    #+#             */
+/*   Updated: 2018/06/05 20:21:36 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdarg.h>
 #include <stdio.h>
 #include "zappy.h"
 
-void		info(t_serv *s, char *fmt, ...)
+void	cmd_fork(t_serv *s, int id)
 {
-	va_list	ap;
+	t_ent	*ent;
+	t_buff	*buff;
 
-	va_start(ap, fmt);
-	printf("[%0.5lu] ", s->time);
-	vprintf(fmt, ap);
-	printf("\n");
-	va_end(ap);
-}
-
-t_timespec	time_diff(t_timespec t1, t_timespec t2)
-{
-	t1.tv_sec -= t2.tv_sec;
-	if ((t1.tv_nsec -= t2.tv_nsec) < 0)
-	{
-		--t1.tv_sec;
-		t1.tv_nsec += 1000000000;
-	}
-	return (t1);
+	ent = ENT(s, id);
+	buff = CMD_NEXT(&ent->cmds);
+	++s->conn.capacity;
+	++ent->team->authorized;
+	buff->resp_len = sprintf(buff->resp, "ok\n");
 }

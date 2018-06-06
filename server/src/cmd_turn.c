@@ -1,37 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   util.c                                             :+:      :+:    :+:   */
+/*   cmd_turn.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/06/03 00:34:00 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/05 18:33:58 by sgardner         ###   ########.fr       */
+/*   Created: 2018/06/05 16:00:42 by sgardner          #+#    #+#             */
+/*   Updated: 2018/06/05 16:15:03 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdarg.h>
 #include <stdio.h>
 #include "zappy.h"
 
-void		info(t_serv *s, char *fmt, ...)
+static void	turn(t_ent *ent, t_buff *buff, int dir)
 {
-	va_list	ap;
-
-	va_start(ap, fmt);
-	printf("[%0.5lu] ", s->time);
-	vprintf(fmt, ap);
-	printf("\n");
-	va_end(ap);
+	ent->facing = ((ent->facing + dir) + 4) % 4;
+	buff->resp_len = sprintf(buff->resp, "ok\n");
 }
 
-t_timespec	time_diff(t_timespec t1, t_timespec t2)
+void		cmd_left(t_serv *s, int id)
 {
-	t1.tv_sec -= t2.tv_sec;
-	if ((t1.tv_nsec -= t2.tv_nsec) < 0)
-	{
-		--t1.tv_sec;
-		t1.tv_nsec += 1000000000;
-	}
-	return (t1);
+	t_ent	*ent;
+
+	ent = ENT(s, id);
+	turn(ent, CMD_NEXT(&ent->cmds), -1);
+}
+
+void		cmd_right(t_serv *s, int id)
+{
+	t_ent	*ent;
+
+	ent = ENT(s, id);
+	turn(ent, CMD_NEXT(&ent->cmds), 1);
 }

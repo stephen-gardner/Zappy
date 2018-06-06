@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/22 07:45:32 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/04 19:20:40 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/05 18:36:15 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void		accept_incoming(t_serv *s)
 				sprintf(ENT(s, id)->addr, "%s:%hu", inet_ntoa(addr.sin_addr),
 					ntohs(addr.sin_port));
 				send_message(s, id, "WELCOME\n", 8);
-				printf("* %s connected\n", ENT(s, id)->addr);
+				info(s, "* %s connected", ENT(s, id)->addr);
 			}
 			else
 				close(sock);
@@ -123,10 +123,10 @@ void		remove_socket(t_serv *s, int id)
 		--team->members[ent->level];
 		if (WRITABLE(s, id))
 			send_message(s, id, "death\n", 6);
-		printf("* %s has died\n", ent->addr);
+		info(s, "* %s has died", ent->addr);
 	}
 	close(SOCK(s, id));
-	printf("* %s disconnected\n", ent->addr);
+	info(s, "* %s disconnected", ent->addr);
 	memmove(ent, ent + 1, SZ(t_ent, s->conn.nsockets - id));
 	memmove(POLL(s, id), POLL(s, id + 1), SZ(t_poll, s->conn.nsockets - id));
 	--s->conn.nsockets;
