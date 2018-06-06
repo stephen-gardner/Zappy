@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/20 04:58:26 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/05 18:51:21 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/06 02:04:24 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int		send_response(t_serv *s, int id)
 	cmds = GET_CMDS(s, id);
 	buff = &cmds->buffs[cmds->start];
 	bytes = write(SOCK(s, id), buff->resp, buff->resp_len);
-	info(s, "<%s> %s", ENT(s, id)->addr, buff->recv);
+	info(s, "<%s[%s]> %s", ENT(s, id)->addr, ENT(s, id)->team, buff->recv);
 	pos = buff->resp;
 	while (*pos)
 	{

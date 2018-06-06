@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:08:47 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/05 20:21:20 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/06 02:14:55 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,13 +99,6 @@ enum	e_cmdtype
 	NCOMMANDS
 };
 
-typedef struct	s_cmddef
-{
-	char		*label;
-	int			len;
-	int			delay;
-}				t_cmddef;
-
 typedef struct	s_buff
 {
 	char		recv[CMD_MAX_LEN + 1];
@@ -113,7 +106,7 @@ typedef struct	s_buff
 	int			recv_len;
 	int			resp_len;
 	int			type;
-	long		scheduled;
+	uintmax_t	scheduled;
 }				t_buff;
 
 typedef struct	s_cmd
@@ -160,8 +153,17 @@ typedef struct	s_serv
 	t_team		*teams;
 	int			nteams;
 	t_timespec	tickrate;
-	long		time;
+	uintmax_t	time;
 }				t_serv;
+
+typedef struct	s_cmddef
+{
+	int			type;
+	char		*label;
+	void		(*dispatch)(t_serv *, int);
+	int			len;
+	int			delay;
+}				t_cmddef;
 
 /*
 ** cmd.c
@@ -174,7 +176,8 @@ void			set_cmdtype(t_buff *buff);
 ** cmd_connect_nbr.c
 */
 
-void			cmd_connect_nbr(t_serv *s, t_team *team, int id, int dimen);
+void			cmd_connect(t_serv *s, int id, t_team *team, int dimen);
+void			cmd_connect_nbr(t_serv *s, int id);
 
 /*
 ** cmd_fork.c
@@ -229,6 +232,7 @@ void			remove_socket(t_serv *s, int id);
 
 void			add_player(t_serv *s, char *name, int id);
 void			add_team(t_serv *s, char *name);
+t_team			*find_team(t_serv *s, char *name);
 
 /*
 ** util.c

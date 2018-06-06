@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/21 05:50:28 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/04 00:34:04 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/06 01:30:08 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static int	process_queue(t_serv *s, int id)
 	while (WRITABLE(s, id) && cmds->ncmds)
 	{
 		buff = &cmds->buffs[cmds->start];
-		if (buff->scheduled > s->time)
+		if (buff->scheduled > s->time && ENT(s, id)->team)
 			break ;
 		process_command(s, id);
 		poll(entpoll, 1, 0);

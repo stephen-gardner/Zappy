@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/03 00:34:00 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/05 18:33:58 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/06 01:25:35 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void		info(t_serv *s, char *fmt, ...)
 	va_list	ap;
 
 	va_start(ap, fmt);
-	printf("[%0.5lu] ", s->time);
+	printf("[%0.5ju] ", s->time);
 	vprintf(fmt, ap);
 	printf("\n");
 	va_end(ap);

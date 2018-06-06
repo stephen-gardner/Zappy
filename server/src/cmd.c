@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/28 18:46:04 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/05 20:23:33 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/06 02:18:43 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,40 +15,39 @@
 #include "zappy.h"
 
 const t_cmddef	g_cmddef[] = {
-	{ NULL, 0, 0 },
-	{ "advance", 7, 7 },
-	{ "broadcast", 9, 7 },
-	{ "connect_nbr", 11, 0 },
-	{ "incantation", 11, 300 },
-	{ "inventory", 9, 1 },
-	{ "kick", 4, 7 },
-	{ "fork", 4, 42 },
-	{ "left", 4, 7 },
-	{ "put", 3, 7 },
-	{ "right", 5, 7 },
-	{ "see", 3, 7 },
-	{ "take", 4, 7 }
+	{ UNDEFINED, NULL, NULL, 0, 0 },
+	{ ADVANCE, "advance", NULL, 7, 7 },
+	{ BROADCAST, "broadcast", NULL, 9, 7 },
+	{ CONNECT_NBR, "connect_nbr", cmd_connect_nbr, 11, 0 },
+	{ INCANTATION, "incantation", NULL, 11, 300 },
+	{ INVENTORY, "inventory", cmd_inventory, 9, 1 },
+	{ KICK, "kick", NULL, 4, 7 },
+	{ FORK, "fork", cmd_fork, 4, 42 },
+	{ LEFT, "left", cmd_left, 4, 7 },
+	{ PUT, "put", NULL, 3, 7 },
+	{ RIGHT, "right", cmd_right, 5, 7 },
+	{ SEE, "see", NULL, 3, 7 },
+	{ TAKE, "take", NULL, 4, 7 }
 };
 
 void	process_command(t_serv *s, int id)
 {
-	t_ent	*ent;
-	t_buff	*buff;
+	t_ent			*ent;
+	t_buff			*buff;
+	const t_cmddef	*def;
+	int				i;
 
 	ent = ENT(s, id);
 	buff = &ent->cmds.buffs[ent->cmds.start];
 	if (!ent->team)
 		return (add_player(s, buff->recv, id));
-	else if (buff->type == CONNECT_NBR)
-		cmd_connect_nbr(s, ent->team, id, 0);
-	else if (buff->type == FORK)
-		cmd_fork(s, id);
-	else if (buff->type == INVENTORY)
-		cmd_inventory(s, id);
-	else if (buff->type == LEFT)
-		cmd_left(s, id);
-	else if (buff->type == RIGHT)
-		cmd_right(s, id);
+	i = 1;
+	while (i < NCOMMANDS)
+	{
+		def = &g_cmddef[i++];
+		if (buff->type == def->type)
+			def->dispatch(s, id);
+	}
 	send_response(s, id);
 }
 

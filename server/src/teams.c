@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/24 09:34:14 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/04 20:07:53 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/06 01:19:59 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,7 @@
 #include <string.h>
 #include "zappy.h"
 
-static t_team	*find_team(t_serv *s, char *name)
-{
-	int	i;
-
-	i = 0;
-	while (i < s->nteams)
-	{
-		if (!strcmp(name, s->teams[i].name))
-			return (&s->teams[i]);
-		++i;
-	}
-	return (NULL);
-}
-
-void			add_player(t_serv *s, char *name, int id)
+void	add_player(t_serv *s, char *name, int id)
 {
 	t_team	*team;
 	t_ent	*ent;
@@ -40,7 +26,7 @@ void			add_player(t_serv *s, char *name, int id)
 		send_message(s, id, "ko\n", 3);
 		return (remove_socket(s, id));
 	}
-	cmd_connect_nbr(s, team, id, 1);
+	cmd_connect(s, id, team, 1);
 	send_response(s, id);
 	if (!team->authorized)
 		return (remove_socket(s, id));
@@ -56,7 +42,7 @@ void			add_player(t_serv *s, char *name, int id)
 	--s->conn.capacity;
 }
 
-void			add_team(t_serv *s, char *name)
+void	add_team(t_serv *s, char *name)
 {
 	t_team	*team;
 
@@ -72,4 +58,18 @@ void			add_team(t_serv *s, char *name)
 	team = &s->teams[s->nteams++];
 	memset(team, 0, sizeof(t_team));
 	stpcpy(team->name, name);
+}
+
+t_team	*find_team(t_serv *s, char *name)
+{
+	int	i;
+
+	i = 0;
+	while (i < s->nteams)
+	{
+		if (!strcmp(name, s->teams[i].name))
+			return (&s->teams[i]);
+		++i;
+	}
+	return (NULL);
 }
