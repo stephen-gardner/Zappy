@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/28 18:46:04 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/06 02:18:43 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/06 02:30:46 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,9 @@ const t_cmddef	g_cmddef[] = {
 	{ TAKE, "take", NULL, 4, 7 }
 };
 
-void	process_command(t_serv *s, int id)
+const int		g_cmddef_count = sizeof(g_cmddef) / sizeof(t_cmddef);
+
+void			process_command(t_serv *s, int id)
 {
 	t_ent			*ent;
 	t_buff			*buff;
@@ -42,7 +44,7 @@ void	process_command(t_serv *s, int id)
 	if (!ent->team)
 		return (add_player(s, buff->recv, id));
 	i = 1;
-	while (i < NCOMMANDS)
+	while (i < g_cmddef_count)
 	{
 		def = &g_cmddef[i++];
 		if (buff->type == def->type)
@@ -51,7 +53,7 @@ void	process_command(t_serv *s, int id)
 	send_response(s, id);
 }
 
-void	set_cmdtype(t_buff *buff)
+void			set_cmdtype(t_buff *buff)
 {
 	const t_cmddef	*def;
 	int				i;
@@ -59,16 +61,15 @@ void	set_cmdtype(t_buff *buff)
 	if (buff->recv_len < CMD_MAX_LEN)
 	{
 		i = 1;
-		while (i < NCOMMANDS)
+		while (i < g_cmddef_count)
 		{
-			def = &g_cmddef[i];
+			def = &g_cmddef[i++];
 			if (!strncmp(buff->recv, def->label, def->len))
 			{
-				buff->type = i;
+				buff->type = def->type;
 				buff->scheduled += def->delay;
 				return ;
 			}
-			++i;
 		}
 	}
 	stpcpy(buff->resp, "ko\n");
