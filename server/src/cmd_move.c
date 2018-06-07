@@ -1,17 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cmd_turn.c                                         :+:      :+:    :+:   */
+/*   cmd_move.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/05 16:00:42 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/05 16:15:03 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/06 17:00:22 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include "zappy.h"
+
+#define MOVE(a, m, n)	a = ((a + n) + m) % m
+
+void		cmd_advance(t_serv *s, int id)
+{
+	t_ent	*ent;
+	t_buff	*buff;
+	int		dir;
+
+	ent = ENT(s, id);
+	dir = ent->facing;
+	if (dir == EAST)
+		MOVE(ent->loc_x, s->map.width, 1);
+	else if (dir == WEST)
+		MOVE(ent->loc_x, s->map.width, -1);
+	else if (dir == SOUTH)
+		MOVE(ent->loc_y, s->map.height, 1);
+	else
+		MOVE(ent->loc_y, s->map.height, -1);
+	buff = CMD_NEXT(&ent->cmds);
+	buff->resp_len = sprintf(buff->resp, "ok\n");
+}
 
 static void	turn(t_ent *ent, t_buff *buff, int dir)
 {

@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:08:47 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/06 02:14:55 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/06 14:49:54 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,9 +192,10 @@ void			cmd_fork(t_serv *s, int id);
 void			cmd_inventory(t_serv *s, int id);
 
 /*
-** cmd_turn.c
+** cmd_move.c
 */
 
+void			cmd_advance(t_serv *s, int id);
 void			cmd_left(t_serv *s, int id);
 void			cmd_right(t_serv *s, int id);
 
