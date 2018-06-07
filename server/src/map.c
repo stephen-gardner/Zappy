@@ -1,37 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   util.c                                             :+:      :+:    :+:   */
+/*   map.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/06/03 00:34:00 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/06 22:43:28 by sgardner         ###   ########.fr       */
+/*   Created: 2018/06/06 17:51:05 by sgardner          #+#    #+#             */
+/*   Updated: 2018/06/07 02:01:55 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdarg.h>
-#include <stdio.h>
 #include "zappy.h"
 
-void		info(t_serv *s, char *fmt, ...)
+t_uint	get_res(t_serv *s, t_loc loc, int type)
 {
-	va_list	ap;
+	size_t	pos;
 
-	va_start(ap, fmt);
-	printf("[%06ju] ", s->time);
-	vprintf(fmt, ap);
-	printf("\n");
-	va_end(ap);
+	pos = (loc.y * s->map.width) + loc.x;
+	return ((s->map.data[pos] & (0x0F << (type * 4))) >> (type * 4));
 }
 
-t_timespec	time_diff(t_timespec t1, t_timespec t2)
+void	set_res(t_serv *s, t_loc loc, int type, t_uint n)
 {
-	t1.tv_sec -= t2.tv_sec;
-	if ((t1.tv_nsec -= t2.tv_nsec) < 0)
-	{
-		--t1.tv_sec;
-		t1.tv_nsec += 1000000000;
-	}
-	return (t1);
+	size_t	pos;
+
+	pos = (loc.y * s->map.width) + loc.x;
+	s->map.data[pos] &= ~(0x0F << (type * 4));
+	s->map.data[pos] |= n << (type * 4);
 }

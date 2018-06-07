@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/28 18:46:04 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/06 14:48:57 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/07 01:58:42 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,22 +15,28 @@
 #include "zappy.h"
 
 const t_cmddef	g_cmddef[] = {
-	{ UNDEFINED, NULL, NULL, 0, 0 },
-	{ ADVANCE, "advance", cmd_advance, 7, 7 },
-	{ BROADCAST, "broadcast", NULL, 9, 7 },
-	{ CONNECT_NBR, "connect_nbr", cmd_connect_nbr, 11, 0 },
-	{ INCANTATION, "incantation", NULL, 11, 300 },
-	{ INVENTORY, "inventory", cmd_inventory, 9, 1 },
-	{ KICK, "kick", NULL, 4, 7 },
-	{ FORK, "fork", cmd_fork, 4, 42 },
-	{ LEFT, "left", cmd_left, 4, 7 },
-	{ PUT, "put", NULL, 3, 7 },
-	{ RIGHT, "right", cmd_right, 5, 7 },
-	{ SEE, "see", NULL, 3, 7 },
-	{ TAKE, "take", NULL, 4, 7 }
+	{ ADVANCE, precmd_void, cmd_advance, "advance", 7, 7 },
+	{ BROADCAST, precmd_void, NULL, "broadcast", 9, 7 },
+	{ CONNECT_NBR, precmd_void, cmd_connect_nbr, "connect_nbr", 11, 0 },
+	{ INCANTATION, NULL, NULL, "incantation", 11, 300 },
+	{ INVENTORY, precmd_void, cmd_inventory, "inventory", 9, 1 },
+	{ KICK, precmd_void, NULL, "kick", 4, 7 },
+	{ FORK, precmd_fork, cmd_fork, "fork", 4, 42 },
+	{ LEFT, precmd_void, cmd_left, "left", 4, 7 },
+	{ PUT, NULL, NULL, "put", 3, 7 },
+	{ RIGHT, precmd_void, cmd_right, "right", 5, 7 },
+	{ SEE, precmd_void, NULL, "see", 3, 7 },
+	{ TAKE, NULL, NULL, "take", 4, 7 }
 };
 
 const int		g_cmddef_count = sizeof(g_cmddef) / sizeof(t_cmddef);
+
+int				precmd_void(t_serv *s, int id)
+{
+	(void)s;
+	(void)id;
+	return (1);
+}
 
 void			process_command(t_serv *s, int id)
 {
@@ -43,7 +49,7 @@ void			process_command(t_serv *s, int id)
 	buff = &ent->cmds.buffs[ent->cmds.start];
 	if (!ent->team)
 		return (add_player(s, buff->recv, id));
-	i = 1;
+	i = 0;
 	while (i < g_cmddef_count)
 	{
 		def = &g_cmddef[i++];
@@ -53,18 +59,20 @@ void			process_command(t_serv *s, int id)
 	send_response(s, id);
 }
 
-void			set_cmdtype(t_buff *buff)
+void			set_cmdtype(t_serv *s, int id)
 {
+	t_buff			*buff;
 	const t_cmddef	*def;
 	int				i;
 
+	buff = CMD_NEXT(GET_CMDS(s, id));
 	if (buff->recv_len < CMD_MAX_LEN)
 	{
-		i = 1;
+		i = 0;
 		while (i < g_cmddef_count)
 		{
 			def = &g_cmddef[i++];
-			if (!strncmp(buff->recv, def->label, def->len))
+			if (!strncmp(buff->recv, def->label, def->len) && def->pre(s, id))
 			{
 				buff->type = def->type;
 				buff->scheduled += def->delay;

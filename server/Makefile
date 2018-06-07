@@ -16,6 +16,7 @@ OBJ_DIR = obj
 SRC = \
 	error\
 	main\
+	map\
 	opt\
 	read\
 	sockets\

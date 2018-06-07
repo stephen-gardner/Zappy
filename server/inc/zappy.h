@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:08:47 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/06 14:49:54 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/07 02:01:30 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ typedef unsigned short		t_ushrt;
 # define CMD_MAX_REQ		10
 # define MAX_LEVEL			8
 # define TEAM_MAX_LEN		27
+# define RES_MAX			15
 
 # define SZ(x, n)			(sizeof(x) * (n))
 
@@ -51,9 +52,9 @@ enum	e_dir
 };
 
 /*
-** Masks for setting/getting resource quantity
-** 5 bits per resource for max of 31
-**	EGG      TH         PH       ME         SI      DE          LI      FOOD
+** Resource quantity map layout:
+** 4 bits per resource for max of 15
+**	EGG      TH        PH        ME       SI        DE          LI      FOOD
 ** [EGG] [THYSTAME] [PHIRAS] [MENDIANE] [SIBUR] [DERAUMERE] [LINEMATE] [FOOD]
 */
 
@@ -70,9 +71,11 @@ enum	e_resources
 	NRES
 };
 
-# define RES_MAX			15
-# define RES_GET(id)		(i & (0x0F << (id * 4)))
-# define RES_SET(i, id, n)	(i |= (n << (id * 4)))
+typedef struct	s_loc
+{
+	int	x;
+	int	y;
+}				t_loc;
 
 typedef struct	s_team
 {
@@ -159,8 +162,9 @@ typedef struct	s_serv
 typedef struct	s_cmddef
 {
 	int			type;
-	char		*label;
+	int			(*pre)(t_serv *, int);
 	void		(*dispatch)(t_serv *, int);
+	char		*label;
 	int			len;
 	int			delay;
 }				t_cmddef;
@@ -169,8 +173,9 @@ typedef struct	s_cmddef
 ** cmd.c
 */
 
+int				precmd_void(t_serv *s, int id);
 void			process_command(t_serv *s, int id);
-void			set_cmdtype(t_buff *buff);
+void			set_cmdtype(t_serv *s, int id);
 
 /*
 ** cmd_connect_nbr.c
@@ -184,6 +189,7 @@ void			cmd_connect_nbr(t_serv *s, int id);
 */
 
 void			cmd_fork(t_serv *s, int id);
+int				precmd_fork(t_serv *s, int id);
 
 /*
 ** cmd_inventory.c
@@ -204,6 +210,13 @@ void			cmd_right(t_serv *s, int id);
 */
 
 void			usage_error(char *msg);
+
+/*
+** map.c
+*/
+
+t_uint			get_res(t_serv *s, t_loc loc, int type);
+void			set_res(t_serv *s, t_loc loc, int type, t_uint n);
 
 /*
 ** opt.c

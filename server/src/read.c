@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:32:24 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/05 19:07:12 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/07 01:55:38 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,14 @@
 #include <unistd.h>
 #include "zappy.h"
 
-static void		buffer_data(t_serv *s, t_cmd *cmds, char *sbuff, int n)
+static void		buffer_data(t_serv *s, int id, char *sbuff, int n)
 {
+	t_cmd	*cmds;
 	t_buff	*buff;
 	char	*dst;
 	int		nl;
 
+	cmds = GET_CMDS(s, id);
 	buff = &cmds->buffs[CMD_POS(cmds, cmds->ncmds)];
 	dst = buff->recv + buff->recv_len;
 	if ((nl = (sbuff[n - 1] == '\n')))
@@ -36,7 +38,7 @@ static void		buffer_data(t_serv *s, t_cmd *cmds, char *sbuff, int n)
 	{
 		buff->scheduled = (cmds->ncmds)
 			? cmds->buffs[CMD_POS(cmds, cmds->ncmds - 1)].scheduled : s->time;
-		set_cmdtype(buff);
+		set_cmdtype(s, id);
 		++cmds->ncmds;
 	}
 }
@@ -61,7 +63,7 @@ int				read_socket(t_serv *s, int id)
 			++end;
 		if (*end)
 			++end;
-		buffer_data(s, cmds, start, end - start);
+		buffer_data(s, id, start, end - start);
 		start = end;
 	}
 	return (bytes);
