@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/21 05:50:28 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/06 01:30:08 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/06 17:07:14 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ static void	init_server(t_serv *s)
 
 static int	process_queue(t_serv *s, int id)
 {
+	t_ent	*ent;
 	t_poll	*entpoll;
 	t_cmd	*cmds;
 	t_buff	*buff;
@@ -48,11 +49,12 @@ static int	process_queue(t_serv *s, int id)
 		remove_socket(s, id);
 		return (id);
 	}
+	ent = ENT(s, id);
 	cmds = GET_CMDS(s, id);
 	while (WRITABLE(s, id) && cmds->ncmds)
 	{
 		buff = &cmds->buffs[cmds->start];
-		if (buff->scheduled > s->time && ENT(s, id)->team)
+		if (buff->scheduled > s->time && ent->team)
 			break ;
 		process_command(s, id);
 		poll(entpoll, 1, 0);
