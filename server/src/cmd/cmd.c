@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/28 18:46:04 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/07 01:58:42 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/07 18:31:16 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,11 +61,13 @@ void			process_command(t_serv *s, int id)
 
 void			set_cmdtype(t_serv *s, int id)
 {
+	t_cmd			*cmds;
 	t_buff			*buff;
 	const t_cmddef	*def;
 	int				i;
 
-	buff = CMD_NEXT(GET_CMDS(s, id));
+	cmds = GET_CMDS(s, id);
+	buff = &cmds->buffs[CMD_POS(cmds, cmds->ncmds)];
 	if (buff->recv_len < CMD_MAX_LEN)
 	{
 		i = 0;

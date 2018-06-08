@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/05 20:17:58 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/07 02:02:31 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/07 19:05:57 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	cmd_fork(t_serv *s, int id)
 {
 	t_ent	*ent;
 	t_buff	*buff;
-	t_loc	loc;
+	t_uint	*loc;
 	t_uint	eggs;
 
 	ent = ENT(s, id);
@@ -25,20 +25,18 @@ void	cmd_fork(t_serv *s, int id)
 	//++s->conn.capacity;
 	//++ent->team->authorized;
 	// TODO: Egg manager
-	loc.x = ent->loc_x;
-	loc.y = ent->loc_y;
-	eggs = get_res(s, loc, EGG);
-	set_res(s, loc, EGG, eggs + 1);
+	loc = GET_LOC(s, ent->loc_x, ent->loc_y);
+	eggs = GET_RES(loc, EGG);
+	SET_RES(loc, EGG, eggs + 1);
 	buff->resp_len = sprintf(buff->resp, "ok\n");
 }
 
 int		precmd_fork(t_serv *s, int id)
 {
 	t_ent	*ent;
-	t_loc	loc;
+	t_uint	*loc;
 
 	ent = ENT(s, id);
-	loc.x = ent->loc_x;
-	loc.y = ent->loc_y;
-	return (get_res(s, loc, EGG) < 15);
+	loc = GET_LOC(s, ent->loc_x, ent->loc_y);
+	return (GET_RES(loc, EGG) < 15);
 }

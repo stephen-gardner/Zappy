@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:08:47 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/07 02:01:30 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/07 19:06:09 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,10 @@ enum	e_dir
 ** [EGG] [THYSTAME] [PHIRAS] [MENDIANE] [SIBUR] [DERAUMERE] [LINEMATE] [FOOD]
 */
 
+# define GET_LOC(s, x, y)	&s->map.data[((y * s->map.width) + x)]
+# define GET_RES(r, t)		(*r & (0x0F << (t * 4))) >> (t * 4)
+# define SET_RES(r, t, n)	*r = (*r & ~(0x0F << (t * 4))) | ((n) << (t * 4))
+
 enum	e_resources
 {
 	FOOD,
@@ -70,12 +74,6 @@ enum	e_resources
 	EGG,
 	NRES
 };
-
-typedef struct	s_loc
-{
-	int	x;
-	int	y;
-}				t_loc;
 
 typedef struct	s_team
 {
@@ -214,9 +212,6 @@ void			usage_error(char *msg);
 /*
 ** map.c
 */
-
-t_uint			get_res(t_serv *s, t_loc loc, int type);
-void			set_res(t_serv *s, t_loc loc, int type, t_uint n);
 
 /*
 ** opt.c
