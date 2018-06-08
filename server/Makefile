@@ -15,6 +15,7 @@ OBJ_DIR = obj
 
 SRC = \
 	error\
+	items\
 	main\
 	map\
 	opt\

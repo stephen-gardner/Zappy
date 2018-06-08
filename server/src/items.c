@@ -1,33 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cmd_fork.c                                         :+:      :+:    :+:   */
+/*   items.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/06/05 20:17:58 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/08 01:00:07 by sgardner         ###   ########.fr       */
+/*   Created: 2018/06/07 19:38:08 by sgardner          #+#    #+#             */
+/*   Updated: 2018/06/07 23:33:28 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
+#include <string.h>
 #include "zappy.h"
 
-void	cmd_fork(t_serv *s, int id)
-{
-	t_ent	*ent;
-	t_buff	*buff;
-	t_uint	*loc;
-	t_uint	eggs;
+const char	*g_items[] = {
+	"food",
+	"linemate",
+	"deraumere",
+	"sibur",
+	"mendiane",
+	"phiras",
+	"thystame"
+};
 
-	ent = ENT(s, id);
-	buff = CMD_NEXT(&ent->cmds);
-	//++s->conn.capacity;
-	//++ent->team->authorized;
-	// TODO: Egg manager
-	loc = GET_LOC(s, ent->loc_x, ent->loc_y);
-	if ((eggs = RES_GET(loc, EGG)) == RES_MAX)
-		return ;
-	RES_SET(loc, EGG, eggs + 1);
-	buff->resp_len = sprintf(buff->resp, "ok\n");
+const int	g_items_count = sizeof(g_items) / sizeof(char *);
+
+int			get_item_id(char *name)
+{
+	int	i;
+
+	i = 0;
+	while (i < g_items_count)
+	{
+		if (!strcmp(name, g_items[i]))
+			return (i);
+		++i;
+	}
+	return (-1);
 }

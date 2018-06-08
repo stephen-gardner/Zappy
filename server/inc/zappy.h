@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:08:47 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/07 19:06:09 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/08 01:10:25 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,30 +26,26 @@ typedef unsigned short		t_ushrt;
 
 # define CMD_MAX_LEN		255
 # define CMD_MAX_REQ		10
+# define BUFF_SIZE			(CMD_MAX_LEN * CMD_MAX_REQ)
 # define MAX_LEVEL			8
 # define TEAM_MAX_LEN		27
-# define RES_MAX			15
-
-# define SZ(x, n)			(sizeof(x) * (n))
 
 # define POLL(s, id)		(&s->conn.polls[id])
 # define SOCK(s, id)		s->conn.polls[id].fd
-# define WRITABLE(s, id)	(s->conn.polls[id].revents & POLLOUT)
 # define READABLE(s, id)	(s->conn.polls[id].revents & POLLIN)
+# define WRITABLE(s, id)	(s->conn.polls[id].revents & POLLOUT)
 
 # define ENT(s, id)			(&s->conn.ents[id])
-# define BUFF_SIZE			(CMD_MAX_LEN * CMD_MAX_REQ)
-# define GET_CMDS(s, id)	(&s->conn.ents[id].cmds)
 # define CMD_NEXT(cmd)		&(cmd)->buffs[(cmd)->start]
 # define CMD_POS(cmd, i)	(((cmd)->start + i + CMD_MAX_REQ) % CMD_MAX_REQ)
+# define GET_CMDS(s, id)	(&s->conn.ents[id].cmds)
 
-enum	e_dir
-{
-	NORTH,
-	EAST,
-	SOUTH,
-	WEST
-};
+# define RES_MAX			15
+# define GET_LOC(s, x, y)	&s->map.data[((y * s->map.width) + x)]
+# define RES_GET(r, t)		((*r & (0x0F << (t * 4))) >> (t * 4))
+# define RES_SET(r, t, n)	*r = (*r & ~(0x0F << (t * 4))) | ((n) << (t * 4))
+
+# define SZ(x, n)			(sizeof(x) * (n))
 
 /*
 ** Resource quantity map layout:
@@ -58,11 +54,7 @@ enum	e_dir
 ** [EGG] [THYSTAME] [PHIRAS] [MENDIANE] [SIBUR] [DERAUMERE] [LINEMATE] [FOOD]
 */
 
-# define GET_LOC(s, x, y)	&s->map.data[((y * s->map.width) + x)]
-# define GET_RES(r, t)		(*r & (0x0F << (t * 4))) >> (t * 4)
-# define SET_RES(r, t, n)	*r = (*r & ~(0x0F << (t * 4))) | ((n) << (t * 4))
-
-enum	e_resources
+enum	e_items
 {
 	FOOD,
 	LI,
@@ -73,6 +65,14 @@ enum	e_resources
 	TH,
 	EGG,
 	NRES
+};
+
+enum	e_dir
+{
+	NORTH,
+	EAST,
+	SOUTH,
+	WEST
 };
 
 typedef struct	s_team
@@ -165,6 +165,7 @@ typedef struct	s_cmddef
 	char		*label;
 	int			len;
 	int			delay;
+	int			args;
 }				t_cmddef;
 
 /*
@@ -194,6 +195,10 @@ int				precmd_fork(t_serv *s, int id);
 */
 
 void			cmd_inventory(t_serv *s, int id);
+void			cmd_put(t_serv *s, int id);
+void			cmd_take(t_serv *s, int id);
+int				precmd_take(t_serv *s, int id);
+int				precmd_put(t_serv *s, int id);
 
 /*
 ** cmd_move.c
@@ -208,6 +213,12 @@ void			cmd_right(t_serv *s, int id);
 */
 
 void			usage_error(char *msg);
+
+/*
+** items.c
+*/
+
+int				get_item_id(char *name);
 
 /*
 ** map.c
@@ -258,4 +269,6 @@ int				send_message(t_serv *s, int id, char *msg, int len);
 int				send_response(t_serv *s, int id);
 
 extern const char	*g_pname;
+extern const char	*g_items[];
+extern const int	g_items_count;
 #endif
