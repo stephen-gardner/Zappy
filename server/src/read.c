@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:32:24 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/07 01:55:38 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/09 20:41:52 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,6 @@ static void		buffer_data(t_serv *s, int id, char *sbuff, int n)
 		*buff->recv = '\0';
 	if (nl)
 	{
-		buff->scheduled = (cmds->ncmds)
-			? cmds->buffs[CMD_POS(cmds, cmds->ncmds - 1)].scheduled : s->time;
 		set_cmdtype(s, id);
 		++cmds->ncmds;
 	}

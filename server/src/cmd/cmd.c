@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/28 18:46:04 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/09 20:25:53 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/09 20:41:48 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,12 +79,8 @@ void			process_precommand(t_serv *s, int id)
 		if (buff->type == def->type)
 			break ;
 	}
-	if (!def->pre(s, id))
-	{
-		i = 0;
-		while (i < cmds->ncmds)
-			cmds->buffs[CMD_POS(cmds, i++)].scheduled -= def->delay;
-	}
+	if (def->pre(s, id))
+		buff->scheduled = s->time + def->delay;
 	buff->pre = 1;
 }
 
@@ -118,7 +114,6 @@ void			set_cmdtype(t_serv *s, int id)
 			if (!cmdcmp(buff->recv, def))
 			{
 				buff->type = def->type;
-				buff->scheduled += def->delay;
 				return ;
 			}
 		}
