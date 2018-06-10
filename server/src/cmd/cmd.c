@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/28 18:46:04 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/08 02:25:45 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/09 20:25:53 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,14 +49,43 @@ void			process_command(t_serv *s, int id)
 	buff = CMD_NEXT(&ent->cmds);
 	if (!ent->team)
 		return (add_player(s, buff->recv, id));
+	if (buff->type != UNDEFINED)
+	{
+		i = 0;
+		while (i < g_cmddef_count)
+		{
+			def = &g_cmddef[i++];
+			if (buff->type == def->type)
+				break ;
+		}
+		def->dispatch(s, id);
+	}
+	send_response(s, id);
+}
+
+void			process_precommand(t_serv *s, int id)
+{
+	t_cmd			*cmds;
+	t_buff			*buff;
+	const t_cmddef	*def;
+	int				i;
+
+	cmds = GET_CMDS(s, id);
+	buff = CMD_NEXT(cmds);
 	i = 0;
 	while (i < g_cmddef_count)
 	{
 		def = &g_cmddef[i++];
 		if (buff->type == def->type)
-			def->dispatch(s, id);
+			break ;
 	}
-	send_response(s, id);
+	if (!def->pre(s, id))
+	{
+		i = 0;
+		while (i < cmds->ncmds)
+			cmds->buffs[CMD_POS(cmds, i++)].scheduled -= def->delay;
+	}
+	buff->pre = 1;
 }
 
 static int		cmdcmp(char *cmd, const t_cmddef *def)
@@ -69,8 +98,6 @@ static int		cmdcmp(char *cmd, const t_cmddef *def)
 		return (*(cmd + def->len) != '\0');
 }
 
-// TODO: Move precmd execution to where command is at top of queue
-
 void			set_cmdtype(t_serv *s, int id)
 {
 	t_cmd			*cmds;
@@ -82,14 +109,13 @@ void			set_cmdtype(t_serv *s, int id)
 	buff = &cmds->buffs[CMD_POS(cmds, cmds->ncmds)];
 	stpcpy(buff->resp, "ko\n");
 	buff->resp_len = 3;
-	buff->type = UNDEFINED;
 	if (buff->recv_len < CMD_MAX_LEN)
 	{
 		i = 0;
 		while (i < g_cmddef_count)
 		{
 			def = &g_cmddef[i++];
-			if (!cmdcmp(buff->recv, def) && def->pre(s, id))
+			if (!cmdcmp(buff->recv, def))
 			{
 				buff->type = def->type;
 				buff->scheduled += def->delay;

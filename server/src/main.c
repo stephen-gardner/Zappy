@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/21 05:50:28 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/06 17:07:14 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/09 19:56:30 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ static int	process_queue(t_serv *s, int id)
 	while (WRITABLE(s, id) && cmds->ncmds)
 	{
 		buff = &cmds->buffs[cmds->start];
+		if (buff->type != UNDEFINED && !buff->pre)
+			process_precommand(s, id);
 		if (buff->scheduled > s->time && ent->team)
 			break ;
 		process_command(s, id);

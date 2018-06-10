@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:08:47 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/08 01:10:25 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/09 20:00:37 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,12 +102,13 @@ enum	e_cmdtype
 
 typedef struct	s_buff
 {
+	uintmax_t	scheduled;
 	char		recv[CMD_MAX_LEN + 1];
 	char		resp[CMD_MAX_LEN + 1];
 	int			recv_len;
 	int			resp_len;
 	int			type;
-	uintmax_t	scheduled;
+	int			pre;
 }				t_buff;
 
 typedef struct	s_cmd
@@ -174,6 +175,7 @@ typedef struct	s_cmddef
 
 int				precmd_void(t_serv *s, int id);
 void			process_command(t_serv *s, int id);
+void			process_precommand(t_serv *s, int id);
 void			set_cmdtype(t_serv *s, int id);
 
 /*
