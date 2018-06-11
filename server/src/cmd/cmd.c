@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/28 18:46:04 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/09 20:41:48 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/10 16:20:50 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ const t_cmddef	g_cmddef[] = {
 	{ LEFT, precmd_void, cmd_left, "left", 4, 7, 0 },
 	{ PUT, precmd_put, cmd_put, "put", 3, 7, 1 },
 	{ RIGHT, precmd_void, cmd_right, "right", 5, 7, 0 },
-	{ SEE, precmd_void, NULL, "see", 3, 7, 0 },
+	{ SEE, precmd_void, cmd_see, "see", 3, 7, 0 },
 	{ TAKE, precmd_take, cmd_take, "take", 4, 7, 1 }
 };
 

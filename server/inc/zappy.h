@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:08:47 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/09 20:00:37 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/10 23:06:32 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ typedef struct timespec		t_timespec;
 typedef unsigned int		t_uint;
 typedef unsigned short		t_ushrt;
 
-# define CMD_MAX_LEN		255
+# define CMD_MAX_LEN		4096
 # define CMD_MAX_REQ		10
 # define BUFF_SIZE			(CMD_MAX_LEN * CMD_MAX_REQ)
 # define MAX_LEVEL			8
@@ -33,7 +33,6 @@ typedef unsigned short		t_ushrt;
 # define POLL(s, id)		(&s->conn.polls[id])
 # define SOCK(s, id)		s->conn.polls[id].fd
 # define READABLE(s, id)	(s->conn.polls[id].revents & POLLIN)
-# define WRITABLE(s, id)	(s->conn.polls[id].revents & POLLOUT)
 
 # define ENT(s, id)			(&s->conn.ents[id])
 # define CMD_NEXT(cmd)		&(cmd)->buffs[(cmd)->start]
@@ -44,6 +43,7 @@ typedef unsigned short		t_ushrt;
 # define GET_LOC(s, x, y)	&s->map.data[((y * s->map.width) + x)]
 # define RES_GET(r, t)		((*r & (0x0F << (t * 4))) >> (t * 4))
 # define RES_SET(r, t, n)	*r = (*r & ~(0x0F << (t * 4))) | ((n) << (t * 4))
+# define MOVE(a, m, n)		a = ((a + (n)) + m) % m
 
 # define SZ(x, n)			(sizeof(x) * (n))
 
@@ -169,6 +169,14 @@ typedef struct	s_cmddef
 	int			args;
 }				t_cmddef;
 
+typedef struct	s_move
+{
+	int			loc_x;
+	int			loc_y;
+	int			rel_x;
+	int			rel_y;
+}				t_move;
+
 /*
 ** cmd.c
 */
@@ -209,6 +217,12 @@ int				precmd_put(t_serv *s, int id);
 void			cmd_advance(t_serv *s, int id);
 void			cmd_left(t_serv *s, int id);
 void			cmd_right(t_serv *s, int id);
+
+/*
+** cmd_see.c
+*/
+
+void			cmd_see(t_serv *s, int id);
 
 /*
 ** error.c

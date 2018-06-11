@@ -6,14 +6,12 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/05 16:00:42 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/06 17:00:22 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/10 16:07:22 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include "zappy.h"
-
-#define MOVE(a, m, n)	a = ((a + n) + m) % m
 
 void		cmd_advance(t_serv *s, int id)
 {
