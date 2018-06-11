@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/22 07:45:32 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/06 02:04:17 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/10 01:39:10 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,6 @@ void		accept_incoming(t_serv *s)
 	}
 }
 
-/*
-** Doubles the size of ents and polls
-** Zeroes out the memory in the extended memory section
-*/
-
 static void	scale_user_max(t_conn *c)
 {
 	int	half;
@@ -65,26 +60,14 @@ static void	scale_user_max(t_conn *c)
 	memset(c->polls + half, 0, SZ(t_poll, half + 1));
 }
 
-/*
-** Sets the fd and events in the next empty poll data for provided socket
-** Scales capacity if needed
-** Increases nsockets by 1
-** Returns index
-*/
-
 int			add_socket(t_serv *s, int sock)
 {
 	if (s->conn.nsockets == s->conn.user_max)
 		scale_user_max(&s->conn);
 	s->conn.polls[s->conn.nsockets].fd = sock;
-	s->conn.polls[s->conn.nsockets].events = (POLLIN | POLLOUT);
+	s->conn.polls[s->conn.nsockets].events = POLLIN;
 	return (s->conn.nsockets++);
 }
-
-/*
-** Starts listening on specified port
-** Adds socket opened to tracked connections
-*/
 
 void		init_listener(t_serv *s)
 {
@@ -105,12 +88,6 @@ void		init_listener(t_serv *s)
 	add_socket(s, fd);
 }
 
-/*
-** Closes the socket located at provided index, and removes its data from ents
-**  and polls
-** Decreases nsockets by 1
-*/
-
 void		remove_socket(t_serv *s, int id)
 {
 	struct s_ent	*ent;
@@ -121,8 +98,7 @@ void		remove_socket(t_serv *s, int id)
 	{
 		--team->members[0];
 		--team->members[ent->level];
-		if (WRITABLE(s, id))
-			send_message(s, id, "death\n", 6);
+		send_message(s, id, "death\n", 6);
 		info(s, "<%s[%s]> has died", ent->addr, team->name);
 	}
 	close(SOCK(s, id));

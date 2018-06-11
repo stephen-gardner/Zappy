@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/21 05:50:28 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/09 19:56:30 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/10 20:14:53 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ static int	process_queue(t_serv *s, int id)
 	}
 	ent = ENT(s, id);
 	cmds = GET_CMDS(s, id);
-	while (WRITABLE(s, id) && cmds->ncmds)
+	while (cmds->ncmds)
 	{
 		buff = &cmds->buffs[cmds->start];
 		if (buff->type != UNDEFINED && !buff->pre)
@@ -69,11 +69,12 @@ static void	server_loop(t_serv *s)
 	t_timespec	t1;
 	t_timespec	t2;
 	int			id;
+	int			timeout;
 
 	clock_gettime(CLOCK_MONOTONIC, &t1);
-	while (1)
+	timeout = (s->tickrate.tv_sec * 1000) + (s->tickrate.tv_nsec / 1000000);
+	while (poll(s->conn.polls, s->conn.nsockets, timeout) != -1)
 	{
-		poll(s->conn.polls, s->conn.nsockets, 0);
 		if (READABLE(s, 0))
 			accept_incoming(s);
 		clock_gettime(CLOCK_MONOTONIC, &t2);
