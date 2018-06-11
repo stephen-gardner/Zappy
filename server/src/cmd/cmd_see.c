@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/10 01:43:44 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/10 23:22:01 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/10 23:29:01 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,16 +69,9 @@ static void	print_players(t_serv *s, int id, t_buff *buff, t_move *m)
 	i = 1;
 	while (i < s->conn.nsockets)
 	{
-		if (i != id)
-		{
-			ent = ENT(s, i);
-			if (ent->loc_x == m->loc_x && ent->loc_y == m->loc_y)
-			{
-				buff->resp_len += sprintf(buff->resp + buff->resp_len,
-					"player ");
-			}
-		}
-		++i;
+		ent = ENT(s, i);
+		if (i++ != id && ent->loc_x == m->loc_x && ent->loc_y == m->loc_y)
+			buff->resp_len += sprintf(buff->resp + buff->resp_len, "player ");
 	}
 }
 
