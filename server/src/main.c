@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/21 05:50:28 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/10 20:14:53 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/11 02:07:59 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,8 @@ static int	process_queue(t_serv *s, int id)
 	return (id + 1);
 }
 
+#define MSEC(ts)	(ts.tv_sec * 1000) + (ts.tv_nsec / 1000000)
+
 static void	server_loop(t_serv *s)
 {
 	t_timespec	t1;
@@ -72,21 +74,24 @@ static void	server_loop(t_serv *s)
 	int			timeout;
 
 	clock_gettime(CLOCK_MONOTONIC, &t1);
-	timeout = (s->tickrate.tv_sec * 1000) + (s->tickrate.tv_nsec / 1000000);
+	timeout = MSEC(s->tickrate);
 	while (poll(s->conn.polls, s->conn.nsockets, timeout) != -1)
 	{
 		if (READABLE(s, 0))
 			accept_incoming(s);
+		id = 1;
+		while (id < s->conn.nsockets)
+			id = process_queue(s, id);
 		clock_gettime(CLOCK_MONOTONIC, &t2);
 		t2 = time_diff(s->tickrate, time_diff(t2, t1));
 		if (t2.tv_sec < 0 || (!t2.tv_sec && !t2.tv_nsec))
 		{
 			++s->time;
 			clock_gettime(CLOCK_MONOTONIC, &t1);
+			timeout = MSEC(s->tickrate);
 		}
-		id = 1;
-		while (id < s->conn.nsockets)
-			id = process_queue(s, id);
+		else
+			timeout = MSEC(t2);
 	}
 }
 
