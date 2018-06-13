@@ -14,6 +14,7 @@ OBJ_DIR = obj
 # [ BASE ]
 
 SRC = \
+	egg\
 	error\
 	items\
 	main\

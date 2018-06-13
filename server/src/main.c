@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/21 05:50:28 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/11 02:07:59 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/13 02:28:55 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ static int	process_queue(t_serv *s, int id)
 		|| (READABLE(s, id) && read_socket(s, id) < 0))
 	{
 		remove_socket(s, id);
-		return (id);
+		return (1);
 	}
 	ent = ENT(s, id);
 	cmds = GET_CMDS(s, id);
@@ -61,7 +61,20 @@ static int	process_queue(t_serv *s, int id)
 		process_command(s, id);
 		poll(entpoll, 1, 0);
 	}
-	return (id + 1);
+	return (0);
+}
+
+static void	run_events(t_serv *s)
+{
+	int	id;
+
+	id = 1;
+	while (id < s->conn.nsockets)
+	{
+		if (process_queue(s, id))
+			continue ;
+		++id;
+	}
 }
 
 #define MSEC(ts)	(ts.tv_sec * 1000) + (ts.tv_nsec / 1000000)
@@ -70,18 +83,17 @@ static void	server_loop(t_serv *s)
 {
 	t_timespec	t1;
 	t_timespec	t2;
-	int			id;
 	int			timeout;
 
 	clock_gettime(CLOCK_MONOTONIC, &t1);
 	timeout = MSEC(s->tickrate);
 	while (poll(s->conn.polls, s->conn.nsockets, timeout) != -1)
 	{
+		if (s->neggs)
+			incubate(s);
 		if (READABLE(s, 0))
 			accept_incoming(s);
-		id = 1;
-		while (id < s->conn.nsockets)
-			id = process_queue(s, id);
+		run_events(s);
 		clock_gettime(CLOCK_MONOTONIC, &t2);
 		t2 = time_diff(s->tickrate, time_diff(t2, t1));
 		if (t2.tv_sec < 0 || (!t2.tv_sec && !t2.tv_nsec))

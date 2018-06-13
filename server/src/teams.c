@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/24 09:34:14 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/06 01:19:59 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/13 03:02:30 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,25 @@
 #include <string.h>
 #include "zappy.h"
 
-void	add_player(t_serv *s, char *name, int id)
+static void	set_location(t_serv *s, t_ent *ent)
+{
+	t_egg	*egg;
+
+	if ((egg = find_egg(s, ent->team)))
+	{
+		ent->loc_x = egg->loc_x;
+		ent->loc_y = egg->loc_y;
+		remove_egg(s, egg);
+	}
+	else
+	{
+		ent->loc_x = rand() % s->map.width;
+		ent->loc_y = rand() % s->map.height;
+	}
+	ent->facing = rand() % 4;
+}
+
+void		add_player(t_serv *s, char *name, int id)
 {
 	t_team	*team;
 	t_ent	*ent;
@@ -33,16 +51,14 @@ void	add_player(t_serv *s, char *name, int id)
 	ent->team = team;
 	ent->level = 1;
 	ent->inv[FOOD] = 10;
-	ent->loc_x = rand() % s->map.width;
-	ent->loc_y = rand() % s->map.height;
-	ent->facing = rand() % 4;
+	set_location(s, ent);
 	++team->members[0];
 	++team->members[1];
 	--team->authorized;
 	--s->conn.capacity;
 }
 
-void	add_team(t_serv *s, char *name)
+void		add_team(t_serv *s, char *name)
 {
 	t_team	*team;
 
@@ -60,7 +76,7 @@ void	add_team(t_serv *s, char *name)
 	stpcpy(team->name, name);
 }
 
-t_team	*find_team(t_serv *s, char *name)
+t_team		*find_team(t_serv *s, char *name)
 {
 	int	i;
 

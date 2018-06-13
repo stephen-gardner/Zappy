@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/05 20:17:58 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/08 01:00:07 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/13 00:06:56 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,12 @@ void	cmd_fork(t_serv *s, int id)
 	t_ent	*ent;
 	t_buff	*buff;
 	t_uint	*loc;
-	t_uint	eggs;
 
 	ent = ENT(s, id);
-	buff = CMD_NEXT(&ent->cmds);
-	//++s->conn.capacity;
-	//++ent->team->authorized;
-	// TODO: Egg manager
 	loc = GET_LOC(s, ent->loc_x, ent->loc_y);
-	if ((eggs = RES_GET(loc, EGG)) == RES_MAX)
+	if (modify_resource(loc, EGG, 1) < 0)
 		return ;
-	RES_SET(loc, EGG, eggs + 1);
+	add_egg(s, ent->team, ent->loc_x, ent->loc_y);
+	buff = CMD_NEXT(&ent->cmds);
 	buff->resp_len = sprintf(buff->resp, "ok\n");
 }

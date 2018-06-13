@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:08:47 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/12 23:28:33 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/13 02:49:05 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ typedef unsigned short		t_ushrt;
 # define BUFF_SIZE			(CMD_MAX_LEN * CMD_MAX_REQ)
 # define MAX_LEVEL			8
 # define TEAM_MAX_LEN		27
+# define HATCH_TIME			600
 
 # define POLL(s, id)		(&s->conn.polls[id])
 # define SOCK(s, id)		s->conn.polls[id].fd
@@ -139,6 +140,15 @@ typedef struct	s_conn
 	int			user_max;
 }				t_conn;
 
+typedef struct	s_egg
+{
+	t_team		*team;
+	int			hatched;
+	int			loc_x;
+	int			loc_y;
+	uintmax_t	scheduled;
+}				t_egg;
+
 typedef struct	s_map
 {
 	t_uint		*data;
@@ -151,11 +161,13 @@ typedef struct	s_serv
 {
 	t_sockin	addr;
 	t_conn		conn;
-	t_map		map;
+	t_egg		*eggs;
 	t_team		*teams;
-	int			nteams;
+	t_map		map;
 	t_timespec	tickrate;
 	uintmax_t	time;
+	int			neggs;
+	int			nteams;
 }				t_serv;
 
 typedef struct	s_cmddef
@@ -243,6 +255,15 @@ void			move_dir(t_serv *s, t_ent *ent, int dir);
 */
 
 void			cmd_see(t_serv *s, int id);
+
+/*
+** egg.c
+*/
+
+void			add_egg(t_serv *s, t_team *team, int x, int y);
+t_egg			*find_egg(t_serv *s, t_team *team);
+void			incubate(t_serv *s);
+void			remove_egg(t_serv *s, t_egg *egg);
 
 /*
 ** error.c
