@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:08:47 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/13 02:49:05 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/13 14:37:54 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ typedef unsigned short		t_ushrt;
 # define MAX_LEVEL			8
 # define TEAM_MAX_LEN		27
 # define HATCH_TIME			600
+# define HUNGER				126
 
 # define POLL(s, id)		(&s->conn.polls[id])
 # define SOCK(s, id)		s->conn.polls[id].fd
@@ -129,6 +130,7 @@ typedef struct	s_ent
 	int			loc_x;
 	int			loc_y;
 	int			facing;
+	uintmax_t	feed_time;
 }				t_ent;
 
 typedef struct	s_conn
@@ -276,6 +278,7 @@ void			usage_error(char *msg);
 */
 
 int				get_item_id(char *name);
+int				starve_player(t_serv *s, int id);
 
 /*
 ** map.c

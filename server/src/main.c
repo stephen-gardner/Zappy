@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/21 05:50:28 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/13 02:28:55 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/13 14:42:28 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static int	process_queue(t_serv *s, int id)
 		buff = &cmds->buffs[cmds->start];
 		if (buff->type != UNDEFINED && !buff->pre)
 			process_precommand(s, id);
-		if (buff->scheduled > s->time && ent->team)
+		if (ent->team && buff->scheduled > s->time)
 			break ;
 		process_command(s, id);
 		poll(entpoll, 1, 0);
@@ -66,12 +66,15 @@ static int	process_queue(t_serv *s, int id)
 
 static void	run_events(t_serv *s)
 {
-	int	id;
+	t_ent	*ent;
+	int		id;
 
 	id = 1;
 	while (id < s->conn.nsockets)
 	{
-		if (process_queue(s, id))
+		ent = ENT(s, id);
+		if ((ent->team && ent->feed_time <= s->time && starve_player(s, id))
+			|| process_queue(s, id))
 			continue ;
 		++id;
 	}
