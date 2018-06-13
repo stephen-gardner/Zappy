@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/04 19:33:25 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/08 02:29:44 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/11 21:03:53 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,16 +52,14 @@ void		cmd_put(t_serv *s, int id)
 	t_buff		*buff;
 	t_uint		*loc;
 	int			item_id;
-	t_uint		count;
 
 	ent = ENT(s, id);
 	buff = CMD_NEXT(&ent->cmds);
 	item_id = get_item_id(strchr(buff->recv, ' ') + 1);
 	loc = GET_LOC(s, ent->loc_x, ent->loc_y);
-	if (!ent->inv[item_id] || (count = RES_GET(loc, item_id)) == RES_MAX)
+	if (!ent->inv[item_id] || modify_resource(loc, item_id, 1) < 0)
 		return ;
 	--ent->inv[item_id];
-	RES_SET(loc, item_id, count + 1);
 	buff->resp_len = sprintf(buff->resp, "ok\n");
 }
 
@@ -81,15 +79,13 @@ void		cmd_take(t_serv *s, int id)
 	t_buff		*buff;
 	t_uint		*loc;
 	int			item_id;
-	t_uint		count;
 
 	ent = ENT(s, id);
 	buff = CMD_NEXT(&ent->cmds);
 	item_id = get_item_id(strchr(buff->recv, ' ') + 1);
 	loc = GET_LOC(s, ent->loc_x, ent->loc_y);
-	if (ent->inv[item_id] == USHRT_MAX || !(count = RES_GET(loc, item_id)))
+	if (ent->inv[item_id] == USHRT_MAX || modify_resource(loc, item_id, -1) < 0)
 		return ;
 	++ent->inv[item_id];
-	RES_SET(loc, item_id, count - 1);
 	buff->resp_len = sprintf(buff->resp, "ok\n");
 }

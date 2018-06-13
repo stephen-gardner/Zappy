@@ -6,13 +6,49 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:32:24 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/09 20:41:52 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/12 20:10:30 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <string.h>
 #include <unistd.h>
 #include "zappy.h"
+
+static int		cmdcmp(char *cmd, const t_cmddef *def)
+{
+	if (strncmp(cmd, def->label, def->len))
+		return (1);
+	if (def->args)
+		return (*(cmd + def->len) != ' ');
+	else
+		return (*(cmd + def->len) != '\0');
+}
+
+static void		set_cmdtype(t_serv *s, int id)
+{
+	t_cmd			*cmds;
+	t_buff			*buff;
+	const t_cmddef	*def;
+	int				i;
+
+	cmds = GET_CMDS(s, id);
+	buff = &cmds->buffs[CMD_POS(cmds, cmds->ncmds)];
+	stpcpy(buff->resp, "ko\n");
+	buff->resp_len = 3;
+	if (buff->recv_len < CMD_MAX_LEN)
+	{
+		i = 0;
+		while (i < g_cmddef_count)
+		{
+			def = &g_cmddef[i++];
+			if (!cmdcmp(buff->recv, def))
+			{
+				buff->type = def->type;
+				return ;
+			}
+		}
+	}
+}
 
 static void		buffer_data(t_serv *s, int id, char *sbuff, int n)
 {

@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:08:47 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/10 23:06:32 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/12 20:17:21 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,6 +169,12 @@ typedef struct	s_cmddef
 	int			args;
 }				t_cmddef;
 
+typedef struct	s_elevreq
+{
+	int			nplayers;
+	t_ushrt		nitems[NRES];
+}				t_elevreq;
+
 typedef struct	s_move
 {
 	int			loc_x;
@@ -181,27 +187,34 @@ typedef struct	s_move
 ** cmd.c
 */
 
+const t_cmddef	*get_cmddef(int type);
 int				precmd_void(t_serv *s, int id);
 void			process_command(t_serv *s, int id);
 void			process_precommand(t_serv *s, int id);
-void			set_cmdtype(t_serv *s, int id);
 
 /*
-** cmd_connect_nbr.c
+** cmd/cmd_connect_nbr.c
 */
 
 void			cmd_connect(t_serv *s, int id, t_team *team, int dimen);
 void			cmd_connect_nbr(t_serv *s, int id);
 
 /*
-** cmd_fork.c
+** cmd/cmd_fork.c
 */
 
 void			cmd_fork(t_serv *s, int id);
 int				precmd_fork(t_serv *s, int id);
 
 /*
-** cmd_inventory.c
+** cmd/cmd_incantation.c
+*/
+
+void			cmd_incant(t_serv *s, int id);
+int				precmd_incant(t_serv *s, int id);
+
+/*
+** cmd/cmd_inventory.c
 */
 
 void			cmd_inventory(t_serv *s, int id);
@@ -211,7 +224,7 @@ int				precmd_take(t_serv *s, int id);
 int				precmd_put(t_serv *s, int id);
 
 /*
-** cmd_move.c
+** cmd/cmd_move.c
 */
 
 void			cmd_advance(t_serv *s, int id);
@@ -219,7 +232,7 @@ void			cmd_left(t_serv *s, int id);
 void			cmd_right(t_serv *s, int id);
 
 /*
-** cmd_see.c
+** cmd/cmd_see.c
 */
 
 void			cmd_see(t_serv *s, int id);
@@ -239,6 +252,8 @@ int				get_item_id(char *name);
 /*
 ** map.c
 */
+
+int				modify_resource(t_uint *loc, int type, int diff);
 
 /*
 ** opt.c
@@ -275,6 +290,7 @@ t_team			*find_team(t_serv *s, char *name);
 */
 
 void			info(t_serv *s, char *fmt, ...);
+void			level_up(t_ent *ent);
 t_timespec		time_diff(t_timespec t1, t_timespec t2);
 
 /*
@@ -284,7 +300,9 @@ t_timespec		time_diff(t_timespec t1, t_timespec t2);
 int				send_message(t_serv *s, int id, char *msg, int len);
 int				send_response(t_serv *s, int id);
 
-extern const char	*g_pname;
-extern const char	*g_items[];
-extern const int	g_items_count;
+extern const char		*g_pname;
+extern const char		*g_items[];
+extern const int		g_items_count;
+extern const t_cmddef	g_cmddef[];
+extern const int		g_cmddef_count;
 #endif

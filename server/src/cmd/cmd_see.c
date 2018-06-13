@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/10 01:43:44 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/10 23:29:01 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/11 21:26:31 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,18 +18,18 @@ static void	move_rel(t_serv *s, t_move *m, int dir)
 {
 	if (dir == EAST)
 	{
-		MOVE(m->loc_x, s->map.width, m->rel_y * -1);
+		MOVE(m->loc_x, s->map.width, -m->rel_y);
 		MOVE(m->loc_y, s->map.height, m->rel_x);
 	}
 	else if (dir == WEST)
 	{
 		MOVE(m->loc_x, s->map.width, m->rel_y);
-		MOVE(m->loc_y, s->map.height, m->rel_x * -1);
+		MOVE(m->loc_y, s->map.height, -m->rel_x);
 	}
 	else if (dir == SOUTH)
 	{
-		MOVE(m->loc_x, s->map.width, m->rel_x * -1);
-		MOVE(m->loc_y, s->map.height, m->rel_y * -1);
+		MOVE(m->loc_x, s->map.width, -m->rel_x);
+		MOVE(m->loc_y, s->map.height, -m->rel_y);
 	}
 	else
 	{
@@ -98,7 +98,7 @@ static void	see(t_serv *s, int id, t_buff *buff, t_move *m)
 			}
 		}
 		m->rel_y = -1;
-		m->rel_x = ++row * -1;
+		m->rel_x = -(++row);
 		move_rel(s, m, ent->facing);
 	}
 }

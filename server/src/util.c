@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/03 00:34:00 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/06 22:43:28 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/12 20:15:21 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,16 @@ void		info(t_serv *s, char *fmt, ...)
 	vprintf(fmt, ap);
 	printf("\n");
 	va_end(ap);
+}
+
+void		level_up(t_ent *ent)
+{
+	t_buff	*buff;
+
+	buff = CMD_NEXT(&ent->cmds);
+	--ent->team->members[ent->level];
+	++ent->team->members[++ent->level];
+	buff->resp_len = sprintf(buff->resp, "current level : %d\n", ent->level);
 }
 
 t_timespec	time_diff(t_timespec t1, t_timespec t2)
