@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/10 01:43:44 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/11 21:26:31 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/12 21:07:03 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,14 +83,14 @@ static void	see(t_serv *s, int id, t_buff *buff, t_move *m)
 
 	row = 0;
 	ent = ENT(s, id);
-	while (row < ent->level + 1)
+	while (row <= ent->level)
 	{
 		col = m->rel_x;
-		while (col < ent->level + row)
+		while (col <= row)
 		{
 			print_players(s, id, buff, m);
 			print_items(buff, GET_LOC(s, m->loc_x, m->loc_y));
-			if (++col < ent->level + row)
+			if (++col <= row)
 			{
 				m->rel_y = 0;
 				m->rel_x = 1;
