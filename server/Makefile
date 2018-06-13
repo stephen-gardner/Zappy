@@ -33,6 +33,7 @@ SRC += \
 	cmd/cmd_fork\
 	cmd/cmd_incantation\
 	cmd/cmd_inventory\
+	cmd/cmd_kick\
 	cmd/cmd_move\
 	cmd/cmd_see
 

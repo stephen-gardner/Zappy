@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/05 16:00:42 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/10 16:07:22 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/12 23:28:41 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,18 +17,9 @@ void		cmd_advance(t_serv *s, int id)
 {
 	t_ent	*ent;
 	t_buff	*buff;
-	int		dir;
 
 	ent = ENT(s, id);
-	dir = ent->facing;
-	if (dir == EAST)
-		MOVE(ent->loc_x, s->map.width, 1);
-	else if (dir == WEST)
-		MOVE(ent->loc_x, s->map.width, -1);
-	else if (dir == SOUTH)
-		MOVE(ent->loc_y, s->map.height, 1);
-	else
-		MOVE(ent->loc_y, s->map.height, -1);
+	move_dir(s, ent, ent->facing);
 	buff = CMD_NEXT(&ent->cmds);
 	buff->resp_len = sprintf(buff->resp, "ok\n");
 }
@@ -53,4 +44,16 @@ void		cmd_right(t_serv *s, int id)
 
 	ent = ENT(s, id);
 	turn(ent, CMD_NEXT(&ent->cmds), 1);
+}
+
+void		move_dir(t_serv *s, t_ent *ent, int dir)
+{
+	if (dir == EAST)
+		MOVE(ent->loc_x, s->map.width, 1);
+	else if (dir == WEST)
+		MOVE(ent->loc_x, s->map.width, -1);
+	else if (dir == SOUTH)
+		MOVE(ent->loc_y, s->map.height, 1);
+	else
+		MOVE(ent->loc_y, s->map.height, -1);
 }

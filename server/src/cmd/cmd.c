@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/28 18:46:04 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/12 20:25:05 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/12 23:27:44 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ const t_cmddef	g_cmddef[] = {
 	{ CONNECT_NBR, precmd_void, cmd_connect_nbr, "connect_nbr", 11, 0, 0 },
 	{ INCANTATION, precmd_incant, cmd_incant, "incantation", 11, 300, 0 },
 	{ INVENTORY, precmd_void, cmd_inventory, "inventory", 9, 1, 0 },
-	{ KICK, precmd_void, NULL, "kick", 4, 7, 0 },
+	{ KICK, precmd_void, cmd_kick, "kick", 4, 7, 0 },
 	{ FORK, precmd_void, cmd_fork, "fork", 4, 42, 0 },
 	{ LEFT, precmd_void, cmd_left, "left", 4, 7, 0 },
 	{ PUT, precmd_put, cmd_put, "put", 3, 7, 1 },

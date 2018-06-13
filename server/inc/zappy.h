@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:08:47 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/12 20:17:21 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/12 23:28:33 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,12 +224,19 @@ int				precmd_take(t_serv *s, int id);
 int				precmd_put(t_serv *s, int id);
 
 /*
+** cmd/cmd_kick.c
+*/
+
+void			cmd_kick(t_serv *s, int id);
+
+/*
 ** cmd/cmd_move.c
 */
 
 void			cmd_advance(t_serv *s, int id);
 void			cmd_left(t_serv *s, int id);
 void			cmd_right(t_serv *s, int id);
+void			move_dir(t_serv *s, t_ent *ent, int dir);
 
 /*
 ** cmd/cmd_see.c
