@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/10 01:43:44 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/12 21:07:03 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/13 17:26:17 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,8 @@ static void	print_items(t_buff *buff, t_uint *loc)
 		}
 		++type;
 	}
-	if (buff->resp[buff->resp_len - 2] == ','
+	if (buff->resp_len < 2
+		|| buff->resp[buff->resp_len - 2] == ','
 		|| buff->resp[buff->resp_len - 1] != ' ')
 		buff->resp_len += sprintf(buff->resp + buff->resp_len, ", ");
 	else
