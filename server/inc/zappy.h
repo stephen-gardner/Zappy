@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:08:47 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/13 17:27:02 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/13 17:39:50 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -284,6 +284,7 @@ int				starve_player(t_serv *s, int id);
 ** map.c
 */
 
+void			drop_stones(t_serv *s, t_ent *ent);
 int				modify_resource(t_uint *loc, int type, int diff);
 void			populate_map(t_serv *s);
 void			replenish(t_serv *s, int type, int amount);

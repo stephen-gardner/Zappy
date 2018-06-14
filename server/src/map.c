@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/06 17:51:05 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/13 17:26:58 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/13 17:39:25 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,28 @@
 #include "zappy.h"
 
 const int	g_resrate[] = { 50, 40, 30, 30, 25, 20, 15 };
+
+void		drop_stones(t_serv *s, t_ent *ent)
+{
+	t_uint	*loc;
+	int		amount;
+	int		i;
+
+	loc = GET_LOC(s, ent->loc_x, ent->loc_y);
+	i = 1;
+	while (i < EGG)
+	{
+		if (ent->inv[i])
+		{
+			amount = RES_GET(loc, i);
+			amount += ent->inv[i];
+			if (amount > RES_MAX)
+				amount = RES_MAX;
+			modify_resource(loc, i, amount);
+		}
+		++i;
+	}
+}
 
 int			modify_resource(t_uint *loc, int type, int diff)
 {
