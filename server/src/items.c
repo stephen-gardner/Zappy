@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/07 19:38:08 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/13 14:42:56 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/13 17:04:42 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,5 +51,6 @@ int			starve_player(t_serv *s, int id)
 	}
 	--ent->inv[FOOD];
 	ent->feed_time = s->time + HUNGER;
+	replenish(s, FOOD, 1);
 	return (0);
 }

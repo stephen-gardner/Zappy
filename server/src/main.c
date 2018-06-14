@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/21 05:50:28 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/13 14:42:28 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/13 17:26:37 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,12 @@ static void	init_server(t_serv *s)
 	authorized = s->conn.capacity / s->nteams;
 	while (i < s->nteams)
 		s->teams[i++].authorized = authorized;
-	s->map.size = s->map.height * s->map.width;
+	s->map.size = (s->map.height * s->map.width);
 	if (!(s->conn.ents = calloc(s->conn.user_max + 1, sizeof(t_ent)))
 		|| !(s->conn.polls = calloc(s->conn.user_max + 1, sizeof(t_poll)))
 		|| !(s->map.data = calloc(s->map.size, sizeof(t_uint))))
 		err(1, NULL);
+	populate_map(s);
 	init_listener(s);
 }
 
