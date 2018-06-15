@@ -6,10 +6,11 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/06 17:51:05 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/13 17:39:25 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/14 14:58:54 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdio.h>
 #include <stdlib.h>
 #include "zappy.h"
 
@@ -28,8 +29,7 @@ void		drop_stones(t_serv *s, t_ent *ent)
 		if (ent->inv[i])
 		{
 			amount = RES_GET(loc, i);
-			amount += ent->inv[i];
-			if (amount > RES_MAX)
+			if ((amount += ent->inv[i]) > RES_MAX)
 				amount = RES_MAX;
 			modify_resource(loc, i, amount);
 		}
@@ -69,6 +69,7 @@ void		populate_map(t_serv *s)
 	int		y;
 	int		type;
 
+	printf("Generating resources...\n");
 	y = 0;
 	while (y < s->map.height)
 	{
