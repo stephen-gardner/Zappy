@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/12 23:44:36 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/13 03:01:53 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/14 19:25:23 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ static void	hatch_egg(t_serv *s, t_egg *egg)
 	t_uint	*loc;
 
 	egg->hatched = 1;
+	egg->food = 9;
+	egg->scheduled = s->time + HUNGER;
 	loc = GET_LOC(s, egg->loc_x, egg->loc_y);
 	modify_resource(loc, EGG, -1);
 	++s->conn.capacity;
@@ -64,14 +66,21 @@ void		incubate(t_serv *s)
 	while (i < s->neggs)
 	{
 		egg = &s->eggs[i];
-		if (egg->hatched)
+		if (s->time == egg->scheduled)
 		{
-			++i;
-			continue ;
+			if (egg->hatched)
+			{
+				if (!egg->food)
+				{
+					kill_hatchling(s, egg);
+					continue ;
+				}
+				--egg->food;
+				egg->scheduled = s->time + HUNGER;
+			}
+			else
+				hatch_egg(s, egg);
 		}
-		if (s->time < egg->scheduled)
-			break ;
-		hatch_egg(s, egg);
 		++i;
 	}
 }

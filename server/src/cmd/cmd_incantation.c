@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/11 02:29:34 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/12 20:18:14 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/14 15:30:19 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,9 +83,10 @@ void			cmd_incant(t_serv *s, int id)
 	while (count < req->nplayers && i < s->conn.nsockets)
 	{
 		cent = ENT(s, i);
-		if (is_ready(pent, cent, 1))
+		if (cent != pent && is_ready(pent, cent, 1))
 		{
 			level_up(cent);
+			send_response(s, i);
 			++count;
 		}
 		++i;

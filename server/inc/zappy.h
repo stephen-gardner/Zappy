@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:08:47 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/13 17:39:50 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/14 19:27:06 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,10 +145,11 @@ typedef struct	s_conn
 typedef struct	s_egg
 {
 	t_team		*team;
-	int			hatched;
 	int			loc_x;
 	int			loc_y;
+	int			hatched;
 	uintmax_t	scheduled;
+	t_ushrt		food;
 }				t_egg;
 
 typedef struct	s_map
@@ -318,6 +319,7 @@ void			remove_socket(t_serv *s, int id);
 void			add_player(t_serv *s, char *name, int id);
 void			add_team(t_serv *s, char *name);
 t_team			*find_team(t_serv *s, char *name);
+void			kill_hatchling(t_serv *s, t_egg *egg);
 
 /*
 ** util.c

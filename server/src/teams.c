@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/24 09:34:14 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/13 03:02:30 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/14 19:21:30 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,15 @@ static void	set_location(t_serv *s, t_ent *ent)
 
 	if ((egg = find_egg(s, ent->team)))
 	{
+		ent->inv[FOOD] = egg->food;
+		ent->feed_time = egg->scheduled;
 		ent->loc_x = egg->loc_x;
 		ent->loc_y = egg->loc_y;
 		remove_egg(s, egg);
 	}
 	else
 	{
+		ent->inv[FOOD] = 10;
 		ent->loc_x = rand() % s->map.width;
 		ent->loc_y = rand() % s->map.height;
 	}
@@ -88,4 +91,12 @@ t_team		*find_team(t_serv *s, char *name)
 		++i;
 	}
 	return (NULL);
+}
+
+void		kill_hatchling(t_serv *s, t_egg *egg)
+{
+	info(s, "[%s] hatchling died of hunger", egg->team->name);
+	--s->conn.capacity;
+	--egg->team->authorized;
+	remove_egg(s, egg);
 }
