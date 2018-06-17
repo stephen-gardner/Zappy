@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/21 05:50:28 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/13 17:26:37 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/17 06:27:14 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,9 +89,10 @@ static void	server_loop(t_serv *s)
 	t_timespec	t2;
 	int			timeout;
 
+	s->go = 1;
 	clock_gettime(CLOCK_MONOTONIC, &t1);
 	timeout = MSEC(s->tickrate);
-	while (poll(s->conn.polls, s->conn.nsockets, timeout) != -1)
+	while (s->go && poll(s->conn.polls, s->conn.nsockets, timeout) != -1)
 	{
 		if (s->neggs)
 			incubate(s);

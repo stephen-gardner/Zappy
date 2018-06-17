@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/03 00:34:00 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/12 20:15:21 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/17 06:35:57 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,18 @@ void		info(t_serv *s, char *fmt, ...)
 	va_end(ap);
 }
 
-void		level_up(t_ent *ent)
+void		level_up(t_serv *s, t_ent *ent)
 {
 	t_buff	*buff;
 
 	buff = CMD_NEXT(&ent->cmds);
 	--ent->team->members[ent->level];
 	++ent->team->members[++ent->level];
+	if (ent->team->members[8] >= 6)
+	{
+		s->go = 0;
+		info(s, "[%s] wins the game!", ent->team->name);
+	}
 	buff->resp_len = sprintf(buff->resp, "current level : %d\n", ent->level);
 }
 

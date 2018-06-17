@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/11 02:29:34 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/14 15:30:19 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/17 06:35:38 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,13 +85,13 @@ void			cmd_incant(t_serv *s, int id)
 		cent = ENT(s, i);
 		if (cent != pent && is_ready(pent, cent, 1))
 		{
-			level_up(cent);
+			level_up(s, cent);
 			send_response(s, i);
 			++count;
 		}
 		++i;
 	}
-	level_up(pent);
+	level_up(s, pent);
 }
 
 static void		begin_incant(t_serv *s, t_ent *pent)

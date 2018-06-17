@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:08:47 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/17 04:38:51 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/17 06:35:49 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,6 +177,7 @@ typedef struct	s_serv
 	uintmax_t	time;
 	int			neggs;
 	int			nteams;
+	int			go;
 }				t_serv;
 
 typedef struct	s_cmddef
@@ -338,7 +339,7 @@ void			kill_hatchling(t_serv *s, t_egg *egg);
 */
 
 void			info(t_serv *s, char *fmt, ...);
-void			level_up(t_ent *ent);
+void			level_up(t_serv *s, t_ent *ent);
 t_timespec		time_diff(t_timespec t1, t_timespec t2);
 
 /*
