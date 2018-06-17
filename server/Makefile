@@ -30,6 +30,7 @@ SRC = \
 
 SRC += \
 	cmd/cmd\
+	cmd/cmd_broadcast\
 	cmd/cmd_connect_nbr\
 	cmd/cmd_fork\
 	cmd/cmd_incantation\

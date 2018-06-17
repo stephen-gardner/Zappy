@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:08:47 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/14 19:27:06 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/17 04:38:51 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,13 @@ typedef unsigned short		t_ushrt;
 # define RES_GET(r, t)		((*r & (0x0F << (t * 4))) >> (t * 4))
 # define RES_SET(r, t, n)	*r = (*r & ~(0x0F << (t * 4))) | ((n) << (t * 4))
 # define MOVE(a, m, n)		a = ((a + (n)) + m) % m
+# define CHDIR(d, n)		(d = (d + (n) + NDIR) % NDIR)
 
 # define SZ(x, n)			(sizeof(x) * (n))
 
 /*
 ** Resource quantity map layout:
-** 4 bits per resource for max of 15
+** 4 bits per resource for max quantity of 15
 **	EGG      TH        PH        ME       SI        DE          LI      FOOD
 ** [EGG] [THYSTAME] [PHIRAS] [MENDIANE] [SIBUR] [DERAUMERE] [LINEMATE] [FOOD]
 */
@@ -72,9 +73,14 @@ enum	e_items
 enum	e_dir
 {
 	NORTH,
-	EAST,
+	NWEST,
+	WEST,
+	SWEST,
 	SOUTH,
-	WEST
+	SEAST,
+	EAST,
+	NEAST,
+	NDIR
 };
 
 typedef struct	s_team
@@ -206,6 +212,12 @@ const t_cmddef	*get_cmddef(int type);
 int				precmd_void(t_serv *s, int id);
 void			process_command(t_serv *s, int id);
 void			process_precommand(t_serv *s, int id);
+
+/*
+** cmd_broadcast.c
+*/
+
+void			cmd_broadcast(t_serv *s, int id);
 
 /*
 ** cmd/cmd_connect_nbr.c

@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/12 22:29:11 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/14 22:21:08 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/16 15:21:58 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static void	kick_player(t_serv *s, int id, int dir)
 
 	ent = ENT(s, id);
 	move_dir(s, ent, dir);
-	dprintf(SOCK(s, id), "moving %c\n", kickdir[dir][ent->facing]);
+	dprintf(SOCK(s, id), "moving %c\n", kickdir[dir / 2][ent->facing / 2]);
 }
 
 void		cmd_kick(t_serv *s, int id)

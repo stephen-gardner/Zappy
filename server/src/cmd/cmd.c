@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/28 18:46:04 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/12 23:27:44 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/14 20:59:18 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 const t_cmddef	g_cmddef[] = {
 	{ ADVANCE, precmd_void, cmd_advance, "advance", 7, 7, 0 },
-	{ BROADCAST, precmd_void, NULL, "broadcast", 9, 7, 1 },
+	{ BROADCAST, precmd_void, cmd_broadcast, "broadcast", 9, 7, 1 },
 	{ CONNECT_NBR, precmd_void, cmd_connect_nbr, "connect_nbr", 11, 0, 0 },
 	{ INCANTATION, precmd_incant, cmd_incant, "incantation", 11, 300, 0 },
 	{ INVENTORY, precmd_void, cmd_inventory, "inventory", 9, 1, 0 },

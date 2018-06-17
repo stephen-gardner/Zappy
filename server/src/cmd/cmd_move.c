@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/05 16:00:42 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/12 23:28:41 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/17 06:19:51 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void		cmd_advance(t_serv *s, int id)
 
 static void	turn(t_ent *ent, t_buff *buff, int dir)
 {
-	ent->facing = ((ent->facing + dir) + 4) % 4;
+	CHDIR(ent->facing, dir);
 	buff->resp_len = sprintf(buff->resp, "ok\n");
 }
 
@@ -35,7 +35,7 @@ void		cmd_left(t_serv *s, int id)
 	t_ent	*ent;
 
 	ent = ENT(s, id);
-	turn(ent, CMD_NEXT(&ent->cmds), -1);
+	turn(ent, CMD_NEXT(&ent->cmds), 2);
 }
 
 void		cmd_right(t_serv *s, int id)
@@ -43,7 +43,7 @@ void		cmd_right(t_serv *s, int id)
 	t_ent	*ent;
 
 	ent = ENT(s, id);
-	turn(ent, CMD_NEXT(&ent->cmds), 1);
+	turn(ent, CMD_NEXT(&ent->cmds), -2);
 }
 
 void		move_dir(t_serv *s, t_ent *ent, int dir)

@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/24 09:34:14 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/14 19:21:30 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/17 06:22:45 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ static void	set_location(t_serv *s, t_ent *ent)
 		ent->loc_x = rand() % s->map.width;
 		ent->loc_y = rand() % s->map.height;
 	}
-	ent->facing = rand() % 4;
+	if ((ent->facing = rand() % NDIR) % 2)
+		CHDIR(ent->facing, 1);
 }
 
 void		add_player(t_serv *s, char *name, int id)
