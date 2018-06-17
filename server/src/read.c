@@ -6,10 +6,11 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:32:24 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/12 20:10:30 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/16 22:29:43 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdio.h>
 #include <string.h>
 #include <unistd.h>
 #include "zappy.h"
@@ -33,8 +34,7 @@ static void		set_cmdtype(t_serv *s, int id)
 
 	cmds = GET_CMDS(s, id);
 	buff = &cmds->buffs[CMD_POS(cmds, cmds->ncmds)];
-	stpcpy(buff->resp, "ko\n");
-	buff->resp_len = 3;
+	buff->resp_len = sprintf(buff->resp, "ko\n");
 	if (buff->recv_len < CMD_MAX_LEN)
 	{
 		i = 0;
@@ -43,7 +43,11 @@ static void		set_cmdtype(t_serv *s, int id)
 			def = &g_cmddef[i++];
 			if (!cmdcmp(buff->recv, def))
 			{
-				buff->type = def->type;
+				if ((buff->type = def->type) == INCANTATION)
+				{
+					buff->resp_len = sprintf(buff->resp, "current level : %d\n",
+						ENT(s, id)->level);
+				}
 				return ;
 			}
 		}
