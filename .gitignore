@@ -3,3 +3,4 @@
 *.a
 *.dSYM
 a.out
+server/server
