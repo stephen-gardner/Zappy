@@ -6,11 +6,10 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/14 19:59:26 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/17 06:15:19 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/17 17:59:55 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <math.h>
 #include <stdio.h>
 #include <string.h>
 #include "zappy.h"
