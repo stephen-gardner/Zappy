@@ -6,13 +6,12 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/21 05:50:28 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/17 06:27:14 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/18 07:36:56 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include "zappy.h"
 
 const char	*g_pname;
@@ -27,55 +26,50 @@ static void	init_server(t_serv *s)
 	authorized = s->conn.capacity / s->nteams;
 	while (i < s->nteams)
 		s->teams[i++].authorized = authorized;
-	s->map.size = (s->map.height * s->map.width);
 	if (!(s->conn.ents = calloc(s->conn.user_max + 1, sizeof(t_ent)))
 		|| !(s->conn.polls = calloc(s->conn.user_max + 1, sizeof(t_poll)))
 		|| !(s->map.data = calloc(s->map.size, sizeof(t_uint))))
 		err(1, NULL);
+	printf("Generating resources...\n");
 	populate_map(s);
 	init_listener(s);
 }
 
-static int	process_queue(t_serv *s, int id)
+static int	process_entity(t_serv *s, int id, t_ent *ent)
 {
-	t_ent	*ent;
-	t_poll	*entpoll;
-	t_cmd	*cmds;
 	t_buff	*buff;
 
-	entpoll = POLL(s, id);
-	if ((entpoll->revents & (POLLERR | POLLHUP))
+	if ((ent->team && ent->feed_time == s->time && starve_player(s, id))
+		|| (POLL(s, id)->revents & (POLLERR | POLLHUP))
 		|| (READABLE(s, id) && read_socket(s, id) < 0))
 	{
 		remove_socket(s, id);
 		return (1);
 	}
-	ent = ENT(s, id);
-	cmds = GET_CMDS(s, id);
-	while (cmds->ncmds)
+	while (ent->cmds.ncmds)
 	{
-		buff = &cmds->buffs[cmds->start];
+		buff = CMD_NEXT(&ent->cmds);
 		if (buff->type != UNDEFINED && !buff->pre)
 			process_precommand(s, id);
 		if (ent->team && buff->scheduled > s->time)
 			break ;
 		process_command(s, id);
-		poll(entpoll, 1, 0);
 	}
 	return (0);
 }
 
 static void	run_events(t_serv *s)
 {
-	t_ent	*ent;
 	int		id;
 
+	if (s->neggs)
+		incubate(s);
+	if (READABLE(s, 0))
+		accept_incoming(s);
 	id = 1;
 	while (id < s->conn.nsockets)
 	{
-		ent = ENT(s, id);
-		if ((ent->team && ent->feed_time <= s->time && starve_player(s, id))
-			|| process_queue(s, id))
+		if (process_entity(s, id, ENT(s, id)))
 			continue ;
 		++id;
 	}
@@ -90,21 +84,17 @@ static void	server_loop(t_serv *s)
 	int			timeout;
 
 	s->go = 1;
-	clock_gettime(CLOCK_MONOTONIC, &t1);
+	clock_gettime(CLOCK_MONOTONIC_RAW, &t1);
 	timeout = MSEC(s->tickrate);
 	while (s->go && poll(s->conn.polls, s->conn.nsockets, timeout) != -1)
 	{
-		if (s->neggs)
-			incubate(s);
-		if (READABLE(s, 0))
-			accept_incoming(s);
 		run_events(s);
-		clock_gettime(CLOCK_MONOTONIC, &t2);
+		clock_gettime(CLOCK_MONOTONIC_RAW, &t2);
 		t2 = time_diff(s->tickrate, time_diff(t2, t1));
 		if (t2.tv_sec < 0 || (!t2.tv_sec && !t2.tv_nsec))
 		{
 			++s->time;
-			clock_gettime(CLOCK_MONOTONIC, &t1);
+			clock_gettime(CLOCK_MONOTONIC_RAW, &t1);
 			timeout = MSEC(s->tickrate);
 		}
 		else
@@ -117,15 +107,14 @@ int			main(int ac, char *const av[])
 	static t_serv	s;
 
 	g_pname = av[0];
-	memset(&s, 0, sizeof(t_serv));
+	srand(time(NULL));
 	s.addr.sin_port = htons(4242);
 	s.conn.capacity = 1;
 	s.conn.user_max = 10;
-	srand(time(NULL));
-	s.tickrate.tv_sec = 1;
-	s.tickrate.tv_nsec = 0;
 	s.map.height = 10;
 	s.map.width = 10;
+	s.tickrate.tv_sec = 1;
+	s.tickrate.tv_nsec = 0;
 	parse_opt(&s, ac, av, "c:n:p:s:t:x:y:");
 	validate_opt(&s);
 	init_server(&s);

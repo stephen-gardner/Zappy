@@ -6,7 +6,7 @@
 
 NAME = server
 CC = gcc
-CFLAGS += -Wall -Werror -Wextra -Wimplicit -g -fsanitize=address
+CFLAGS += -Wall -Werror -Wextra -Wimplicit #-g -fsanitize=address
 INC = -I inc
 SRC_DIR = src
 OBJ_DIR = obj
@@ -15,11 +15,10 @@ OBJ_DIR = obj
 
 SRC = \
 	egg\
-	error\
-	items\
 	main\
 	map\
 	opt\
+	player\
 	read\
 	sockets\
 	teams\

@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:08:47 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/17 06:35:49 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/18 03:09:56 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -282,19 +282,6 @@ void			incubate(t_serv *s);
 void			remove_egg(t_serv *s, t_egg *egg);
 
 /*
-** error.c
-*/
-
-void			usage_error(char *msg);
-
-/*
-** items.c
-*/
-
-int				get_item_id(char *name);
-int				starve_player(t_serv *s, int id);
-
-/*
 ** map.c
 */
 
@@ -309,6 +296,13 @@ void			replenish(t_serv *s, int type, int amount);
 
 void			parse_opt(t_serv *s, int ac, char *const av[], char *optstr);
 void			validate_opt(t_serv *s);
+
+/*
+** player.c
+*/
+
+void			level_up(t_serv *s, t_ent *ent);
+int				starve_player(t_serv *s, int id);
 
 /*
 ** read.c
@@ -338,9 +332,10 @@ void			kill_hatchling(t_serv *s, t_egg *egg);
 ** util.c
 */
 
+int				get_item_id(char *name);
 void			info(t_serv *s, char *fmt, ...);
-void			level_up(t_serv *s, t_ent *ent);
 t_timespec		time_diff(t_timespec t1, t_timespec t2);
+void			usage_error(char *msg);
 
 /*
 ** write.c
@@ -350,8 +345,8 @@ int				send_message(t_serv *s, int id, char *msg, int len);
 int				send_response(t_serv *s, int id);
 
 extern const char		*g_pname;
-extern const char		*g_items[];
-extern const int		g_items_count;
 extern const t_cmddef	g_cmddef[];
 extern const int		g_cmddef_count;
+extern const char		*g_items[];
+extern const int		g_items_count;
 #endif

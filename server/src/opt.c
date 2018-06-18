@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/24 09:57:10 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/03 01:29:06 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/18 07:51:44 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,8 +91,13 @@ void				parse_opt(t_serv *s, int ac, char *const av[], char *optstr)
 
 void				validate_opt(t_serv *s)
 {
+	s->map.size = s->map.height * s->map.width;
 	if (!s->nteams)
 		usage_error("No teams specified");
+	if (s->map.height < 8 || s->map.width < 8)
+		usage_error("Minimum map dimensions are 8x8");
+	if ((size_t)s->conn.capacity > s->map.size / 4)
+		errx(1, "Density too high. Lower capacity or increase map size.");
 	if (s->conn.capacity % s->nteams)
-		usage_error("Capacity must be a multiple of # teams");
+		errx(1, "Capacity must be a multiple of # teams");
 }

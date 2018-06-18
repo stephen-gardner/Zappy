@@ -6,11 +6,10 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/24 09:34:14 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/17 06:22:45 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/18 02:31:16 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "zappy.h"
@@ -29,7 +28,8 @@ static void	set_location(t_serv *s, t_ent *ent)
 	}
 	else
 	{
-		ent->inv[FOOD] = 10;
+		ent->inv[FOOD] = 9;
+		ent->feed_time = s->time + HUNGER;
 		ent->loc_x = rand() % s->map.width;
 		ent->loc_y = rand() % s->map.height;
 	}
@@ -54,7 +54,6 @@ void		add_player(t_serv *s, char *name, int id)
 		return (remove_socket(s, id));
 	ent->team = team;
 	ent->level = 1;
-	ent->inv[FOOD] = 10;
 	set_location(s, ent);
 	++team->members[0];
 	++team->members[1];
@@ -92,12 +91,4 @@ t_team		*find_team(t_serv *s, char *name)
 		++i;
 	}
 	return (NULL);
-}
-
-void		kill_hatchling(t_serv *s, t_egg *egg)
-{
-	info(s, "[%s] hatchling died of hunger", egg->team->name);
-	--s->conn.capacity;
-	--egg->team->authorized;
-	remove_egg(s, egg);
 }
