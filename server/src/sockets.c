@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/22 07:45:32 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/13 17:40:06 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/19 10:10:36 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,4 +107,6 @@ void		remove_socket(t_serv *s, int id)
 	memmove(ent, ent + 1, SZ(t_ent, s->conn.nsockets - id));
 	memmove(POLL(s, id), POLL(s, id + 1), SZ(t_poll, s->conn.nsockets - id));
 	--s->conn.nsockets;
+	if (s->conn.nsockets < 2 && !s->conn.capacity && !s->neggs)
+		end_game(s, NULL);
 }

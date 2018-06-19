@@ -6,12 +6,28 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/07 19:38:08 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/19 07:13:38 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/19 10:08:25 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include "zappy.h"
+
+void	end_game(t_serv *s, t_team *team)
+{
+	int	i;
+
+	if (team)
+		info(s, "[%s] wins the game!", team->name);
+	else
+		info(s, "All players have died. Game over. :(");
+	i = 0;
+	while (i < s->conn.nsockets)
+		close(SOCK(s, i++));
+	exit(1);
+}
 
 void	kill_hatchling(t_serv *s, t_egg *egg)
 {
@@ -26,10 +42,7 @@ void	level_up(t_serv *s, t_ent *ent, t_buff *buff)
 	--ent->team->members[ent->level];
 	++ent->team->members[++ent->level];
 	if (ent->team->members[8] >= 6)
-	{
-		s->go = 0;
-		info(s, "[%s] wins the game!", ent->team->name);
-	}
+		end_game(s, ent->team);
 	buff->resp_len = sprintf(buff->resp, "current level : %d\n", ent->level);
 }
 

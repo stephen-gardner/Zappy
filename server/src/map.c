@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/06 17:51:05 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/18 06:01:28 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/19 07:56:07 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 void		drop_stones(t_serv *s, t_ent *ent)
 {
 	t_uint	*loc;
-	int		amount;
 	int		type;
+	int		amount;
 
 	loc = GET_LOC(s, ent->loc_x, ent->loc_y);
 	type = LI;

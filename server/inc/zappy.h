@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:08:47 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/19 07:30:04 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/19 10:08:51 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,6 +126,7 @@ void			validate_opt(t_serv *s);
 ** player.c
 */
 
+void			end_game(t_serv *s, t_team *team);
 void			level_up(t_serv *s, t_ent *ent, t_buff *buff);
 int				starve_player(t_serv *s, t_ent *ent);
 

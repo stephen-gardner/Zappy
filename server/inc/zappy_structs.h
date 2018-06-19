@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/19 03:30:44 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/19 03:52:18 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/19 10:08:05 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,6 @@ typedef struct	s_serv
 	uintmax_t	time;
 	int			neggs;
 	int			nteams;
-	int			go;
 }				t_serv;
 
 /*

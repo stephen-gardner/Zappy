@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:32:24 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/19 07:28:57 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/19 07:52:39 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,8 @@ int				read_socket(t_ent *ent, int sock)
 {
 	static char	sbuff[BUFF_SIZE + 1];
 	char		*start;
-	char		*end;
 	int			bytes;
+	int			n;
 
 	if ((bytes = read(sock, sbuff, BUFF_SIZE)) <= 0)
 		return (-1);
@@ -81,13 +81,13 @@ int				read_socket(t_ent *ent, int sock)
 	start = sbuff;
 	while (*start && ent->cmds.ncmds < CMD_MAX_REQ)
 	{
-		end = start;
-		while (*end && *end != '\n')
-			++end;
-		if (*end)
-			++end;
-		buffer_data(ent, start, end - start);
-		start = end;
+		n = 0;
+		while (start[n] && start[n] != '\n')
+			++n;
+		if (start[n])
+			++n;
+		buffer_data(ent, start, n);
+		start += n;
 	}
 	return (bytes);
 }
