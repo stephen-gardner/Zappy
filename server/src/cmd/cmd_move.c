@@ -6,44 +6,34 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/05 16:00:42 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/17 06:19:51 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/18 23:57:19 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include "zappy.h"
 
-void		cmd_advance(t_serv *s, int id)
+void		cmd_advance(t_serv *s, int id, t_ent *ent, t_buff *buff)
 {
-	t_ent	*ent;
-	t_buff	*buff;
-
-	ent = ENT(s, id);
+	(void)id;
 	move_dir(s, ent, ent->facing);
-	buff = CMD_NEXT(&ent->cmds);
-	buff->resp_len = sprintf(buff->resp, "ok\n");
+	OK(buff);
 }
 
-static void	turn(t_ent *ent, t_buff *buff, int dir)
+void		cmd_left(t_serv *s, int id, t_ent *ent, t_buff *buff)
 {
-	CHDIR(ent->facing, dir);
-	buff->resp_len = sprintf(buff->resp, "ok\n");
+	(void)s;
+	(void)id;
+	CHDIR(ent->facing, 2);
+	OK(buff);
 }
 
-void		cmd_left(t_serv *s, int id)
+void		cmd_right(t_serv *s, int id, t_ent *ent, t_buff *buff)
 {
-	t_ent	*ent;
-
-	ent = ENT(s, id);
-	turn(ent, CMD_NEXT(&ent->cmds), 2);
-}
-
-void		cmd_right(t_serv *s, int id)
-{
-	t_ent	*ent;
-
-	ent = ENT(s, id);
-	turn(ent, CMD_NEXT(&ent->cmds), -2);
+	(void)s;
+	(void)id;
+	CHDIR(ent->facing, -2);
+	OK(buff);
 }
 
 void		move_dir(t_serv *s, t_ent *ent, int dir)

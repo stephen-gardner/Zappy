@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/14 19:59:26 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/17 17:59:55 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/19 00:01:53 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,13 @@ static void	calc_vector(t_serv *s, t_ent *pent, t_ent *cent, int *vec)
 		rdy *= -1;
 	vec[0] = (ABS(dx) < ABS(rdx)) ? dx : rdx;
 	vec[1] = (ABS(dy) < ABS(rdy)) ? dy : rdy;
+	vec[2] = ABS(vec[0]);
+	vec[3] = ABS(vec[1]);
 }
 
 static int	get_dir(t_serv *s, t_ent *pent, t_ent *cent)
 {
-	int	vec[2];
+	int	vec[4];
 	int	dir;
 
 	if (pent == cent)
@@ -54,12 +56,12 @@ static int	get_dir(t_serv *s, t_ent *pent, t_ent *cent)
 			CHDIR(dir, (vec[0] > 0) ? -1 : 1);
 		else
 			CHDIR(dir, (vec[0] > 0) ? 1 : -1);
-		if (ABS(vec[1]) != ABS(vec[0]))
+		if (vec[2] != vec[3])
 		{
 			if (dir == NWEST || dir == SEAST)
-				CHDIR(dir, (ABS(vec[0]) > ABS(vec[1])) ? 1 : -1);
+				CHDIR(dir, (vec[2] > vec[3]) ? 1 : -1);
 			else
-				CHDIR(dir, (ABS(vec[0]) > ABS(vec[1])) ? -1 : 1);
+				CHDIR(dir, (vec[2] > vec[3]) ? -1 : 1);
 		}
 	}
 	else
@@ -68,23 +70,20 @@ static int	get_dir(t_serv *s, t_ent *pent, t_ent *cent)
 	return (dir + 1);
 }
 
-void		cmd_broadcast(t_serv *s, int id)
+void		cmd_broadcast(t_serv *s, int id, t_ent *ent, t_buff *buff)
 {
-	t_ent	*pent;
-	t_buff	*buff;
 	char	*msg;
 	int		k;
 	int		i;
 
-	pent = ENT(s, id);
-	buff = CMD_NEXT(&pent->cmds);
+	(void)id;
 	msg = strchr(buff->recv, ' ') + 1;
 	i = 1;
 	while (i < s->conn.nsockets)
 	{
-		k = get_dir(s, pent, ENT(s, i));
+		k = get_dir(s, ent, ENT(s, i));
 		dprintf(SOCK(s, i), "message %d,%s\n", k, msg);
 		++i;
 	}
-	buff->resp_len = sprintf(buff->resp, "ok\n");
+	OK(buff);
 }

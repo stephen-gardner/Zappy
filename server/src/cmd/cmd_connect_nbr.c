@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/29 17:06:19 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/06 01:24:27 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/18 23:11:03 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@ void	cmd_connect(t_serv *s, int id, t_team *team, int dimen)
 		s->map.width, s->map.height);
 }
 
-void	cmd_connect_nbr(t_serv *s, int id)
+void	cmd_connect_nbr(t_serv *s, int id, t_ent *ent, t_buff *buff)
 {
-	cmd_connect(s, id, ENT(s, id)->team, 0);
+	(void)buff;
+	cmd_connect(s, id, ent->team, 0);
 }

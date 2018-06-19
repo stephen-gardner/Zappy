@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:08:47 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/18 03:09:56 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/19 00:00:46 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ typedef unsigned short		t_ushrt;
 # define CMD_NEXT(cmd)		&(cmd)->buffs[(cmd)->start]
 # define CMD_POS(cmd, i)	(((cmd)->start + i + CMD_MAX_REQ) % CMD_MAX_REQ)
 # define GET_CMDS(s, id)	(&s->conn.ents[id].cmds)
+# define OK(b)				b->resp_len = sprintf(b->resp, "ok\n")
 
 # define RES_MAX			15
 # define GET_LOC(s, x, y)	&s->map.data[((y * s->map.width) + x)]
@@ -183,8 +184,8 @@ typedef struct	s_serv
 typedef struct	s_cmddef
 {
 	int			type;
-	int			(*pre)(t_serv *, int);
-	void		(*dispatch)(t_serv *, int);
+	int			(*pre)(t_serv *, int, t_ent *, t_buff *);
+	void		(*dispatch)(t_serv *, int, t_ent *, t_buff *);
 	char		*label;
 	int			len;
 	int			delay;
@@ -210,67 +211,66 @@ typedef struct	s_move
 */
 
 const t_cmddef	*get_cmddef(int type);
-int				precmd_void(t_serv *s, int id);
-void			process_command(t_serv *s, int id);
-void			process_precommand(t_serv *s, int id);
+int				precmd_void(t_serv *s, int id, t_ent *ent, t_buff *buff);
+void			process_command(t_serv *s, int id, t_ent *ent, t_buff *buff);
+void			process_precommand(t_serv *s, int id, t_ent *ent, t_buff *buff);
 
 /*
 ** cmd_broadcast.c
 */
 
-void			cmd_broadcast(t_serv *s, int id);
+void			cmd_broadcast(t_serv *s, int id, t_ent *ent, t_buff *buff);
 
 /*
 ** cmd/cmd_connect_nbr.c
 */
 
 void			cmd_connect(t_serv *s, int id, t_team *team, int dimen);
-void			cmd_connect_nbr(t_serv *s, int id);
+void			cmd_connect_nbr(t_serv *s, int id, t_ent *ent, t_buff *buff);
 
 /*
 ** cmd/cmd_fork.c
 */
 
-void			cmd_fork(t_serv *s, int id);
-int				precmd_fork(t_serv *s, int id);
+void			cmd_fork(t_serv *s, int id, t_ent *ent, t_buff *buff);
 
 /*
 ** cmd/cmd_incantation.c
 */
 
-void			cmd_incant(t_serv *s, int id);
-int				precmd_incant(t_serv *s, int id);
+void			cmd_incant(t_serv *s, int id, t_ent *ent, t_buff *buff);
+int				precmd_incant(t_serv *s, int id, t_ent *ent, t_buff *buff);
 
 /*
 ** cmd/cmd_inventory.c
 */
 
-void			cmd_inventory(t_serv *s, int id);
-void			cmd_put(t_serv *s, int id);
-void			cmd_take(t_serv *s, int id);
-int				precmd_take(t_serv *s, int id);
-int				precmd_put(t_serv *s, int id);
+void			cmd_inventory(t_serv *s, int id, t_ent *ent, t_buff *buff);
+void			cmd_put(t_serv *s, int id, t_ent *ent, t_buff *buff);
+void			cmd_take(t_serv *s, int id, t_ent *ent, t_buff *buff);
+int				precmd_take(t_serv *s, int id, t_ent *ent, t_buff *buff);
+int				precmd_put(t_serv *s, int id, t_ent *ent, t_buff *buff);
 
 /*
 ** cmd/cmd_kick.c
 */
 
-void			cmd_kick(t_serv *s, int id);
+void			cmd_kick(t_serv *s, int id, t_ent *ent, t_buff *buff);
 
 /*
 ** cmd/cmd_move.c
 */
 
-void			cmd_advance(t_serv *s, int id);
-void			cmd_left(t_serv *s, int id);
-void			cmd_right(t_serv *s, int id);
+void			cmd_advance(t_serv *s, int id, t_ent *ent, t_buff *buff);
+void			cmd_left(t_serv *s, int id, t_ent *ent, t_buff *buff);
+void			cmd_right(t_serv *s, int id, t_ent *ent, t_buff *buff);
 void			move_dir(t_serv *s, t_ent *ent, int dir);
 
 /*
 ** cmd/cmd_see.c
 */
 
-void			cmd_see(t_serv *s, int id);
+void			cmd_see(t_serv *s, int id, t_ent *ent, t_buff *buff);
 
 /*
 ** egg.c

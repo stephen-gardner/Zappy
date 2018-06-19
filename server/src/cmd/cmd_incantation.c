@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/11 02:29:34 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/17 06:35:38 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/19 00:03:08 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,23 +24,23 @@ const t_elevreq	g_elevreq[] = {
 	{ 6, { 0, 2, 2, 2, 2, 2, 1, 0 } }
 };
 
-static int		is_ready(t_ent *pent, t_ent *cent, int finished)
+static int		is_ready(t_ent *ent, t_ent *cent, int finished)
 {
-	t_buff	*pbuff;
+	t_buff	*buff;
 	t_buff	*cbuff;
 
-	if (cent == pent
-		|| cent->level != pent->level
-		|| cent->loc_x != pent->loc_x
-		|| cent->loc_y != pent->loc_y)
+	if (cent == ent
+		|| cent->level != ent->level
+		|| cent->loc_x != ent->loc_x
+		|| cent->loc_y != ent->loc_y)
 		return (0);
 	if (finished)
 	{
-		pbuff = CMD_NEXT(&pent->cmds);
+		buff = CMD_NEXT(&ent->cmds);
 		cbuff = CMD_NEXT(&cent->cmds);
 		if (!cent->cmds.ncmds
 			|| cbuff->type != INCANTATION
-			|| cbuff->scheduled != pbuff->scheduled)
+			|| cbuff->scheduled != buff->scheduled)
 			return (0);
 	}
 	else if (cent->cmds.ncmds)
@@ -48,7 +48,7 @@ static int		is_ready(t_ent *pent, t_ent *cent, int finished)
 	return (1);
 }
 
-static int		count_ready(t_serv *s, t_ent *pent, int finished)
+static int		count_ready(t_serv *s, t_ent *ent, int finished)
 {
 	t_ent	*cent;
 	int		count;
@@ -59,31 +59,31 @@ static int		count_ready(t_serv *s, t_ent *pent, int finished)
 	while (i < s->conn.nsockets)
 	{
 		cent = ENT(s, i);
-		if (is_ready(pent, cent, finished))
+		if (is_ready(ent, cent, finished))
 			++count;
 		++i;
 	}
 	return (count);
 }
 
-void			cmd_incant(t_serv *s, int id)
+void			cmd_incant(t_serv *s, int id, t_ent *ent, t_buff *buff)
 {
 	const t_elevreq	*req;
-	t_ent			*pent;
 	t_ent			*cent;
 	int				count;
 	int				i;
 
-	pent = ENT(s, id);
-	req = &g_elevreq[pent->level - 1];
-	if (count_ready(s, pent, 1) < req->nplayers)
+	(void)id;
+	(void)buff;
+	req = &g_elevreq[ent->level - 1];
+	if (count_ready(s, ent, 1) < req->nplayers)
 		return ;
 	i = 1;
 	count = 1;
 	while (count < req->nplayers && i < s->conn.nsockets)
 	{
 		cent = ENT(s, i);
-		if (cent != pent && is_ready(pent, cent, 1))
+		if (cent != ent && is_ready(ent, cent, 1))
 		{
 			level_up(s, cent);
 			send_response(s, i);
@@ -91,10 +91,10 @@ void			cmd_incant(t_serv *s, int id)
 		}
 		++i;
 	}
-	level_up(s, pent);
+	level_up(s, ent);
 }
 
-static void		begin_incant(t_serv *s, t_ent *pent)
+static void		begin_incant(t_serv *s, t_ent *ent)
 {
 	const t_elevreq	*req;
 	t_ent			*cent;
@@ -104,15 +104,15 @@ static void		begin_incant(t_serv *s, t_ent *pent)
 
 	i = 1;
 	count = 1;
-	req = &g_elevreq[pent->level - 1];
+	req = &g_elevreq[ent->level - 1];
 	while (count < req->nplayers && i < s->conn.nsockets)
 	{
 		cent = ENT(s, i);
-		if (is_ready(pent, cent, 0))
+		if (is_ready(ent, cent, 0))
 		{
 			++cent->cmds.ncmds;
 			cbuff = CMD_NEXT(&cent->cmds);
-			memcpy(cbuff, CMD_NEXT(&pent->cmds), sizeof(t_buff));
+			memcpy(cbuff, CMD_NEXT(&ent->cmds), sizeof(t_buff));
 			cbuff->pre = 1;
 			cbuff->scheduled = s->time + get_cmddef(INCANTATION)->delay;
 			send_message(s, i, "elevation in progress\n", 22);
@@ -122,14 +122,13 @@ static void		begin_incant(t_serv *s, t_ent *pent)
 	}
 }
 
-int				precmd_incant(t_serv *s, int id)
+int				precmd_incant(t_serv *s, int id, t_ent *ent, t_buff *buff)
 {
 	const t_elevreq	*req;
-	t_ent			*ent;
 	t_uint			*loc;
 	int				i;
 
-	ent = ENT(s, id);
+	(void)buff;
 	if (ent->level >= MAX_LEVEL)
 		return (0);
 	req = &g_elevreq[ent->level - 1];

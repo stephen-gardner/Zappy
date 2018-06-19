@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/10 01:43:44 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/13 17:26:17 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/18 23:59:09 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,14 +104,10 @@ static void	see(t_serv *s, int id, t_buff *buff, t_move *m)
 	}
 }
 
-void		cmd_see(t_serv *s, int id)
+void		cmd_see(t_serv *s, int id, t_ent *ent, t_buff *buff)
 {
-	t_ent	*ent;
-	t_buff	*buff;
 	t_move	m;
 
-	ent = ENT(s, id);
-	buff = CMD_NEXT(&ent->cmds);
 	m.loc_x = ent->loc_x;
 	m.loc_y = ent->loc_y;
 	m.rel_x = 0;

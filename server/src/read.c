@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:32:24 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/16 22:29:43 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/18 21:30:39 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,7 @@ static int		cmdcmp(char *cmd, const t_cmddef *def)
 {
 	if (strncmp(cmd, def->label, def->len))
 		return (1);
-	if (def->args)
-		return (*(cmd + def->len) != ' ');
-	else
-		return (*(cmd + def->len) != '\0');
+	return (*(cmd + def->len) != ((def->args) ? ' ' : '\0'));
 }
 
 static void		set_cmdtype(t_serv *s, int id)

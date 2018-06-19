@@ -6,12 +6,11 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/20 04:58:26 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/11 00:15:23 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/18 20:35:23 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <string.h>
-#include <sys/uio.h>
 #include <unistd.h>
 #include "zappy.h"
 
@@ -35,7 +34,8 @@ int		send_response(t_serv *s, int id)
 	pos = buff->resp;
 	while (*pos)
 	{
-		nl = strchr(pos, '\n');
+		if (!(nl = strchr(pos, '\n')))
+			break ;
 		info(s, " >> %.*s", nl - pos, pos);
 		pos = nl + 1;
 	}

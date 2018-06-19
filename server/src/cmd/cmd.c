@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/28 18:46:04 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/14 20:59:18 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/19 00:01:26 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,41 +46,35 @@ const t_cmddef	*get_cmddef(int type)
 	return (NULL);
 }
 
-int				precmd_void(t_serv *s, int id)
+int				precmd_void(t_serv *s, int id, t_ent *ent, t_buff *buff)
 {
 	(void)s;
 	(void)id;
+	(void)ent;
+	(void)buff;
 	return (1);
 }
 
-void			process_command(t_serv *s, int id)
+void			process_command(t_serv *s, int id, t_ent *ent, t_buff *buff)
 {
-	t_ent			*ent;
-	t_buff			*buff;
 	const t_cmddef	*def;
 
-	ent = ENT(s, id);
-	buff = CMD_NEXT(&ent->cmds);
 	if (!ent->team)
 		return (add_player(s, buff->recv, id));
 	if (buff->type != UNDEFINED)
 	{
 		def = get_cmddef(buff->type);
-		def->dispatch(s, id);
+		def->dispatch(s, id, ent, buff);
 	}
 	send_response(s, id);
 }
 
-void			process_precommand(t_serv *s, int id)
+void			process_precommand(t_serv *s, int id, t_ent *ent, t_buff *buff)
 {
-	t_cmd			*cmds;
-	t_buff			*buff;
 	const t_cmddef	*def;
 
-	cmds = GET_CMDS(s, id);
-	buff = CMD_NEXT(cmds);
 	def = get_cmddef(buff->type);
-	if (def->pre(s, id))
+	if (def->pre(s, id, ent, buff))
 		buff->scheduled = s->time + def->delay;
 	else
 		buff->type = UNDEFINED;
