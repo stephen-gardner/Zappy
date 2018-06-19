@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/14 19:59:26 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/19 00:01:53 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/19 13:19:11 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ static int	get_dir(t_serv *s, t_ent *pent, t_ent *cent)
 	}
 	else
 		dir = (vec[0] > 0) ? EAST : WEST;
-	CHDIR(dir, cent->facing);
+	CHDIR(dir, -cent->facing);
 	return (dir + 1);
 }
 
