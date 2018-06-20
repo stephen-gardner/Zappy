@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/07 19:38:08 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/19 10:08:25 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/19 19:38:55 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	end_game(t_serv *s, t_team *team)
 	int	i;
 
 	if (team)
-		info(s, "[%s] wins the game!", team->name);
+		info(s, "[%s] wins the game! :)", team->name);
 	else
 		info(s, "All players have died. Game over. :(");
 	i = 0;
