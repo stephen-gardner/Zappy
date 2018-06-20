@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/19 03:24:13 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/19 21:47:34 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/20 13:16:17 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,8 +82,46 @@ typedef unsigned short		t_ushrt;
 # define TAK_DEL			7
 
 /*
+** # define ADV_STR			"avance"
+** # define ADV_DEL			7
+**
+** # define BRO_STR			"broadcast"
+** # define BRO_DEL			7
+**
+** # define CON_STR			"connect_nbr"
+** # define CON_DEL			0
+**
+** # define INC_STR			"incantation"
+** # define INC_DEL			300
+**
+** # define INV_STR			"inventaire"
+** # define INV_DEL			1
+**
+** # define KIC_STR			"expulse"
+** # define KIC_DEL			7
+**
+** # define FOR_STR			"fork"
+** # define FOR_DEL			42
+**
+** # define LEF_STR			"gauche"
+** # define LEF_DEL			7
+**
+** # define PUT_STR			"pose"
+** # define PUT_DEL			7
+**
+** # define RIG_STR			"droite"
+** # define RIG_DEL			7
+**
+** # define SEE_STR			"voir"
+** # define SEE_DEL			7
+**
+** # define TAK_STR			"prend"
+** # define TAK_DEL			7
+*/
+
+/*
 ** #############################################################################
-** # RESPONSES                                                                 #
+** # LANG                                                                      #
 ** #############################################################################
 */
 
@@ -91,6 +129,15 @@ typedef unsigned short		t_ushrt;
 # define ELEVATING			"elevation in progress\n"
 # define CURR_LEVEL			"current level : %d\n"
 # define DEATH				"death\n"
+# define FOOD_STR			"food"
+
+/*
+** # define WELCOME			"BIENVENUE\n"
+** # define ELEVATING			"elevation en cours\n"
+** # define CURR_LEVEL			"niveau actuel : %d\n"
+** # define DEATH				"mort\n"
+** # define FOOD_STR			"nourriture"
+*/
 
 /*
 ** #############################################################################

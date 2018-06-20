@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/03 00:34:00 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/18 07:23:15 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/20 12:48:17 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include "zappy.h"
 
 const char	*g_items[] = {
-	"food",
+	FOOD_STR,
 	"linemate",
 	"deraumere",
 	"sibur",

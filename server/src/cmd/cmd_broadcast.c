@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/14 19:59:26 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/19 13:19:11 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/20 13:09:41 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static int	get_dir(t_serv *s, t_ent *pent, t_ent *cent)
 	int	vec[4];
 	int	dir;
 
-	if (pent == cent)
+	if (pent->loc_x == cent->loc_x && pent->loc_y == cent->loc_y)
 		return (0);
 	calc_vector(s, pent, cent, vec);
 	dir = (vec[1] < 0) ? NORTH : SOUTH;
