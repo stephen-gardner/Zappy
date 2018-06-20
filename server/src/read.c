@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:32:24 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/19 07:52:39 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/19 20:54:47 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 static void		set_cmdtype(t_ent *ent, t_buff *buff)
 {
 	const t_cmddef	*def;
+	int				len;
 	int				i;
 
 	buff->resp_len = sprintf(buff->resp, "ko\n");
@@ -27,8 +28,9 @@ static void		set_cmdtype(t_ent *ent, t_buff *buff)
 		while (i < g_cmddef_count)
 		{
 			def = &g_cmddef[i++];
-			if (!strncmp(buff->recv, def->label, def->len)
-				&& *(buff->recv + def->len) == ((def->args) ? ' ' : '\0'))
+			len = strlen(def->label);
+			if (!strncmp(buff->recv, def->label, len)
+				&& *(buff->recv + len) == ((def->args) ? ' ' : '\0'))
 			{
 				if ((buff->type = def->type) == INCANTATION)
 				{

@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/24 09:34:14 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/18 02:31:16 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/19 19:15:54 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ static void	set_location(t_serv *s, t_ent *ent)
 
 	if ((egg = find_egg(s, ent->team)))
 	{
+		memcpy(ent->uuid, egg->uuid, sizeof(uuid_t));
 		ent->inv[FOOD] = egg->food;
 		ent->feed_time = egg->scheduled;
 		ent->loc_x = egg->loc_x;
@@ -28,6 +29,7 @@ static void	set_location(t_serv *s, t_ent *ent)
 	}
 	else
 	{
+		uuid_generate(ent->uuid);
 		ent->inv[FOOD] = 9;
 		ent->feed_time = s->time + HUNGER;
 		ent->loc_x = rand() % s->map.width;

@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/28 18:46:04 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/19 00:01:26 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/19 20:56:26 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,18 @@
 #include "zappy.h"
 
 const t_cmddef	g_cmddef[] = {
-	{ ADVANCE, precmd_void, cmd_advance, "advance", 7, 7, 0 },
-	{ BROADCAST, precmd_void, cmd_broadcast, "broadcast", 9, 7, 1 },
-	{ CONNECT_NBR, precmd_void, cmd_connect_nbr, "connect_nbr", 11, 0, 0 },
-	{ INCANTATION, precmd_incant, cmd_incant, "incantation", 11, 300, 0 },
-	{ INVENTORY, precmd_void, cmd_inventory, "inventory", 9, 1, 0 },
-	{ KICK, precmd_void, cmd_kick, "kick", 4, 7, 0 },
-	{ FORK, precmd_void, cmd_fork, "fork", 4, 42, 0 },
-	{ LEFT, precmd_void, cmd_left, "left", 4, 7, 0 },
-	{ PUT, precmd_put, cmd_put, "put", 3, 7, 1 },
-	{ RIGHT, precmd_void, cmd_right, "right", 5, 7, 0 },
-	{ SEE, precmd_void, cmd_see, "see", 3, 7, 0 },
-	{ TAKE, precmd_take, cmd_take, "take", 4, 7, 1 }
+	{ ADVANCE, precmd_void, cmd_advance, ADV_STR, ADV_DEL, 0 },
+	{ BROADCAST, precmd_void, cmd_broadcast, BRO_STR, BRO_DEL, 1 },
+	{ CONNECT_NBR, precmd_void, cmd_connect_nbr, CON_STR, CON_DEL, 0 },
+	{ INCANTATION, precmd_incant, cmd_incant, INC_STR, INC_DEL, 0 },
+	{ INVENTORY, precmd_void, cmd_inventory, INV_STR, INV_DEL, 0 },
+	{ KICK, precmd_void, cmd_kick, KIC_STR, KIC_DEL, 0 },
+	{ FORK, precmd_void, cmd_fork, FOR_STR, FOR_DEL, 0 },
+	{ LEFT, precmd_void, cmd_left, LEF_STR, LEF_DEL, 0 },
+	{ PUT, precmd_put, cmd_put, PUT_STR, PUT_DEL, 1 },
+	{ RIGHT, precmd_void, cmd_right, RIG_STR, RIG_DEL, 0 },
+	{ SEE, precmd_void, cmd_see, SEE_STR, SEE_DEL, 0 },
+	{ TAKE, precmd_take, cmd_take, TAK_STR, TAK_DEL, 1 }
 };
 
 const int		g_cmddef_count = sizeof(g_cmddef) / sizeof(t_cmddef);

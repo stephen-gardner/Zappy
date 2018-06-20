@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/19 03:30:44 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/19 10:08:05 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/19 20:45:19 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ typedef struct	s_team
 typedef struct	s_ent
 {
 	char		addr[32];
+	uuid_t		uuid;
 	t_cmd		cmds;
 	t_team		*team;
 	t_ushrt		inv[NRES];
@@ -68,6 +69,7 @@ typedef struct	s_conn
 
 typedef struct	s_egg
 {
+	uuid_t		uuid;
 	t_team		*team;
 	int			loc_x;
 	int			loc_y;
@@ -109,7 +111,6 @@ typedef struct	s_cmddef
 	int			(*pre)(t_serv *, int, t_ent *, t_buff *);
 	void		(*dispatch)(t_serv *, int, t_ent *, t_buff *);
 	char		*label;
-	int			len;
 	int			delay;
 	int			args;
 }				t_cmddef;

@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:08:47 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/19 10:08:51 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/19 19:06:04 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <err.h>
 # include <poll.h>
 # include <time.h>
+# include <uuid/uuid.h>
 # include "zappy_def.h"
 # include "zappy_structs.h"
 
