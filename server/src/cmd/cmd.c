@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/28 18:46:04 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/19 20:56:26 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/19 21:45:18 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,10 @@ void			process_precommand(t_serv *s, int id, t_ent *ent, t_buff *buff)
 	if (def->pre(s, id, ent, buff))
 		buff->scheduled = s->time + def->delay;
 	else
+	{
+		if (buff->type == INCANTATION)
+			buff->resp_len = sprintf(buff->resp, CURR_LEVEL, ent->level);
 		buff->type = UNDEFINED;
+	}
 	buff->pre = 1;
 }

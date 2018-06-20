@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/22 07:45:32 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/19 10:10:36 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/19 21:47:50 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void		accept_incoming(t_serv *s)
 				id = add_socket(s, sock);
 				sprintf(ENT(s, id)->addr, "%s:%hu", inet_ntoa(addr.sin_addr),
 					ntohs(addr.sin_port));
-				send_message(s, id, "WELCOME\n", 8);
+				send_message(s, id, WELCOME, strlen(WELCOME));
 				info(s, "<%s> connected", ENT(s, id)->addr);
 			}
 			else
@@ -98,7 +98,7 @@ void		remove_socket(t_serv *s, int id)
 	{
 		--team->members[0];
 		--team->members[ent->level];
-		send_message(s, id, "death\n", 6);
+		send_message(s, id, DEATH, strlen(DEATH));
 		info(s, "<%s[%s]> has died", ent->addr, team->name);
 	}
 	close(SOCK(s, id));

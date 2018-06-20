@@ -6,12 +6,12 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/11 02:29:34 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/19 07:13:23 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/19 21:48:51 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
-#include <strings.h>
+#include <string.h>
 #include "zappy.h"
 
 const t_elevreq	g_elevreq[] = {
@@ -115,7 +115,7 @@ static void		begin_incant(t_serv *s, t_ent *ent)
 			memcpy(cbuff, CMD_NEXT(&ent->cmds), sizeof(t_buff));
 			cbuff->pre = 1;
 			cbuff->scheduled = s->time + get_cmddef(INCANTATION)->delay;
-			send_message(s, i, "elevation in progress\n", 22);
+			send_message(s, i, ELEVATING, strlen(ELEVATING));
 			++count;
 		}
 		++i;
@@ -146,6 +146,6 @@ int				precmd_incant(t_serv *s, int id, t_ent *ent, t_buff *buff)
 	while (++i < NRES)
 		modify_resource(loc, i, -req->nitems[i]);
 	begin_incant(s, ent);
-	send_message(s, id, "elevation in progress\n", 22);
+	send_message(s, id, ELEVATING, strlen(ELEVATING));
 	return (1);
 }

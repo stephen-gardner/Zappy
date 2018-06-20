@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:32:24 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/19 20:54:47 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/19 21:48:43 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <unistd.h>
 #include "zappy.h"
 
-static void		set_cmdtype(t_ent *ent, t_buff *buff)
+static void		set_cmdtype(t_buff *buff)
 {
 	const t_cmddef	*def;
 	int				len;
@@ -32,11 +32,7 @@ static void		set_cmdtype(t_ent *ent, t_buff *buff)
 			if (!strncmp(buff->recv, def->label, len)
 				&& *(buff->recv + len) == ((def->args) ? ' ' : '\0'))
 			{
-				if ((buff->type = def->type) == INCANTATION)
-				{
-					buff->resp_len = sprintf(buff->resp, "current level : %d\n",
-						ent->level);
-				}
+				buff->type = def->type;
 				return ;
 			}
 		}
@@ -65,7 +61,7 @@ static void		buffer_data(t_ent *ent, char *sbuff, int n)
 		*buff->recv = '\0';
 	if (nl)
 	{
-		set_cmdtype(ent, buff);
+		set_cmdtype(buff);
 		++cmds->ncmds;
 	}
 }

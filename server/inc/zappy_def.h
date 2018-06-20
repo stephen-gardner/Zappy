@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/19 03:24:13 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/19 20:56:28 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/19 21:47:34 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,17 @@ typedef unsigned short		t_ushrt;
 
 # define TAK_STR			"take"
 # define TAK_DEL			7
+
+/*
+** #############################################################################
+** # RESPONSES                                                                 #
+** #############################################################################
+*/
+
+# define WELCOME			"WELCOME\n"
+# define ELEVATING			"elevation in progress\n"
+# define CURR_LEVEL			"current level : %d\n"
+# define DEATH				"death\n"
 
 /*
 ** #############################################################################
