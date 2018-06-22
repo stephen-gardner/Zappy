@@ -38,7 +38,7 @@ static void	move_rel(t_serv *s, t_move *m, int dir)
 	}
 }
 
-static void	print_items(t_buff *buff, t_uint *loc)
+static void	print_items(t_buff *buff, t_ull *loc)
 {
 	int	type;
 	int	n;

@@ -31,7 +31,7 @@ void		add_egg(t_serv *s, t_team *team, int x, int y)
 
 static void	hatch_egg(t_serv *s, t_egg *egg)
 {
-	t_uint	*loc;
+	t_ull	*loc;
 
 	egg->hatched = 1;
 	egg->food = 9;

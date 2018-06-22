@@ -36,7 +36,7 @@ void		cmd_inventory(t_serv *s, int id, t_ent *ent, t_buff *buff)
 
 void		cmd_put(t_serv *s, int id, t_ent *ent, t_buff *buff)
 {
-	t_uint		*loc;
+	t_ull		*loc;
 	int			item_id;
 
 	(void)s;
@@ -67,7 +67,7 @@ int			precmd_take(t_serv *s, int id, t_ent *ent, t_buff *buff)
 
 void		cmd_take(t_serv *s, int id, t_ent *ent, t_buff *buff)
 {
-	t_uint		*loc;
+	t_ull		*loc;
 	int			item_id;
 
 	(void)id;

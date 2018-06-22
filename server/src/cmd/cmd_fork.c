@@ -15,7 +15,7 @@
 
 void	cmd_fork(t_serv *s, int id, t_ent *ent, t_buff *buff)
 {
-	t_uint	*loc;
+	t_ull	*loc;
 
 	(void)id;
 	loc = GET_LOC(s, ent->loc_x, ent->loc_y);

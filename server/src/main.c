@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/21 05:50:28 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/19 10:08:18 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/21 19:10:40 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static void	init_server(t_serv *s)
 		s->teams[i++].authorized = authorized;
 	if (!(s->conn.ents = calloc(s->conn.user_max + 1, sizeof(t_ent)))
 		|| !(s->conn.polls = calloc(s->conn.user_max + 1, sizeof(t_poll)))
-		|| !(s->map.data = calloc(s->map.size, sizeof(t_uint))))
+		|| !(s->map.data = calloc(s->map.size, sizeof(t_ull))))
 		err(1, NULL);
 	printf("Generating resources...\n");
 	populate_map(s);

@@ -6,7 +6,7 @@
 
 NAME = server
 CC = gcc
-CFLAGS += -Wall -Werror -Wextra -Wimplicit #-g -fsanitize=address
+CFLAGS += -Wall -Werror -Wextra -Wimplicit -Ofast #-g -fsanitize=address
 INC = -I inc
 SRC_DIR = src
 OBJ_DIR = obj

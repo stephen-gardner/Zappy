@@ -112,7 +112,7 @@ void			remove_egg(t_serv *s, t_egg *egg);
 */
 
 void			drop_stones(t_serv *s, t_ent *ent);
-int				modify_resource(t_uint *loc, int type, int diff);
+int				modify_resource(t_ull *loc, int type, int diff);
 void			populate_map(t_serv *s);
 void			replenish(t_serv *s, int type, int amount);
 

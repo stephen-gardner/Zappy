@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/19 03:30:44 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/19 20:45:19 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/21 19:02:39 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ typedef struct	s_egg
 
 typedef struct	s_map
 {
-	t_uint		*data;
+	t_ull		*data;
 	int			height;
 	int			width;
 	size_t		size;

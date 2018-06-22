@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/19 03:24:13 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/20 13:16:17 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/21 19:01:02 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ typedef struct sockaddr		t_sock;
 typedef struct sockaddr_in	t_sockin;
 typedef struct pollfd		t_poll;
 typedef struct timespec		t_timespec;
-typedef unsigned int		t_uint;
+typedef unsigned long long	t_ull;
 typedef unsigned short		t_ushrt;
 
 /*
@@ -165,10 +165,10 @@ typedef unsigned short		t_ushrt;
 ** [EGG] [THYSTAME] [PHIRAS] [MENDIANE] [SIBUR] [DERAUMERE] [LINEMATE] [FOOD]
 */
 
-# define RES_MAX			15
+# define RES_MAX			255
 # define GET_LOC(s, x, y)	&s->map.data[((y * s->map.width) + x)]
-# define RES_GET(r, t)		((*r & (0x0F << (t * 4))) >> (t * 4))
-# define RES_SET(r, t, n)	*r = (*r & ~(0x0F << (t * 4))) | ((n) << (t * 4))
+# define RES_GET(r, t)		((unsigned char *)r)[t]
+# define RES_SET(r, t, n)	((unsigned char *)r)[t] = n
 
 # define SZ(x, n)			(sizeof(x) * (n))
 # define BUFF_SIZE			(CMD_MAX_LEN * CMD_MAX_REQ)

@@ -125,7 +125,7 @@ static void		begin_incant(t_serv *s, t_ent *ent)
 int				precmd_incant(t_serv *s, int id, t_ent *ent, t_buff *buff)
 {
 	const t_elevreq	*req;
-	t_uint			*loc;
+	t_ull			*loc;
 	int				i;
 
 	(void)buff;

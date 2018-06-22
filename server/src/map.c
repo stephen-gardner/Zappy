@@ -15,7 +15,7 @@
 
 void		drop_stones(t_serv *s, t_ent *ent)
 {
-	t_uint	*loc;
+	t_ull	*loc;
 	int		type;
 	int		amount;
 
@@ -34,7 +34,7 @@ void		drop_stones(t_serv *s, t_ent *ent)
 	}
 }
 
-int			modify_resource(t_uint *loc, int type, int diff)
+int			modify_resource(t_ull *loc, int type, int diff)
 {
 	int	n;
 
@@ -82,7 +82,7 @@ void		populate_map(t_serv *s)
 
 void		replenish(t_serv *s, int type, int amount)
 {
-	t_uint	*loc;
+	t_ull	*loc;
 
 	loc = GET_LOC(s, rand() % s->map.width, rand() % s->map.height);
 	modify_resource(loc, type, amount);
