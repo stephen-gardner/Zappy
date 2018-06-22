@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/11 02:29:34 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/19 21:48:51 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/22 00:01:38 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ static int		count_ready(t_serv *s, t_ent *ent, int finished)
 	return (count);
 }
 
-void			cmd_incant(t_serv *s, int id, t_ent *ent, t_buff *buff)
+int				cmd_incant(t_serv *s, int id, t_ent *ent, t_buff *buff)
 {
 	const t_elevreq	*req;
 	t_ent			*cent;
@@ -77,7 +77,7 @@ void			cmd_incant(t_serv *s, int id, t_ent *ent, t_buff *buff)
 	(void)buff;
 	req = &g_elevreq[ent->level - 1];
 	if (count_ready(s, ent, 1) < req->nplayers)
-		return ;
+		return (-1);
 	i = 1;
 	count = 1;
 	while (count < req->nplayers && i < s->conn.nsockets)
@@ -92,6 +92,7 @@ void			cmd_incant(t_serv *s, int id, t_ent *ent, t_buff *buff)
 		++i;
 	}
 	level_up(s, ent, buff);
+	return (0);
 }
 
 static void		begin_incant(t_serv *s, t_ent *ent)
@@ -115,7 +116,7 @@ static void		begin_incant(t_serv *s, t_ent *ent)
 			memcpy(cbuff, CMD_NEXT(&ent->cmds), sizeof(t_buff));
 			cbuff->pre = 1;
 			cbuff->scheduled = s->time + get_cmddef(INCANTATION)->delay;
-			send_message(s, i, ELEVATING, strlen(ELEVATING));
+			dprintf(SOCK(s, i), ELEVATING);
 			++count;
 		}
 		++i;
@@ -146,6 +147,6 @@ int				precmd_incant(t_serv *s, int id, t_ent *ent, t_buff *buff)
 	while (++i < NRES)
 		modify_resource(loc, i, -req->nitems[i]);
 	begin_incant(s, ent);
-	send_message(s, id, ELEVATING, strlen(ELEVATING));
+	dprintf(SOCK(s, id), ELEVATING);
 	return (1);
 }

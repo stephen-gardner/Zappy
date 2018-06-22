@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/07 19:38:08 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/19 21:46:33 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/22 02:02:35 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	level_up(t_serv *s, t_ent *ent, t_buff *buff)
 	++ent->team->members[++ent->level];
 	if (ent->team->members[8] >= 6)
 		end_game(s, ent->team);
-	buff->resp_len = sprintf(buff->resp, CURR_LEVEL, ent->level);
+	build_message(buff, CURR_LEVEL, ent->level);
 }
 
 int		starve_player(t_serv *s, t_ent *ent)

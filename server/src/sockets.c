@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/22 07:45:32 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/19 21:47:50 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/21 23:42:46 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,34 +17,7 @@
 #include <unistd.h>
 #include "zappy.h"
 
-void		accept_incoming(t_serv *s)
-{
-	t_sockin	addr;
-	socklen_t	addr_len;
-	int			id;
-	int			sock;
-
-	addr_len = sizeof(addr);
-	while (READABLE(s, 0))
-	{
-		if ((sock = accept(SOCK(s, 0), (t_sock *)&addr, &addr_len)) != -1)
-		{
-			if (s->conn.capacity)
-			{
-				id = add_socket(s, sock);
-				sprintf(ENT(s, id)->addr, "%s:%hu", inet_ntoa(addr.sin_addr),
-					ntohs(addr.sin_port));
-				send_message(s, id, WELCOME, strlen(WELCOME));
-				info(s, "<%s> connected", ENT(s, id)->addr);
-			}
-			else
-				close(sock);
-		}
-		poll(s->conn.polls, 1, 0);
-	}
-}
-
-static void	scale_user_max(t_conn *c)
+static void		scale_user_max(t_conn *c)
 {
 	int	half;
 
@@ -60,16 +33,43 @@ static void	scale_user_max(t_conn *c)
 	memset(c->polls + half, 0, SZ(t_poll, half + 1));
 }
 
-int			add_socket(t_serv *s, int sock)
+static t_ent	*add_socket(t_serv *s, int sock)
 {
 	if (s->conn.nsockets == s->conn.user_max)
 		scale_user_max(&s->conn);
 	s->conn.polls[s->conn.nsockets].fd = sock;
 	s->conn.polls[s->conn.nsockets].events = POLLIN;
-	return (s->conn.nsockets++);
+	return (ENT(s, s->conn.nsockets++));
 }
 
-void		init_listener(t_serv *s)
+void			accept_incoming(t_serv *s)
+{
+	t_sockin	addr;
+	socklen_t	addr_len;
+	t_ent		*ent;
+	int			sock;
+
+	addr_len = sizeof(addr);
+	while (READABLE(s, 0))
+	{
+		if ((sock = accept(SOCK(s, 0), (t_sock *)&addr, &addr_len)) != -1)
+		{
+			if (s->conn.capacity)
+			{
+				ent = add_socket(s, sock);
+				sprintf(ent->addr, "%s:%hu", inet_ntoa(addr.sin_addr),
+					ntohs(addr.sin_port));
+				dprintf(sock, WELCOME);
+				info(s, "<%s> connected", ent->addr);
+			}
+			else
+				close(sock);
+		}
+		poll(s->conn.polls, 1, 0);
+	}
+}
+
+void			init_listener(t_serv *s)
 {
 	int			fd;
 	int			opt;
@@ -88,20 +88,22 @@ void		init_listener(t_serv *s)
 	add_socket(s, fd);
 }
 
-void		remove_socket(t_serv *s, int id)
+void			remove_socket(t_serv *s, int id)
 {
 	struct s_ent	*ent;
 	t_team			*team;
+	int				sock;
 
 	ent = ENT(s, id);
+	sock = SOCK(s, id);
 	if ((team = ent->team))
 	{
 		--team->members[0];
 		--team->members[ent->level];
-		send_message(s, id, DEATH, strlen(DEATH));
+		dprintf(sock, DEATH);
 		info(s, "<%s[%s]> has died", ent->addr, team->name);
 	}
-	close(SOCK(s, id));
+	close(sock);
 	info(s, "<%s> disconnected", ent->addr);
 	drop_stones(s, ent);
 	memmove(ent, ent + 1, SZ(t_ent, s->conn.nsockets - id));

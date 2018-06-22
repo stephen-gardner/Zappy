@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/19 03:30:44 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/21 19:02:39 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/21 23:49:24 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ typedef struct	s_buff
 {
 	uintmax_t	scheduled;
 	char		recv[CMD_MAX_LEN + 1];
-	char		resp[CMD_MAX_LEN + 1];
+	char		*resp;
 	int			recv_len;
 	int			resp_len;
 	int			type;
@@ -109,7 +109,7 @@ typedef struct	s_cmddef
 {
 	int			type;
 	int			(*pre)(t_serv *, int, t_ent *, t_buff *);
-	void		(*dispatch)(t_serv *, int, t_ent *, t_buff *);
+	int			(*dispatch)(t_serv *, int, t_ent *, t_buff *);
 	char		*label;
 	int			delay;
 	int			args;

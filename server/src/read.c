@@ -6,11 +6,10 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:32:24 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/19 21:48:43 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/21 23:54:31 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
 #include <string.h>
 #include <unistd.h>
 #include "zappy.h"
@@ -21,7 +20,6 @@ static void		set_cmdtype(t_buff *buff)
 	int				len;
 	int				i;
 
-	buff->resp_len = sprintf(buff->resp, "ko\n");
 	if (buff->recv_len < CMD_MAX_LEN)
 	{
 		i = 0;

@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/28 18:46:04 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/19 21:45:18 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/22 01:47:01 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,13 @@ void			process_command(t_serv *s, int id, t_ent *ent, t_buff *buff)
 	if (buff->type != UNDEFINED)
 	{
 		def = get_cmddef(buff->type);
-		def->dispatch(s, id, ent, buff);
+		if (def->dispatch(s, id, ent, buff) == -1)
+		{
+			if (buff->type == INCANTATION)
+				build_message(buff, CURR_LEVEL, ent->level);
+			else
+				build_message(buff, "ko\n");
+		}
 	}
 	send_response(s, id);
 }
@@ -79,7 +85,9 @@ void			process_precommand(t_serv *s, int id, t_ent *ent, t_buff *buff)
 	else
 	{
 		if (buff->type == INCANTATION)
-			buff->resp_len = sprintf(buff->resp, CURR_LEVEL, ent->level);
+			build_message(buff, CURR_LEVEL, ent->level);
+		else
+			build_message(buff, "ko\n");
 		buff->type = UNDEFINED;
 	}
 	buff->pre = 1;

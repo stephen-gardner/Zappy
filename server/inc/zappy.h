@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:08:47 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/19 19:06:04 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/21 23:55:51 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,35 +39,35 @@ void			process_precommand(t_serv *s, int id, t_ent *ent, t_buff *buff);
 ** ./cmd/cmd_broadcast.c
 */
 
-void			cmd_broadcast(t_serv *s, int id, t_ent *ent, t_buff *buff);
+int				cmd_broadcast(t_serv *s, int id, t_ent *ent, t_buff *buff);
 
 /*
 ** ./cmd/cmd_connect_nbr.c
 */
 
-void			cmd_connect(t_serv *s, int id, t_team *team, int dimen);
-void			cmd_connect_nbr(t_serv *s, int id, t_ent *ent, t_buff *buff);
+void			cmd_connect(t_serv *s, t_buff *buff, t_team *team, int dimen);
+int				cmd_connect_nbr(t_serv *s, int id, t_ent *ent, t_buff *buff);
 
 /*
 ** ./cmd/cmd_fork.c
 */
 
-void			cmd_fork(t_serv *s, int id, t_ent *ent, t_buff *buff);
+int				cmd_fork(t_serv *s, int id, t_ent *ent, t_buff *buff);
 
 /*
 ** ./cmd/cmd_incantation.c
 */
 
-void			cmd_incant(t_serv *s, int id, t_ent *ent, t_buff *buff);
+int				cmd_incant(t_serv *s, int id, t_ent *ent, t_buff *buff);
 int				precmd_incant(t_serv *s, int id, t_ent *ent, t_buff *buff);
 
 /*
 ** ./cmd/cmd_inventory.c
 */
 
-void			cmd_inventory(t_serv *s, int id, t_ent *ent, t_buff *buff);
-void			cmd_put(t_serv *s, int id, t_ent *ent, t_buff *buff);
-void			cmd_take(t_serv *s, int id, t_ent *ent, t_buff *buff);
+int				cmd_inventory(t_serv *s, int id, t_ent *ent, t_buff *buff);
+int				cmd_put(t_serv *s, int id, t_ent *ent, t_buff *buff);
+int				cmd_take(t_serv *s, int id, t_ent *ent, t_buff *buff);
 int				precmd_take(t_serv *s, int id, t_ent *ent, t_buff *buff);
 int				precmd_put(t_serv *s, int id, t_ent *ent, t_buff *buff);
 
@@ -75,22 +75,22 @@ int				precmd_put(t_serv *s, int id, t_ent *ent, t_buff *buff);
 ** ./cmd/cmd_kick.c
 */
 
-void			cmd_kick(t_serv *s, int id, t_ent *ent, t_buff *buff);
+int				cmd_kick(t_serv *s, int id, t_ent *ent, t_buff *buff);
 
 /*
 ** ./cmd/cmd_move.c
 */
 
-void			cmd_advance(t_serv *s, int id, t_ent *ent, t_buff *buff);
-void			cmd_left(t_serv *s, int id, t_ent *ent, t_buff *buff);
-void			cmd_right(t_serv *s, int id, t_ent *ent, t_buff *buff);
+int				cmd_advance(t_serv *s, int id, t_ent *ent, t_buff *buff);
+int				cmd_left(t_serv *s, int id, t_ent *ent, t_buff *buff);
+int				cmd_right(t_serv *s, int id, t_ent *ent, t_buff *buff);
 void			move_dir(t_serv *s, t_ent *ent, int dir);
 
 /*
 ** ./cmd/cmd_see.c
 */
 
-void			cmd_see(t_serv *s, int id, t_ent *ent, t_buff *buff);
+int				cmd_see(t_serv *s, int id, t_ent *ent, t_buff *buff);
 
 /*
 ** #############################################################################
@@ -142,7 +142,6 @@ int				read_socket(t_ent *ent, int sock);
 */
 
 void			accept_incoming(t_serv *s);
-int				add_socket(t_serv *s, int sock);
 void			init_listener(t_serv *s);
 void			remove_socket(t_serv *s, int id);
 
@@ -168,8 +167,8 @@ void			usage_error(char *msg);
 ** write.c
 */
 
-int				send_message(t_serv *s, int id, char *msg, int len);
-int				send_response(t_serv *s, int id);
+void			build_message(t_buff *buff, char *msg, ...);
+void			send_response(t_serv *s, int id);
 
 /*
 ** #############################################################################

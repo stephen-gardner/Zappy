@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/14 19:59:26 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/20 13:09:41 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/21 23:56:28 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ static int	get_dir(t_serv *s, t_ent *pent, t_ent *cent)
 	return (dir + 1);
 }
 
-void		cmd_broadcast(t_serv *s, int id, t_ent *ent, t_buff *buff)
+int			cmd_broadcast(t_serv *s, int id, t_ent *ent, t_buff *buff)
 {
 	char	*msg;
 	int		k;
@@ -86,4 +86,5 @@ void		cmd_broadcast(t_serv *s, int id, t_ent *ent, t_buff *buff)
 		++i;
 	}
 	OK(buff);
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/19 03:24:13 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/21 19:35:19 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/21 23:30:28 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ typedef unsigned short		t_ushrt;
 ** #############################################################################
 */
 
-# define CMD_MAX_LEN		4096
+# define CMD_MAX_LEN		255
 # define CMD_MAX_REQ		10
 # define MAX_LEVEL			8
 # define TEAM_MAX_LEN		27
@@ -155,7 +155,7 @@ typedef unsigned short		t_ushrt;
 # define CMD_NEXT(cmd)		&(cmd)->buffs[(cmd)->start]
 # define CMD_POS(cmd, i)	(((cmd)->start + i + CMD_MAX_REQ) % CMD_MAX_REQ)
 # define GET_CMDS(s, id)	(&s->conn.ents[id].cmds)
-# define OK(b)				b->resp_len = sprintf(b->resp, "ok\n")
+# define OK(b)				build_message(b, "ok\n")
 
 # define MOVE(a, m, n)		a = ((a + (n)) + m) % m
 # define CHDIR(d, n)		(d = (d + (n) + NDIR) % NDIR)

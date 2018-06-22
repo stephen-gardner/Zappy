@@ -6,10 +6,11 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/24 09:34:14 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/19 19:15:54 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/22 00:42:46 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "zappy.h"
@@ -47,10 +48,10 @@ void		add_player(t_serv *s, char *name, int id)
 	ent = ENT(s, id);
 	if (ent->team || !(team = find_team(s, name)))
 	{
-		send_message(s, id, "ko\n", 3);
+		dprintf(SOCK(s, id), "ko\n");
 		return (remove_socket(s, id));
 	}
-	cmd_connect(s, id, team, 1);
+	cmd_connect(s, CMD_NEXT(&ent->cmds), team, 1);
 	send_response(s, id);
 	if (!team->authorized)
 		return (remove_socket(s, id));
