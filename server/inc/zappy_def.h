@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/19 03:24:13 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/21 19:01:02 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/21 19:35:19 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,7 @@ typedef unsigned short		t_ushrt;
 # define ELEVATING			"elevation in progress\n"
 # define CURR_LEVEL			"current level : %d\n"
 # define DEATH				"death\n"
+# define PLAYER				"player"
 # define FOOD_STR			"food"
 
 /*
@@ -136,6 +137,7 @@ typedef unsigned short		t_ushrt;
 ** # define ELEVATING			"elevation en cours\n"
 ** # define CURR_LEVEL			"niveau actuel : %d\n"
 ** # define DEATH				"mort\n"
+** # define PLAYER				"joueur"
 ** # define FOOD_STR			"nourriture"
 */
 

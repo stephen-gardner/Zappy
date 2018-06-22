@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/10 01:43:44 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/19 07:42:10 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/21 19:35:34 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ static void	print_players(t_serv *s, t_ent *ent, t_buff *buff, t_move *m)
 		if (cent != ent
 			&& cent->loc_x == m->loc_x
 			&& cent->loc_y == m->loc_y)
-			buff->resp_len += sprintf(buff->resp + buff->resp_len, "player ");
+			buff->resp_len += sprintf(buff->resp + buff->resp_len, PLAYER " ");
 	}
 }
 
