@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/22 07:45:32 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/21 23:42:46 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/22 03:23:26 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,22 +50,18 @@ void			accept_incoming(t_serv *s)
 	int			sock;
 
 	addr_len = sizeof(addr);
-	while (READABLE(s, 0))
+	if ((sock = accept(SOCK(s, 0), (t_sock *)&addr, &addr_len)) != -1)
 	{
-		if ((sock = accept(SOCK(s, 0), (t_sock *)&addr, &addr_len)) != -1)
+		if (s->conn.capacity)
 		{
-			if (s->conn.capacity)
-			{
-				ent = add_socket(s, sock);
-				sprintf(ent->addr, "%s:%hu", inet_ntoa(addr.sin_addr),
-					ntohs(addr.sin_port));
-				dprintf(sock, WELCOME);
-				info(s, "<%s> connected", ent->addr);
-			}
-			else
-				close(sock);
+			ent = add_socket(s, sock);
+			sprintf(ent->addr, "%s:%hu", inet_ntoa(addr.sin_addr),
+				ntohs(addr.sin_port));
+			dprintf(sock, WELCOME);
+			info(s, "<%s> connected", ent->addr);
 		}
-		poll(s->conn.polls, 1, 0);
+		else
+			close(sock);
 	}
 }
 
@@ -106,6 +102,7 @@ void			remove_socket(t_serv *s, int id)
 	close(sock);
 	info(s, "<%s> disconnected", ent->addr);
 	drop_stones(s, ent);
+	clean_responses(&ent->cmds);
 	memmove(ent, ent + 1, SZ(t_ent, s->conn.nsockets - id));
 	memmove(POLL(s, id), POLL(s, id + 1), SZ(t_poll, s->conn.nsockets - id));
 	--s->conn.nsockets;

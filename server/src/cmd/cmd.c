@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/28 18:46:04 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/22 01:47:01 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/22 08:05:40 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int				precmd_void(t_serv *s, int id, t_ent *ent, t_buff *buff)
 	(void)id;
 	(void)ent;
 	(void)buff;
-	return (1);
+	return (0);
 }
 
 void			process_command(t_serv *s, int id, t_ent *ent, t_buff *buff)
@@ -69,7 +69,7 @@ void			process_command(t_serv *s, int id, t_ent *ent, t_buff *buff)
 			if (buff->type == INCANTATION)
 				build_message(buff, CURR_LEVEL, ent->level);
 			else
-				build_message(buff, "ko\n");
+				KO(buff);
 		}
 	}
 	send_response(s, id);
@@ -80,15 +80,16 @@ void			process_precommand(t_serv *s, int id, t_ent *ent, t_buff *buff)
 	const t_cmddef	*def;
 
 	def = get_cmddef(buff->type);
-	if (def->pre(s, id, ent, buff))
-		buff->scheduled = s->time + def->delay;
-	else
+	if (def->pre(s, id, ent, buff) == -1)
 	{
 		if (buff->type == INCANTATION)
 			build_message(buff, CURR_LEVEL, ent->level);
 		else
-			build_message(buff, "ko\n");
+			KO(buff);
 		buff->type = UNDEFINED;
+		buff->scheduled = s->time;
 	}
+	else
+		buff->scheduled = s->time + def->delay;
 	buff->pre = 1;
 }

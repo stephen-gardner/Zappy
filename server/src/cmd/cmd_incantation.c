@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/11 02:29:34 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/22 00:01:38 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/22 02:37:42 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,16 +131,16 @@ int				precmd_incant(t_serv *s, int id, t_ent *ent, t_buff *buff)
 
 	(void)buff;
 	if (ent->level >= MAX_LEVEL)
-		return (0);
+		return (-1);
 	req = &g_elevreq[ent->level - 1];
 	if (count_ready(s, ent, 0) < req->nplayers)
-		return (0);
+		return (-1);
 	i = 0;
 	loc = GET_LOC(s, ent->loc_x, ent->loc_y);
 	while (i < NRES)
 	{
 		if (RES_GET(loc, i) < req->nitems[i])
-			return (0);
+			return (-1);
 		++i;
 	}
 	i = -1;
@@ -148,5 +148,5 @@ int				precmd_incant(t_serv *s, int id, t_ent *ent, t_buff *buff)
 		modify_resource(loc, i, -req->nitems[i]);
 	begin_incant(s, ent);
 	dprintf(SOCK(s, id), ELEVATING);
-	return (1);
+	return (0);
 }

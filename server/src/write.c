@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/20 04:58:26 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/22 01:59:40 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/22 04:13:09 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,17 +36,32 @@ void	build_message(t_buff *buff, char *msg, ...)
 	free(tmp);
 }
 
+void	clean_responses(t_cmd *cmds)
+{
+	t_buff	*buff;
+	int		i;
+
+	i = 0;
+	while (i < CMD_MAX_REQ)
+	{
+		buff = &cmds->buffs[i++];
+		free(buff->resp);
+	}
+}
+
 void	send_response(t_serv *s, int id)
 {
+	t_ent	*ent;
 	t_cmd	*cmds;
 	t_buff	*buff;
 	char	*pos;
 	char	*nl;
 
+	ent = ENT(s, id);
 	cmds = GET_CMDS(s, id);
 	buff = &cmds->buffs[cmds->start];
 	write(SOCK(s, id), buff->resp, buff->resp_len);
-	info(s, "<%s[%s]> %s", ENT(s, id)->addr, ENT(s, id)->team, buff->recv);
+	info(s, "<%s[%s]> %s", ent->addr, ent->team, buff->recv);
 	pos = buff->resp;
 	while (pos && *pos)
 	{

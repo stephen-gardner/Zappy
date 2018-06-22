@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/21 05:50:28 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/21 19:10:40 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/22 04:35:08 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ static int	process_entity(t_serv *s, int id, t_ent *ent)
 		buff = CMD_NEXT(&ent->cmds);
 		if (buff->type != UNDEFINED && !buff->pre)
 			process_precommand(s, id, ent, buff);
-		if (ent->team && buff->scheduled > s->time)
+		if (ent->team && buff->scheduled != s->time && buff->type != UNDEFINED)
 			break ;
 		process_command(s, id, ent, buff);
 	}

@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:08:47 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/21 23:55:51 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/22 03:23:14 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,6 +168,7 @@ void			usage_error(char *msg);
 */
 
 void			build_message(t_buff *buff, char *msg, ...);
+void			clean_responses(t_cmd *cmds);
 void			send_response(t_serv *s, int id);
 
 /*

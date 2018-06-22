@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:32:24 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/21 23:54:31 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/22 07:43:40 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <unistd.h>
 #include "zappy.h"
 
-static void		set_cmdtype(t_buff *buff)
+static void		set_cmdtype(t_buff *buff, int has_team)
 {
 	const t_cmddef	*def;
 	int				len;
@@ -35,6 +35,8 @@ static void		set_cmdtype(t_buff *buff)
 			}
 		}
 	}
+	if (has_team)
+		KO(buff);
 }
 
 static void		buffer_data(t_ent *ent, char *sbuff, int n)
@@ -59,7 +61,7 @@ static void		buffer_data(t_ent *ent, char *sbuff, int n)
 		*buff->recv = '\0';
 	if (nl)
 	{
-		set_cmdtype(buff);
+		set_cmdtype(buff, ent->team != NULL);
 		++cmds->ncmds;
 	}
 }

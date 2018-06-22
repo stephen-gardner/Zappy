@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/04 19:33:25 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/22 00:26:33 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/22 04:05:56 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int			precmd_put(t_serv *s, int id, t_ent *ent, t_buff *buff)
 	(void)s;
 	(void)id;
 	(void)ent;
-	return (get_item_id(strchr(buff->recv, ' ') + 1) != -1);
+	return (get_item_id(strchr(buff->recv, ' ') + 1));
 }
 
 int			cmd_put(t_serv *s, int id, t_ent *ent, t_buff *buff)
@@ -63,7 +63,7 @@ int			precmd_take(t_serv *s, int id, t_ent *ent, t_buff *buff)
 	(void)s;
 	(void)id;
 	(void)ent;
-	return (get_item_id(strchr(buff->recv, ' ') + 1) != -1);
+	return (get_item_id(strchr(buff->recv, ' ') + 1));
 }
 
 int			cmd_take(t_serv *s, int id, t_ent *ent, t_buff *buff)
