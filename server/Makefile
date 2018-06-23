@@ -25,18 +25,18 @@ SRC = \
 	util\
 	write
 
-# [ COMMANDS ]
+# [ EVENTS ]
 
 SRC += \
-	cmd/cmd\
-	cmd/cmd_broadcast\
-	cmd/cmd_connect_nbr\
-	cmd/cmd_fork\
-	cmd/cmd_incantation\
-	cmd/cmd_inventory\
-	cmd/cmd_kick\
-	cmd/cmd_move\
-	cmd/cmd_see
+	events/event\
+	events/event_broadcast\
+	events/event_connect_nbr\
+	events/event_fork\
+	events/event_incantation\
+	events/event_inventory\
+	events/event_kick\
+	events/event_move\
+	events/event_see
 
 OBJ = $(patsubst %, $(OBJ_DIR)/%.o, $(SRC))
 

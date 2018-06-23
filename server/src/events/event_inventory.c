@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cmd_inventory.c                                    :+:      :+:    :+:   */
+/*   event_inventory.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/04 19:33:25 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/22 20:55:30 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/22 22:43:27 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <string.h>
 #include "zappy.h"
 
-int			cmd_inventory(t_serv *s, int id, t_ent *ent, t_buff *buff)
+int			ev_inventory(t_serv *s, int id, t_ent *ent, t_buff *buff)
 {
 	int		i;
 
@@ -35,7 +35,7 @@ int			cmd_inventory(t_serv *s, int id, t_ent *ent, t_buff *buff)
 	return (0);
 }
 
-int			precmd_put(t_serv *s, int id, t_ent *ent, t_buff *buff)
+int			preev_put(t_serv *s, int id, t_ent *ent, t_buff *buff)
 {
 	(void)s;
 	(void)id;
@@ -43,7 +43,7 @@ int			precmd_put(t_serv *s, int id, t_ent *ent, t_buff *buff)
 	return (get_item_id(strchr(buff->data, ' ') + 1));
 }
 
-int			cmd_put(t_serv *s, int id, t_ent *ent, t_buff *buff)
+int			ev_put(t_serv *s, int id, t_ent *ent, t_buff *buff)
 {
 	t_ull		*loc;
 	int			item_id;
@@ -59,7 +59,7 @@ int			cmd_put(t_serv *s, int id, t_ent *ent, t_buff *buff)
 	return (0);
 }
 
-int			precmd_take(t_serv *s, int id, t_ent *ent, t_buff *buff)
+int			preev_take(t_serv *s, int id, t_ent *ent, t_buff *buff)
 {
 	(void)s;
 	(void)id;
@@ -67,7 +67,7 @@ int			precmd_take(t_serv *s, int id, t_ent *ent, t_buff *buff)
 	return (get_item_id(strchr(buff->data, ' ') + 1));
 }
 
-int			cmd_take(t_serv *s, int id, t_ent *ent, t_buff *buff)
+int			ev_take(t_serv *s, int id, t_ent *ent, t_buff *buff)
 {
 	t_ull		*loc;
 	int			item_id;

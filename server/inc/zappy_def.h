@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/19 03:24:13 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/22 20:34:42 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/22 22:55:58 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ typedef unsigned short		t_ushrt;
 ** #############################################################################
 */
 
-# define CMD_MAX_LEN		255
-# define CMD_MAX_REQ		10
+# define EV_MAX_LEN			255
+# define EV_MAX_REQ			10
 # define MAX_LEVEL			8
 # define TEAM_MAX_LEN		27
 # define HATCH_TIME			600
@@ -41,7 +41,7 @@ typedef unsigned short		t_ushrt;
 
 /*
 ** #############################################################################
-** # COMMANDS                                                                  #
+** # EVENTS                                                                    #
 ** #############################################################################
 */
 
@@ -152,9 +152,9 @@ typedef unsigned short		t_ushrt;
 # define READABLE(s, id)	(s->conn.polls[id].revents & POLLIN)
 
 # define ENT(s, id)			(&s->conn.ents[id])
-# define CMD_NEXT(cmd)		(&(cmd)->recv[(cmd)->start])
-# define CMD_POS(cmd, i)	(((cmd)->start + i + CMD_MAX_REQ) % CMD_MAX_REQ)
-# define GET_CMDS(s, id)	(&s->conn.ents[id].cmds)
+# define EV_NEXT(ev)		(&(ev)->buffs[(ev)->start])
+# define EV_POS(ev, i)		(((ev)->start + i + EV_MAX_REQ) % EV_MAX_REQ)
+# define GET_EVS(s, id)		(&s->conn.ents[id].evs)
 # define OK(s)				build_message(s, "ok\n")
 # define KO(s)				build_message(s, "ko\n")
 
@@ -174,7 +174,7 @@ typedef unsigned short		t_ushrt;
 # define RES_SET(r, t, n)	((unsigned char *)r)[t] = n
 
 # define SZ(x, n)			(sizeof(x) * (n))
-# define BUFF_SIZE			(CMD_MAX_LEN * CMD_MAX_REQ)
+# define BUFF_SIZE			(EV_MAX_LEN * EV_MAX_REQ)
 
 /*
 ** #############################################################################
@@ -182,7 +182,7 @@ typedef unsigned short		t_ushrt;
 ** #############################################################################
 */
 
-enum	e_cmdtype
+enum	e_evtype
 {
 	UNDEFINED,
 	ADVANCE,
@@ -197,7 +197,7 @@ enum	e_cmdtype
 	RIGHT,
 	SEE,
 	TAKE,
-	NCOMMANDS
+	NEVENTS
 };
 
 enum	e_dir

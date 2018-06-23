@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/19 03:30:44 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/22 20:36:19 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/22 22:36:04 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,18 +22,18 @@
 typedef struct	s_buff
 {
 	uintmax_t	scheduled;
-	char		data[CMD_MAX_LEN + 1];
+	char		data[EV_MAX_LEN + 1];
 	int			len;
 	int			pre;
 	int			type;
 }				t_buff;
 
-typedef struct	s_cmd
+typedef struct	s_events
 {
-	t_buff		recv[CMD_MAX_REQ];
+	t_buff		buffs[EV_MAX_REQ];
 	int			start;
-	int			ncmds;
-}				t_cmd;
+	int			nevs;
+}				t_events;
 
 typedef struct	s_team
 {
@@ -46,7 +46,7 @@ typedef struct	s_ent
 {
 	char		addr[32];
 	uuid_t		uuid;
-	t_cmd		cmds;
+	t_events	evs;
 	t_team		*team;
 	t_ushrt		inv[NRES];
 	uintmax_t	feed_time;
@@ -105,7 +105,7 @@ typedef struct	s_serv
 ** #############################################################################
 */
 
-typedef struct	s_cmddef
+typedef struct	s_eventsdef
 {
 	int			type;
 	int			(*pre)(t_serv *, int, t_ent *, t_buff *);
@@ -113,7 +113,7 @@ typedef struct	s_cmddef
 	char		*label;
 	int			delay;
 	int			args;
-}				t_cmddef;
+}				t_evdef;
 
 typedef struct	s_elevreq
 {

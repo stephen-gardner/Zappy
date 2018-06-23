@@ -49,7 +49,7 @@ void		add_player(t_serv *s, int id, t_ent *ent, t_buff *buff)
 		dprintf(SOCK(s, id), "ko\n");
 		return (remove_socket(s, id));
 	}
-	cmd_connect(s, team, 1);
+	ev_connect(s, team, 1);
 	send_response(s, id);
 	if (!team->authorized)
 		return (remove_socket(s, id));

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cmd_incantation.c                                  :+:      :+:    :+:   */
+/*   event_incantation.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/11 02:29:34 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/22 20:53:20 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/22 22:43:21 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,14 @@ static int		is_ready(t_ent *ent, t_ent *cent, int finished)
 		return (0);
 	if (finished)
 	{
-		buff = CMD_NEXT(&ent->cmds);
-		cbuff = CMD_NEXT(&cent->cmds);
-		if (!cent->cmds.ncmds
+		buff = EV_NEXT(&ent->evs);
+		cbuff = EV_NEXT(&cent->evs);
+		if (!cent->evs.nevs
 			|| cbuff->type != INCANTATION
 			|| cbuff->scheduled != buff->scheduled)
 			return (0);
 	}
-	else if (cent->cmds.ncmds)
+	else if (cent->evs.nevs)
 		return (0);
 	return (1);
 }
@@ -66,7 +66,7 @@ static int		count_ready(t_serv *s, t_ent *ent, int finished)
 	return (count);
 }
 
-int				cmd_incant(t_serv *s, int id, t_ent *ent, t_buff *buff)
+int				ev_incant(t_serv *s, int id, t_ent *ent, t_buff *buff)
 {
 	const t_elevreq	*req;
 	t_ent			*cent;
@@ -111,11 +111,11 @@ static void		begin_incant(t_serv *s, t_ent *ent)
 		cent = ENT(s, i);
 		if (is_ready(ent, cent, 0))
 		{
-			++cent->cmds.ncmds;
-			cbuff = CMD_NEXT(&cent->cmds);
-			memcpy(cbuff, CMD_NEXT(&ent->cmds), sizeof(t_buff));
+			++cent->evs.nevs;
+			cbuff = EV_NEXT(&cent->evs);
+			memcpy(cbuff, EV_NEXT(&ent->evs), sizeof(t_buff));
 			cbuff->pre = 1;
-			cbuff->scheduled = s->time + get_cmddef(INCANTATION)->delay;
+			cbuff->scheduled = s->time + get_evdef(INCANTATION)->delay;
 			dprintf(SOCK(s, i), ELEVATING);
 			++count;
 		}
@@ -123,7 +123,7 @@ static void		begin_incant(t_serv *s, t_ent *ent)
 	}
 }
 
-int				precmd_incant(t_serv *s, int id, t_ent *ent, t_buff *buff)
+int				preev_incant(t_serv *s, int id, t_ent *ent, t_buff *buff)
 {
 	const t_elevreq	*req;
 	t_ull			*loc;

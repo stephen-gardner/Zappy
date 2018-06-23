@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/20 04:58:26 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/22 20:34:16 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/22 22:36:35 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,15 +38,15 @@ void	build_message(t_serv *s, char *msg, ...)
 
 void	send_response(t_serv *s, int id)
 {
-	t_ent	*ent;
-	t_cmd	*cmds;
-	t_buff	*buff;
-	char	*pos;
-	char	*nl;
+	t_ent		*ent;
+	t_events	*evs;
+	t_buff		*buff;
+	char		*pos;
+	char		*nl;
 
 	ent = ENT(s, id);
-	cmds = GET_CMDS(s, id);
-	buff = &cmds->recv[cmds->start];
+	evs = GET_EVS(s, id);
+	buff = &evs->buffs[evs->start];
 	write(SOCK(s, id), s->resp, s->resp_len);
 	info(s, "<%s[%s]> %s", ent->addr, ent->team, buff->data);
 	pos = s->resp;
@@ -61,6 +61,6 @@ void	send_response(t_serv *s, int id)
 	buff->len = 0;
 	buff->pre = 0;
 	buff->type = UNDEFINED;
-	cmds->start = CMD_POS(cmds, 1);
-	--cmds->ncmds;
+	evs->start = EV_POS(evs, 1);
+	--evs->nevs;
 }

@@ -1,19 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cmd_fork.c                                         :+:      :+:    :+:   */
+/*   event_fork.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/05 20:17:58 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/22 20:46:39 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/22 22:43:15 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include "zappy.h"
 
-int	cmd_fork(t_serv *s, int id, t_ent *ent, t_buff *buff)
+int	ev_fork(t_serv *s, int id, t_ent *ent, t_buff *buff)
 {
 	t_ull	*loc;
 

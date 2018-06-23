@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:08:47 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/22 20:45:21 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/23 04:13:37 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,75 +22,75 @@
 
 /*
 ** #############################################################################
-** # COMMAND FUNCTIONS                                                         #
+** # EVENT FUNCTIONS                                                           #
 ** #############################################################################
 */
 
 /*
-** ./cmd/cmd.c
+** ./events/event.c
 */
 
-const t_cmddef	*get_cmddef(int type);
-int				precmd_void(t_serv *s, int id, t_ent *ent, t_buff *buff);
+const t_evdef	*get_evdef(int type);
+int				preev_void(t_serv *s, int id, t_ent *ent, t_buff *buff);
 void			process_command(t_serv *s, int id, t_ent *ent, t_buff *buff);
 void			process_precommand(t_serv *s, int id, t_ent *ent, t_buff *buff);
 
 /*
-** ./cmd/cmd_broadcast.c
+** ./events/event_broadcast.c
 */
 
-int				cmd_broadcast(t_serv *s, int id, t_ent *ent, t_buff *buff);
+int				ev_broadcast(t_serv *s, int id, t_ent *ent, t_buff *buff);
 
 /*
-** ./cmd/cmd_connect_nbr.c
+** ./events/event_connect_nbr.c
 */
 
-void			cmd_connect(t_serv *s, t_team *team, int dimen);
-int				cmd_connect_nbr(t_serv *s, int id, t_ent *ent, t_buff *buff);
+void			ev_connect(t_serv *s, t_team *team, int dimen);
+int				ev_connect_nbr(t_serv *s, int id, t_ent *ent, t_buff *buff);
 
 /*
-** ./cmd/cmd_fork.c
+** ./events/event_fork.c
 */
 
-int				cmd_fork(t_serv *s, int id, t_ent *ent, t_buff *buff);
+int				ev_fork(t_serv *s, int id, t_ent *ent, t_buff *buff);
 
 /*
-** ./cmd/cmd_incantation.c
+** ./events/event_incantation.c
 */
 
-int				cmd_incant(t_serv *s, int id, t_ent *ent, t_buff *buff);
-int				precmd_incant(t_serv *s, int id, t_ent *ent, t_buff *buff);
+int				ev_incant(t_serv *s, int id, t_ent *ent, t_buff *buff);
+int				preev_incant(t_serv *s, int id, t_ent *ent, t_buff *buff);
 
 /*
-** ./cmd/cmd_inventory.c
+** ./events/event_inventory.c
 */
 
-int				cmd_inventory(t_serv *s, int id, t_ent *ent, t_buff *buff);
-int				cmd_put(t_serv *s, int id, t_ent *ent, t_buff *buff);
-int				cmd_take(t_serv *s, int id, t_ent *ent, t_buff *buff);
-int				precmd_take(t_serv *s, int id, t_ent *ent, t_buff *buff);
-int				precmd_put(t_serv *s, int id, t_ent *ent, t_buff *buff);
+int				ev_inventory(t_serv *s, int id, t_ent *ent, t_buff *buff);
+int				ev_put(t_serv *s, int id, t_ent *ent, t_buff *buff);
+int				ev_take(t_serv *s, int id, t_ent *ent, t_buff *buff);
+int				preev_take(t_serv *s, int id, t_ent *ent, t_buff *buff);
+int				preev_put(t_serv *s, int id, t_ent *ent, t_buff *buff);
 
 /*
-** ./cmd/cmd_kick.c
+** ./events/event_kick.c
 */
 
-int				cmd_kick(t_serv *s, int id, t_ent *ent, t_buff *buff);
+int				ev_kick(t_serv *s, int id, t_ent *ent, t_buff *buff);
 
 /*
-** ./cmd/cmd_move.c
+** ./events/event_move.c
 */
 
-int				cmd_advance(t_serv *s, int id, t_ent *ent, t_buff *buff);
-int				cmd_left(t_serv *s, int id, t_ent *ent, t_buff *buff);
-int				cmd_right(t_serv *s, int id, t_ent *ent, t_buff *buff);
+int				ev_advance(t_serv *s, int id, t_ent *ent, t_buff *buff);
+int				ev_left(t_serv *s, int id, t_ent *ent, t_buff *buff);
+int				ev_right(t_serv *s, int id, t_ent *ent, t_buff *buff);
 void			move_dir(t_serv *s, t_ent *ent, int dir);
 
 /*
-** ./cmd/cmd_see.c
+** ./events/event_see.c
 */
 
-int				cmd_see(t_serv *s, int id, t_ent *ent, t_buff *buff);
+int				ev_see(t_serv *s, int id, t_ent *ent, t_buff *buff);
 
 /*
 ** #############################################################################
@@ -177,8 +177,8 @@ void			send_response(t_serv *s, int id);
 */
 
 extern const char		*g_pname;
-extern const t_cmddef	g_cmddef[];
-extern const int		g_cmddef_count;
+extern const t_evdef	g_evdef[];
+extern const int		g_evdef_count;
 extern const char		*g_items[];
 extern const int		g_items_count;
 #endif

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cmd_broadcast.c                                    :+:      :+:    :+:   */
+/*   event_broadcast.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/14 19:59:26 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/22 20:39:54 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/22 22:43:02 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ static int	get_dir(t_serv *s, t_ent *pent, t_ent *cent)
 	return (dir + 1);
 }
 
-int			cmd_broadcast(t_serv *s, int id, t_ent *ent, t_buff *buff)
+int			ev_broadcast(t_serv *s, int id, t_ent *ent, t_buff *buff)
 {
 	char	*msg;
 	int		k;

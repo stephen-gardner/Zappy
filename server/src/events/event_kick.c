@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cmd_kick.c                                         :+:      :+:    :+:   */
+/*   event_kick.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/12 22:29:11 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/22 22:04:39 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/22 22:43:32 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static void	kick_player(t_serv *s, t_ent *cent, int sock, int dir)
 	dprintf(sock, "moving %c\n", kickdir[dir / 2][cent->facing / 2]);
 }
 
-int			cmd_kick(t_serv *s, int id, t_ent *ent, t_buff *buff)
+int			ev_kick(t_serv *s, int id, t_ent *ent, t_buff *buff)
 {
 	t_ent	*cent;
 	int		count;

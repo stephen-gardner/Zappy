@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cmd_see.c                                          :+:      :+:    :+:   */
+/*   event_see.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/10 01:43:44 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/22 20:59:15 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/22 22:43:40 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ static void	see(t_serv *s, t_ent *ent, t_move *m)
 	}
 }
 
-int			cmd_see(t_serv *s, int id, t_ent *ent, t_buff *buff)
+int			ev_see(t_serv *s, int id, t_ent *ent, t_buff *buff)
 {
 	t_move	m;
 

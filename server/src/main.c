@@ -46,9 +46,9 @@ static int	process_entity(t_serv *s, int id, t_ent *ent)
 		remove_socket(s, id);
 		return (1);
 	}
-	while (ent->cmds.ncmds)
+	while (ent->evs.nevs)
 	{
-		buff = CMD_NEXT(&ent->cmds);
+		buff = EV_NEXT(&ent->evs);
 		if (buff->type != UNDEFINED && !buff->pre)
 			process_precommand(s, id, ent, buff);
 		if (ent->team && buff->scheduled != s->time && buff->type != UNDEFINED)
