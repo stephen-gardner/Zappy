@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/14 19:59:26 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/21 23:56:28 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/22 20:39:54 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ int			cmd_broadcast(t_serv *s, int id, t_ent *ent, t_buff *buff)
 	int		i;
 
 	(void)id;
-	msg = strchr(buff->recv, ' ') + 1;
+	msg = strchr(buff->data, ' ') + 1;
 	i = 1;
 	while (i < s->conn.nsockets)
 	{
@@ -85,6 +85,6 @@ int			cmd_broadcast(t_serv *s, int id, t_ent *ent, t_buff *buff)
 		dprintf(SOCK(s, i), "message %d,%s\n", k, msg);
 		++i;
 	}
-	OK(buff);
+	OK(s);
 	return (0);
 }

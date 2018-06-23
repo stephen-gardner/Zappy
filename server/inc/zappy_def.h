@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/19 03:24:13 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/22 02:45:47 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/22 20:34:42 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,11 +152,11 @@ typedef unsigned short		t_ushrt;
 # define READABLE(s, id)	(s->conn.polls[id].revents & POLLIN)
 
 # define ENT(s, id)			(&s->conn.ents[id])
-# define CMD_NEXT(cmd)		&(cmd)->buffs[(cmd)->start]
+# define CMD_NEXT(cmd)		(&(cmd)->recv[(cmd)->start])
 # define CMD_POS(cmd, i)	(((cmd)->start + i + CMD_MAX_REQ) % CMD_MAX_REQ)
 # define GET_CMDS(s, id)	(&s->conn.ents[id].cmds)
-# define OK(b)				build_message(b, "ok\n")
-# define KO(b)				build_message(b, "ko\n")
+# define OK(s)				build_message(s, "ok\n")
+# define KO(s)				build_message(s, "ko\n")
 
 # define MOVE(a, m, n)		a = ((a + (n)) + m) % m
 # define CHDIR(d, n)		(d = (d + (n) + NDIR) % NDIR)

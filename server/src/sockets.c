@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/22 07:45:32 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/22 03:23:26 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/22 20:44:07 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,6 @@ void			remove_socket(t_serv *s, int id)
 	close(sock);
 	info(s, "<%s> disconnected", ent->addr);
 	drop_stones(s, ent);
-	clean_responses(&ent->cmds);
 	memmove(ent, ent + 1, SZ(t_ent, s->conn.nsockets - id));
 	memmove(POLL(s, id), POLL(s, id + 1), SZ(t_poll, s->conn.nsockets - id));
 	--s->conn.nsockets;

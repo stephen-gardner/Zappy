@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/20 04:58:26 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/22 04:13:09 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/22 20:34:16 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include <unistd.h>
 #include "zappy.h"
 
-void	build_message(t_buff *buff, char *msg, ...)
+void	build_message(t_serv *s, char *msg, ...)
 {
 	va_list	ap;
 	char	*tmp;
@@ -27,26 +27,13 @@ void	build_message(t_buff *buff, char *msg, ...)
 	va_start(ap, msg);
 	len = vasprintf(&tmp, msg, ap);
 	if (!tmp
-		|| !(buff->resp = realloc(buff->resp, buff->resp_len + len + 1)))
+		|| !(s->resp = realloc(s->resp, s->resp_len + len + 1)))
 		err(1, NULL);
 	va_end(ap);
-	memcpy(buff->resp + buff->resp_len, tmp, len);
-	buff->resp_len += len;
-	buff->resp[buff->resp_len] = '\0';
+	memcpy(s->resp + s->resp_len, tmp, len);
+	s->resp_len += len;
+	s->resp[s->resp_len] = '\0';
 	free(tmp);
-}
-
-void	clean_responses(t_cmd *cmds)
-{
-	t_buff	*buff;
-	int		i;
-
-	i = 0;
-	while (i < CMD_MAX_REQ)
-	{
-		buff = &cmds->buffs[i++];
-		free(buff->resp);
-	}
 }
 
 void	send_response(t_serv *s, int id)
@@ -59,10 +46,10 @@ void	send_response(t_serv *s, int id)
 
 	ent = ENT(s, id);
 	cmds = GET_CMDS(s, id);
-	buff = &cmds->buffs[cmds->start];
-	write(SOCK(s, id), buff->resp, buff->resp_len);
-	info(s, "<%s[%s]> %s", ent->addr, ent->team, buff->recv);
-	pos = buff->resp;
+	buff = &cmds->recv[cmds->start];
+	write(SOCK(s, id), s->resp, s->resp_len);
+	info(s, "<%s[%s]> %s", ent->addr, ent->team, buff->data);
+	pos = s->resp;
 	while (pos && *pos)
 	{
 		if (!(nl = strchr(pos, '\n')))
@@ -70,10 +57,10 @@ void	send_response(t_serv *s, int id)
 		info(s, " >> %.*s", nl - pos, pos);
 		pos = nl + 1;
 	}
-	buff->recv_len = 0;
-	buff->resp_len = 0;
-	buff->type = UNDEFINED;
+	s->resp_len = 0;
+	buff->len = 0;
 	buff->pre = 0;
+	buff->type = UNDEFINED;
 	cmds->start = CMD_POS(cmds, 1);
 	--cmds->ncmds;
 }

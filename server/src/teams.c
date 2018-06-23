@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/24 09:34:14 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/22 00:42:46 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/22 20:46:07 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,18 +40,16 @@ static void	set_location(t_serv *s, t_ent *ent)
 		CHDIR(ent->facing, 1);
 }
 
-void		add_player(t_serv *s, char *name, int id)
+void		add_player(t_serv *s, int id, t_ent *ent, t_buff *buff)
 {
 	t_team	*team;
-	t_ent	*ent;
 
-	ent = ENT(s, id);
-	if (ent->team || !(team = find_team(s, name)))
+	if (ent->team || !(team = find_team(s, buff->data)))
 	{
 		dprintf(SOCK(s, id), "ko\n");
 		return (remove_socket(s, id));
 	}
-	cmd_connect(s, CMD_NEXT(&ent->cmds), team, 1);
+	cmd_connect(s, team, 1);
 	send_response(s, id);
 	if (!team->authorized)
 		return (remove_socket(s, id));

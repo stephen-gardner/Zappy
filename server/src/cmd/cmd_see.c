@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/10 01:43:44 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/22 01:44:57 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/22 20:59:15 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static void	move_rel(t_serv *s, t_move *m, int dir)
 	}
 }
 
-static void	print_items(t_buff *buff, t_ull *loc, int printed, int sep)
+static void	print_items(t_serv *s, t_ull *loc, int printed, int sep)
 {
 	int	type;
 	int	n;
@@ -50,20 +50,20 @@ static void	print_items(t_buff *buff, t_ull *loc, int printed, int sep)
 		while (n--)
 		{
 			if (printed)
-				build_message(buff, " %s", g_items[type]);
+				build_message(s, " %s", g_items[type]);
 			else
 			{
-				build_message(buff, "%s", g_items[type]);
+				build_message(s, "%s", g_items[type]);
 				printed = 1;
 			}
 		}
 		++type;
 	}
 	if (sep)
-		build_message(buff, ", ");
+		build_message(s, ", ");
 }
 
-static int	print_players(t_serv *s, t_ent *ent, t_buff *buff, t_move *m)
+static int	print_players(t_serv *s, t_ent *ent, t_move *m)
 {
 	t_ent	*cent;
 	int		i;
@@ -79,10 +79,10 @@ static int	print_players(t_serv *s, t_ent *ent, t_buff *buff, t_move *m)
 			&& cent->loc_y == m->loc_y)
 		{
 			if (printed)
-				build_message(buff, " " PLAYER);
+				build_message(s, " " PLAYER);
 			else
 			{
-				build_message(buff, PLAYER);
+				build_message(s, PLAYER);
 				printed = 1;
 			}
 		}
@@ -90,7 +90,7 @@ static int	print_players(t_serv *s, t_ent *ent, t_buff *buff, t_move *m)
 	return (printed);
 }
 
-static void	see(t_serv *s, t_ent *ent, t_buff *buff, t_move *m)
+static void	see(t_serv *s, t_ent *ent, t_move *m)
 {
 	int		row;
 	int		col;
@@ -102,8 +102,8 @@ static void	see(t_serv *s, t_ent *ent, t_buff *buff, t_move *m)
 		col = -row;
 		while (col <= row)
 		{
-			printed = print_players(s, ent, buff, m);
-			print_items(buff, GET_LOC(s, m->loc_x, m->loc_y), printed,
+			printed = print_players(s, ent, m);
+			print_items(s, GET_LOC(s, m->loc_x, m->loc_y), printed,
 				(row < ent->level || col < row));
 			m->rel_y = 0;
 			m->rel_x = 1;
@@ -121,12 +121,13 @@ int			cmd_see(t_serv *s, int id, t_ent *ent, t_buff *buff)
 	t_move	m;
 
 	(void)id;
+	(void)buff;
 	m.loc_x = ent->loc_x;
 	m.loc_y = ent->loc_y;
 	m.rel_x = 0;
 	m.rel_y = 0;
-	build_message(buff, "{");
-	see(s, ent, buff, &m);
-	build_message(buff, "}\n");
+	build_message(s, "{");
+	see(s, ent, &m);
+	build_message(s, "}\n");
 	return (0);
 }

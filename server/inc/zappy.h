@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:08:47 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/22 03:23:14 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/22 20:45:21 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int				cmd_broadcast(t_serv *s, int id, t_ent *ent, t_buff *buff);
 ** ./cmd/cmd_connect_nbr.c
 */
 
-void			cmd_connect(t_serv *s, t_buff *buff, t_team *team, int dimen);
+void			cmd_connect(t_serv *s, t_team *team, int dimen);
 int				cmd_connect_nbr(t_serv *s, int id, t_ent *ent, t_buff *buff);
 
 /*
@@ -128,14 +128,14 @@ void			validate_opt(t_serv *s);
 */
 
 void			end_game(t_serv *s, t_team *team);
-void			level_up(t_serv *s, t_ent *ent, t_buff *buff);
+void			level_up(t_serv *s, t_ent *ent);
 int				starve_player(t_serv *s, t_ent *ent);
 
 /*
 ** read.c
 */
 
-int				read_socket(t_ent *ent, int sock);
+int				read_socket(t_serv *s, int id, t_ent *ent);
 
 /*
 ** sockets.c
@@ -149,7 +149,7 @@ void			remove_socket(t_serv *s, int id);
 ** teams.c
 */
 
-void			add_player(t_serv *s, char *name, int id);
+void			add_player(t_serv *s, int id, t_ent *ent, t_buff *buff);
 void			add_team(t_serv *s, char *name);
 t_team			*find_team(t_serv *s, char *name);
 void			kill_hatchling(t_serv *s, t_egg *egg);
@@ -167,8 +167,7 @@ void			usage_error(char *msg);
 ** write.c
 */
 
-void			build_message(t_buff *buff, char *msg, ...);
-void			clean_responses(t_cmd *cmds);
+void			build_message(t_serv *s, char *msg, ...);
 void			send_response(t_serv *s, int id);
 
 /*

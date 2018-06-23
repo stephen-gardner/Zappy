@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/21 05:50:28 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/22 04:35:08 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/22 20:43:49 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static int	process_entity(t_serv *s, int id, t_ent *ent)
 
 	if ((ent->team && ent->feed_time == s->time && starve_player(s, ent))
 		|| (POLL(s, id)->revents & (POLLERR | POLLHUP))
-		|| (READABLE(s, id) && read_socket(ent, SOCK(s, id)) < 0))
+		|| (READABLE(s, id) && read_socket(s, id, ent) < 0))
 	{
 		remove_socket(s, id);
 		return (1);

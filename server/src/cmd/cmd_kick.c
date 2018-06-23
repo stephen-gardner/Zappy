@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/12 22:29:11 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/22 00:28:23 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/22 22:04:39 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ int			cmd_kick(t_serv *s, int id, t_ent *ent, t_buff *buff)
 	int		i;
 
 	(void)id;
+	(void)buff;
 	i = 1;
 	count = 0;
 	while (i < s->conn.nsockets)
@@ -48,9 +49,6 @@ int			cmd_kick(t_serv *s, int id, t_ent *ent, t_buff *buff)
 		++i;
 	}
 	if (count)
-	{
-		OK(buff);
-		return (0);
-	}
-	return (-1);
+		OK(s);
+	return ((count) ? 0 : -1);
 }

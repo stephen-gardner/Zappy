@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/28 18:46:04 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/22 08:05:40 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/22 20:39:33 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,16 +60,16 @@ void			process_command(t_serv *s, int id, t_ent *ent, t_buff *buff)
 	const t_cmddef	*def;
 
 	if (!ent->team)
-		return (add_player(s, buff->recv, id));
+		return (add_player(s, id, ent, buff));
 	if (buff->type != UNDEFINED)
 	{
 		def = get_cmddef(buff->type);
 		if (def->dispatch(s, id, ent, buff) == -1)
 		{
 			if (buff->type == INCANTATION)
-				build_message(buff, CURR_LEVEL, ent->level);
+				build_message(s, CURR_LEVEL, ent->level);
 			else
-				KO(buff);
+				KO(s);
 		}
 	}
 	send_response(s, id);
@@ -83,9 +83,9 @@ void			process_precommand(t_serv *s, int id, t_ent *ent, t_buff *buff)
 	if (def->pre(s, id, ent, buff) == -1)
 	{
 		if (buff->type == INCANTATION)
-			build_message(buff, CURR_LEVEL, ent->level);
+			build_message(s, CURR_LEVEL, ent->level);
 		else
-			KO(buff);
+			KO(s);
 		buff->type = UNDEFINED;
 		buff->scheduled = s->time;
 	}

@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/19 03:30:44 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/21 23:49:24 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/22 20:36:19 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,17 +22,15 @@
 typedef struct	s_buff
 {
 	uintmax_t	scheduled;
-	char		recv[CMD_MAX_LEN + 1];
-	char		*resp;
-	int			recv_len;
-	int			resp_len;
-	int			type;
+	char		data[CMD_MAX_LEN + 1];
+	int			len;
 	int			pre;
+	int			type;
 }				t_buff;
 
 typedef struct	s_cmd
 {
-	t_buff		buffs[CMD_MAX_REQ];
+	t_buff		recv[CMD_MAX_REQ];
 	int			start;
 	int			ncmds;
 }				t_cmd;
@@ -51,11 +49,11 @@ typedef struct	s_ent
 	t_cmd		cmds;
 	t_team		*team;
 	t_ushrt		inv[NRES];
+	uintmax_t	feed_time;
 	int			level;
 	int			loc_x;
 	int			loc_y;
 	int			facing;
-	uintmax_t	feed_time;
 }				t_ent;
 
 typedef struct	s_conn
@@ -71,19 +69,19 @@ typedef struct	s_egg
 {
 	uuid_t		uuid;
 	t_team		*team;
+	uintmax_t	scheduled;
 	int			loc_x;
 	int			loc_y;
 	int			hatched;
-	uintmax_t	scheduled;
 	t_ushrt		food;
 }				t_egg;
 
 typedef struct	s_map
 {
 	t_ull		*data;
+	size_t		size;
 	int			height;
 	int			width;
-	size_t		size;
 }				t_map;
 
 typedef struct	s_serv
@@ -95,6 +93,8 @@ typedef struct	s_serv
 	t_map		map;
 	t_timespec	tickrate;
 	uintmax_t	time;
+	char		*resp;
+	int			resp_len;
 	int			neggs;
 	int			nteams;
 }				t_serv;

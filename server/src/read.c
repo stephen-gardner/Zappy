@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:32:24 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/22 07:43:40 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/22 20:43:37 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,21 @@
 #include <unistd.h>
 #include "zappy.h"
 
-static void		set_cmdtype(t_buff *buff, int has_team)
+static void		set_cmdtype(t_serv *s, t_buff *buff, int has_team)
 {
 	const t_cmddef	*def;
 	int				len;
 	int				i;
 
-	if (buff->recv_len < CMD_MAX_LEN)
+	if (buff->len < CMD_MAX_LEN)
 	{
 		i = 0;
 		while (i < g_cmddef_count)
 		{
 			def = &g_cmddef[i++];
 			len = strlen(def->label);
-			if (!strncmp(buff->recv, def->label, len)
-				&& *(buff->recv + len) == ((def->args) ? ' ' : '\0'))
+			if (!strncmp(buff->data, def->label, len)
+				&& *(buff->data + len) == ((def->args) ? ' ' : '\0'))
 			{
 				buff->type = def->type;
 				return ;
@@ -36,10 +36,10 @@ static void		set_cmdtype(t_buff *buff, int has_team)
 		}
 	}
 	if (has_team)
-		KO(buff);
+		KO(s);
 }
 
-static void		buffer_data(t_ent *ent, char *sbuff, int n)
+static void		buffer_data(t_serv *s, t_ent *ent, char *sbuff, int n)
 {
 	t_cmd	*cmds;
 	t_buff	*buff;
@@ -47,33 +47,33 @@ static void		buffer_data(t_ent *ent, char *sbuff, int n)
 	int		nl;
 
 	cmds = &ent->cmds;
-	buff = &cmds->buffs[CMD_POS(cmds, cmds->ncmds)];
-	dst = buff->recv + buff->recv_len;
+	buff = &cmds->recv[CMD_POS(cmds, cmds->ncmds)];
+	dst = buff->data + buff->len;
 	if ((nl = (sbuff[n - 1] == '\n')))
 		--n;
-	if ((buff->recv_len += n) < CMD_MAX_LEN)
+	if ((buff->len += n) < CMD_MAX_LEN)
 	{
 		memcpy(dst, sbuff, n);
 		if (nl)
 			dst[n] = '\0';
 	}
 	else
-		*buff->recv = '\0';
+		*buff->data = '\0';
 	if (nl)
 	{
-		set_cmdtype(buff, ent->team != NULL);
+		set_cmdtype(s, buff, ent->team != NULL);
 		++cmds->ncmds;
 	}
 }
 
-int				read_socket(t_ent *ent, int sock)
+int				read_socket(t_serv *s, int id, t_ent *ent)
 {
 	static char	sbuff[BUFF_SIZE + 1];
 	char		*start;
 	int			bytes;
 	int			n;
 
-	if ((bytes = read(sock, sbuff, BUFF_SIZE)) <= 0)
+	if ((bytes = read(SOCK(s, id), sbuff, BUFF_SIZE)) <= 0)
 		return (-1);
 	sbuff[bytes] = '\0';
 	start = sbuff;
@@ -84,7 +84,7 @@ int				read_socket(t_ent *ent, int sock)
 			++n;
 		if (start[n])
 			++n;
-		buffer_data(ent, start, n);
+		buffer_data(s, ent, start, n);
 		start += n;
 	}
 	return (bytes);
