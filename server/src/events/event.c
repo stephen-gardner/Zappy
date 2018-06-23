@@ -15,18 +15,18 @@
 #include "zappy.h"
 
 const t_evdef	g_evdef[] = {
-	{ ADVANCE, preev_void, ev_advance, ADV_STR, ADV_DEL, 0 },
-	{ BROADCAST, preev_void, ev_broadcast, BRO_STR, BRO_DEL, 1 },
-	{ CONNECT_NBR, preev_void, ev_connect_nbr, CON_STR, CON_DEL, 0 },
-	{ INCANTATION, preev_incant, ev_incant, INC_STR, INC_DEL, 0 },
-	{ INVENTORY, preev_void, ev_inventory, INV_STR, INV_DEL, 0 },
-	{ KICK, preev_void, ev_kick, KIC_STR, KIC_DEL, 0 },
-	{ FORK, preev_void, ev_fork, FOR_STR, FOR_DEL, 0 },
-	{ LEFT, preev_void, ev_left, LEF_STR, LEF_DEL, 0 },
-	{ PUT, preev_put, ev_put, PUT_STR, PUT_DEL, 1 },
-	{ RIGHT, preev_void, ev_right, RIG_STR, RIG_DEL, 0 },
-	{ SEE, preev_void, ev_see, SEE_STR, SEE_DEL, 0 },
-	{ TAKE, preev_take, ev_take, TAK_STR, TAK_DEL, 1 }
+	{ EV_ADV, preev_void, ev_advance, ADV_STR, ADV_DEL, 0 },
+	{ EV_BRO, preev_void, ev_broadcast, BRO_STR, BRO_DEL, 1 },
+	{ EV_CON, preev_void, ev_connect_nbr, CON_STR, CON_DEL, 0 },
+	{ EV_INC, preev_incant, ev_incant, INC_STR, INC_DEL, 0 },
+	{ EV_INV, preev_void, ev_inventory, INV_STR, INV_DEL, 0 },
+	{ EV_KIC, preev_void, ev_kick, KIC_STR, KIC_DEL, 0 },
+	{ EV_FOR, preev_void, ev_fork, FOR_STR, FOR_DEL, 0 },
+	{ EV_LEF, preev_void, ev_left, LEF_STR, LEF_DEL, 0 },
+	{ EV_PUT, preev_put, ev_put, PUT_STR, PUT_DEL, 1 },
+	{ EV_RIG, preev_void, ev_right, RIG_STR, RIG_DEL, 0 },
+	{ EV_SEE, preev_void, ev_see, SEE_STR, SEE_DEL, 0 },
+	{ EV_TAK, preev_take, ev_take, TAK_STR, TAK_DEL, 1 }
 };
 
 const int		g_evdef_count = sizeof(g_evdef) / sizeof(t_evdef);
@@ -66,7 +66,7 @@ void			process_command(t_serv *s, int id, t_ent *ent, t_buff *buff)
 		def = get_evdef(buff->type);
 		if (def->dispatch(s, id, ent, buff) == -1)
 		{
-			if (buff->type == INCANTATION)
+			if (buff->type == EV_INC)
 				build_message(s, CURR_LEVEL, ent->level);
 			else
 				KO(s);
@@ -82,7 +82,7 @@ void			process_precommand(t_serv *s, int id, t_ent *ent, t_buff *buff)
 	def = get_evdef(buff->type);
 	if (def->pre(s, id, ent, buff) == -1)
 	{
-		if (buff->type == INCANTATION)
+		if (buff->type == EV_INC)
 			build_message(s, CURR_LEVEL, ent->level);
 		else
 			KO(s);

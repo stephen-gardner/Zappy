@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/19 03:24:13 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/22 22:55:58 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/23 04:29:07 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,91 +39,37 @@ typedef unsigned short		t_ushrt;
 # define HATCH_TIME			600
 # define HUNGER				126
 
-/*
-** #############################################################################
-** # EVENTS                                                                    #
-** #############################################################################
-*/
-
-# define ADV_STR			"advance"
 # define ADV_DEL			7
-
-# define BRO_STR			"broadcast"
 # define BRO_DEL			7
-
-# define CON_STR			"connect_nbr"
 # define CON_DEL			0
-
-# define INC_STR			"incantation"
 # define INC_DEL			300
-
-# define INV_STR			"inventory"
 # define INV_DEL			1
-
-# define KIC_STR			"kick"
 # define KIC_DEL			7
-
-# define FOR_STR			"fork"
 # define FOR_DEL			42
-
-# define LEF_STR			"left"
 # define LEF_DEL			7
-
-# define PUT_STR			"put"
 # define PUT_DEL			7
-
-# define RIG_STR			"right"
 # define RIG_DEL			7
-
-# define SEE_STR			"see"
 # define SEE_DEL			7
-
-# define TAK_STR			"take"
 # define TAK_DEL			7
-
-/*
-** # define ADV_STR			"avance"
-** # define ADV_DEL			7
-**
-** # define BRO_STR			"broadcast"
-** # define BRO_DEL			7
-**
-** # define CON_STR			"connect_nbr"
-** # define CON_DEL			0
-**
-** # define INC_STR			"incantation"
-** # define INC_DEL			300
-**
-** # define INV_STR			"inventaire"
-** # define INV_DEL			1
-**
-** # define KIC_STR			"expulse"
-** # define KIC_DEL			7
-**
-** # define FOR_STR			"fork"
-** # define FOR_DEL			42
-**
-** # define LEF_STR			"gauche"
-** # define LEF_DEL			7
-**
-** # define PUT_STR			"pose"
-** # define PUT_DEL			7
-**
-** # define RIG_STR			"droite"
-** # define RIG_DEL			7
-**
-** # define SEE_STR			"voir"
-** # define SEE_DEL			7
-**
-** # define TAK_STR			"prend"
-** # define TAK_DEL			7
-*/
 
 /*
 ** #############################################################################
 ** # LANG                                                                      #
 ** #############################################################################
 */
+
+# define ADV_STR			"advance"
+# define BRO_STR			"broadcast"
+# define CON_STR			"connect_nbr"
+# define INC_STR			"incantation"
+# define INV_STR			"inventory"
+# define KIC_STR			"kick"
+# define FOR_STR			"fork"
+# define LEF_STR			"left"
+# define PUT_STR			"put"
+# define RIG_STR			"right"
+# define SEE_STR			"see"
+# define TAK_STR			"take"
 
 # define WELCOME			"WELCOME\n"
 # define ELEVATING			"elevation in progress\n"
@@ -133,6 +79,19 @@ typedef unsigned short		t_ushrt;
 # define FOOD_STR			"food"
 
 /*
+** # define ADV_STR			"avance"
+** # define BRO_STR			"broadcast"
+** # define CON_STR			"connect_nbr"
+** # define INC_STR			"incantation"
+** # define INV_STR			"inventaire"
+** # define KIC_STR			"expulse"
+** # define FOR_STR			"fork"
+** # define LEF_STR			"gauche"
+** # define PUT_STR			"pose"
+** # define RIG_STR			"droite"
+** # define SEE_STR			"voir"
+** # define TAK_STR			"prend"
+**
 ** # define WELCOME			"BIENVENUE\n"
 ** # define ELEVATING			"elevation en cours\n"
 ** # define CURR_LEVEL			"niveau actuel : %d\n"
@@ -163,7 +122,7 @@ typedef unsigned short		t_ushrt;
 
 /*
 ** Resource quantity map layout:
-** 4 bits per resource for max quantity of 15
+** 1 byte per resource for max quantity of 255
 **	EGG      TH        PH        ME       SI        DE          LI      FOOD
 ** [EGG] [THYSTAME] [PHIRAS] [MENDIANE] [SIBUR] [DERAUMERE] [LINEMATE] [FOOD]
 */
@@ -185,18 +144,18 @@ typedef unsigned short		t_ushrt;
 enum	e_evtype
 {
 	UNDEFINED,
-	ADVANCE,
-	BROADCAST,
-	CONNECT_NBR,
-	INCANTATION,
-	INVENTORY,
-	KICK,
-	FORK,
-	LEFT,
-	PUT,
-	RIGHT,
-	SEE,
-	TAKE,
+	EV_ADV,
+	EV_BRO,
+	EV_CON,
+	EV_INC,
+	EV_INV,
+	EV_KIC,
+	EV_FOR,
+	EV_LEF,
+	EV_PUT,
+	EV_RIG,
+	EV_SEE,
+	EV_TAK,
 	NEVENTS
 };
 

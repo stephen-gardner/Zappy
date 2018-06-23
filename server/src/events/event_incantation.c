@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/11 02:29:34 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/22 22:43:21 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/23 17:57:40 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static int		is_ready(t_ent *ent, t_ent *cent, int finished)
 		buff = EV_NEXT(&ent->evs);
 		cbuff = EV_NEXT(&cent->evs);
 		if (!cent->evs.nevs
-			|| cbuff->type != INCANTATION
+			|| cbuff->type != EV_INC
 			|| cbuff->scheduled != buff->scheduled)
 			return (0);
 	}
@@ -115,7 +115,7 @@ static void		begin_incant(t_serv *s, t_ent *ent)
 			cbuff = EV_NEXT(&cent->evs);
 			memcpy(cbuff, EV_NEXT(&ent->evs), sizeof(t_buff));
 			cbuff->pre = 1;
-			cbuff->scheduled = s->time + get_evdef(INCANTATION)->delay;
+			cbuff->scheduled = s->time + get_evdef(EV_INC)->delay;
 			dprintf(SOCK(s, i), ELEVATING);
 			++count;
 		}
