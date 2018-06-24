@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/07 19:38:08 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/22 20:35:37 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/23 18:51:44 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	level_up(t_serv *s, t_ent *ent)
 {
 	--ent->team->members[ent->level];
 	++ent->team->members[++ent->level];
-	if (ent->team->members[8] >= 6)
+	if (ent->team->members[MAX_LEVEL] >= REQ_MAX_PLAYERS)
 		end_game(s, ent->team);
 	build_message(s, CURR_LEVEL, ent->level);
 }

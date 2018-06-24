@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/19 03:24:13 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/23 04:29:07 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/23 18:49:54 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ typedef unsigned short		t_ushrt;
 # define EV_MAX_LEN			255
 # define EV_MAX_REQ			10
 # define MAX_LEVEL			8
+# define REQ_MAX_PLAYERS	6
 # define TEAM_MAX_LEN		27
 # define HATCH_TIME			600
 # define HUNGER				126

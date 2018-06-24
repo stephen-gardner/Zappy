@@ -6,13 +6,15 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/11 02:29:34 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/23 17:57:40 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/23 18:06:15 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include <string.h>
 #include "zappy.h"
+
+#define LVI(lv)	(((lv > g_elevreq_count) ? g_elevreq_count : lv) - 1)
 
 const t_elevreq	g_elevreq[] = {
 	{ 1, { 0, 1, 0, 0, 0, 0, 0, 0 } },
@@ -23,6 +25,8 @@ const t_elevreq	g_elevreq[] = {
 	{ 6, { 0, 1, 2, 3, 0, 1, 0, 0 } },
 	{ 6, { 0, 2, 2, 2, 2, 2, 1, 0 } }
 };
+
+const int		g_elevreq_count = sizeof(g_elevreq) / sizeof(t_elevreq);
 
 static int		is_ready(t_ent *ent, t_ent *cent, int finished)
 {
@@ -75,7 +79,7 @@ int				ev_incant(t_serv *s, int id, t_ent *ent, t_buff *buff)
 
 	(void)id;
 	(void)buff;
-	req = &g_elevreq[ent->level - 1];
+	req = &g_elevreq[LVI(ent->level)];
 	if (count_ready(s, ent, 1) < req->nplayers)
 		return (-1);
 	i = 1;
@@ -105,7 +109,7 @@ static void		begin_incant(t_serv *s, t_ent *ent)
 
 	i = 1;
 	count = 1;
-	req = &g_elevreq[ent->level - 1];
+	req = &g_elevreq[LVI(ent->level)];
 	while (count < req->nplayers && i < s->conn.nsockets)
 	{
 		cent = ENT(s, i);
@@ -132,7 +136,7 @@ int				preev_incant(t_serv *s, int id, t_ent *ent, t_buff *buff)
 	(void)buff;
 	if (ent->level >= MAX_LEVEL)
 		return (-1);
-	req = &g_elevreq[ent->level - 1];
+	req = &g_elevreq[LVI(ent->level)];
 	if (count_ready(s, ent, 0) < req->nplayers)
 		return (-1);
 	i = 0;
