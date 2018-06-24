@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/14 19:59:26 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/22 22:43:02 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/23 19:07:41 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,11 @@ static void	calc_vector(t_serv *s, t_ent *pent, t_ent *cent, int *vec)
 	dy = pent->loc_y - cent->loc_y;
 	rdx = s->map.width - MAX(pent->loc_x, cent->loc_x)
 		+ MIN(pent->loc_x, cent->loc_x);
-	if (MAX(pent->loc_x, cent->loc_x) == pent->loc_x)
+	if (pent->loc_x > cent->loc_x)
 		rdx *= -1;
 	rdy = s->map.height - MAX(pent->loc_y, cent->loc_y)
 		+ MIN(pent->loc_y, cent->loc_y);
-	if (MAX(pent->loc_y, cent->loc_y) == pent->loc_y)
+	if (pent->loc_y > cent->loc_y)
 		rdy *= -1;
 	vec[0] = (ABS(dx) < ABS(rdx)) ? dx : rdx;
 	vec[1] = (ABS(dy) < ABS(rdy)) ? dy : rdy;
