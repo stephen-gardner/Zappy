@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/19 03:24:13 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/23 18:49:54 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/23 23:27:19 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ typedef unsigned short		t_ushrt;
 # define TEAM_MAX_LEN		27
 # define HATCH_TIME			600
 # define HUNGER				126
+# define TIMEOUT			5
 
 # define ADV_DEL			7
 # define BRO_DEL			7

@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/21 05:50:28 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/22 20:43:49 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/23 23:05:56 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static int	process_entity(t_serv *s, int id, t_ent *ent)
 {
 	t_buff	*buff;
 
-	if ((ent->team && ent->feed_time == s->time && starve_player(s, ent))
+	if ((ent->feed_time == s->time && starve_player(s, ent))
 		|| (POLL(s, id)->revents & (POLLERR | POLLHUP))
 		|| (READABLE(s, id) && read_socket(s, id, ent) < 0))
 	{
@@ -114,6 +114,7 @@ int			main(int ac, char *const av[])
 	s.map.width = 10;
 	s.tickrate.tv_sec = 1;
 	s.tickrate.tv_nsec = 0;
+	s.ticks = 1;
 	parse_opt(&s, ac, av, "c:n:p:s:t:x:y:");
 	validate_opt(&s);
 	init_server(&s);

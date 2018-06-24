@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/22 07:45:32 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/22 20:44:07 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/23 23:27:42 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ void			accept_incoming(t_serv *s)
 		if (s->conn.capacity)
 		{
 			ent = add_socket(s, sock);
+			ent->feed_time = s->time + (s->ticks * TIMEOUT);
 			sprintf(ent->addr, "%s:%hu", inet_ntoa(addr.sin_addr),
 				ntohs(addr.sin_port));
 			dprintf(sock, WELCOME);
@@ -96,12 +97,12 @@ void			remove_socket(t_serv *s, int id)
 	{
 		--team->members[0];
 		--team->members[ent->level];
+		drop_stones(s, ent);
 		dprintf(sock, DEATH);
 		info(s, "<%s[%s]> has died", ent->addr, team->name);
 	}
 	close(sock);
 	info(s, "<%s> disconnected", ent->addr);
-	drop_stones(s, ent);
 	memmove(ent, ent + 1, SZ(t_ent, s->conn.nsockets - id));
 	memmove(POLL(s, id), POLL(s, id + 1), SZ(t_poll, s->conn.nsockets - id));
 	--s->conn.nsockets;

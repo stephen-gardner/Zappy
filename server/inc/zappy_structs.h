@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/19 03:30:44 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/22 22:36:04 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/23 23:04:16 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@
 
 typedef struct	s_buff
 {
-	uintmax_t	scheduled;
 	char		data[EV_MAX_LEN + 1];
+	uintmax_t	scheduled;
 	int			len;
 	int			pre;
 	int			type;
@@ -44,9 +44,9 @@ typedef struct	s_team
 
 typedef struct	s_ent
 {
-	char		addr[32];
-	uuid_t		uuid;
 	t_events	evs;
+	uuid_t		uuid;
+	char		addr[32];
 	t_team		*team;
 	t_ushrt		inv[NRES];
 	uintmax_t	feed_time;
@@ -68,8 +68,8 @@ typedef struct	s_conn
 typedef struct	s_egg
 {
 	uuid_t		uuid;
-	t_team		*team;
 	uintmax_t	scheduled;
+	t_team		*team;
 	int			loc_x;
 	int			loc_y;
 	int			hatched;
@@ -86,17 +86,18 @@ typedef struct	s_map
 
 typedef struct	s_serv
 {
-	t_sockin	addr;
 	t_conn		conn;
-	t_egg		*eggs;
-	t_team		*teams;
 	t_map		map;
+	t_sockin	addr;
 	t_timespec	tickrate;
 	uintmax_t	time;
+	t_egg		*eggs;
+	t_team		*teams;
 	char		*resp;
 	int			resp_len;
 	int			neggs;
 	int			nteams;
+	int			ticks;
 }				t_serv;
 
 /*

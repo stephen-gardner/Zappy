@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/24 09:57:10 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/18 07:51:44 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/23 23:05:15 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,16 +41,15 @@ static t_ushrt		parse_short(char *opt, char *arg)
 	return ((t_ushrt)n);
 }
 
-static t_timespec	parse_tickrate(char *arg)
+static t_timespec	parse_tickrate(t_serv *s, char *arg)
 {
 	t_timespec	tickrate;
-	int			ticks;
 
-	ticks = parse_int("tick rate", arg);
-	if (ticks > 1)
+	s->ticks = parse_int("tick rate", arg);
+	if (s->ticks > 1)
 	{
 		tickrate.tv_sec = 0;
-		tickrate.tv_nsec = 1000000000 / ticks;
+		tickrate.tv_nsec = 1000000000 / s->ticks;
 	}
 	else
 	{
@@ -79,7 +78,7 @@ void				parse_opt(t_serv *s, int ac, char *const av[], char *optstr)
 		else if (f == 's')
 			srand(parse_int("seed", optarg));
 		else if (f == 't')
-			s->tickrate = parse_tickrate(optarg);
+			s->tickrate = parse_tickrate(s, optarg);
 		else if (f == 'x')
 			s->map.width = parse_int("map width", optarg);
 		else if (f == 'y')
