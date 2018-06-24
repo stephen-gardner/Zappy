@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/19 03:30:44 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/23 23:04:16 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/24 01:18:56 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ typedef struct	s_ent
 	int			loc_x;
 	int			loc_y;
 	int			facing;
+	int			type;
 }				t_ent;
 
 typedef struct	s_conn
@@ -108,7 +109,8 @@ typedef struct	s_serv
 
 typedef struct	s_eventsdef
 {
-	int			type;
+	int			evtype;
+	int			enttype;
 	int			(*pre)(t_serv *, int, t_ent *, t_buff *);
 	int			(*dispatch)(t_serv *, int, t_ent *, t_buff *);
 	char		*label;

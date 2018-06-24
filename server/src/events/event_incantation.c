@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/11 02:29:34 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/23 18:06:15 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/24 14:39:04 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ static int		is_ready(t_ent *ent, t_ent *cent, int finished)
 	t_buff	*cbuff;
 
 	if (cent == ent
+		|| cent->type != ENT_PLAYER
 		|| cent->level != ent->level
 		|| cent->loc_x != ent->loc_x
 		|| cent->loc_y != ent->loc_y)
@@ -119,7 +120,7 @@ static void		begin_incant(t_serv *s, t_ent *ent)
 			cbuff = EV_NEXT(&cent->evs);
 			memcpy(cbuff, EV_NEXT(&ent->evs), sizeof(t_buff));
 			cbuff->pre = 1;
-			cbuff->scheduled = s->time + get_evdef(EV_INC)->delay;
+			cbuff->scheduled = s->time + get_evdef(ENT_PLAYER, EV_INC)->delay;
 			dprintf(SOCK(s, i), ELEVATING);
 			++count;
 		}

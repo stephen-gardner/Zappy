@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/21 05:50:28 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/23 23:05:56 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/24 15:51:44 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ static int	process_entity(t_serv *s, int id, t_ent *ent)
 {
 	t_buff	*buff;
 
-	if ((ent->feed_time == s->time && starve_player(s, ent))
+	if ((ent->type == ENT_PLAYER && ent->feed_time == s->time
+			&& starve_player(s, ent))
 		|| (POLL(s, id)->revents & (POLLERR | POLLHUP))
 		|| (READABLE(s, id) && read_socket(s, id, ent) < 0))
 	{
@@ -51,7 +52,9 @@ static int	process_entity(t_serv *s, int id, t_ent *ent)
 		buff = EV_NEXT(&ent->evs);
 		if (buff->type != UNDEFINED && !buff->pre)
 			process_precommand(s, id, ent, buff);
-		if (ent->team && buff->scheduled != s->time && buff->type != UNDEFINED)
+		if (ent->team
+			&& buff->scheduled != s->time
+			&& buff->type != UNDEFINED)
 			break ;
 		process_command(s, id, ent, buff);
 	}

@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/12 23:44:36 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/22 19:25:48 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/24 15:30:33 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,6 @@ void		remove_egg(t_serv *s, t_egg *egg)
 	i = (egg - s->eggs) / sizeof(t_egg);
 	memmove(egg, egg + 1, SZ(t_egg, s->neggs - i));
 	--s->neggs;
-	if (s->conn.nsockets < 2 && !s->conn.capacity && !s->neggs)
+	if (!count_players(s) && !s->conn.capacity && !s->neggs)
 		end_game(s, NULL);
 }

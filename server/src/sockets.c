@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/22 07:45:32 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/23 23:27:42 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/24 15:29:54 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,17 +52,12 @@ void			accept_incoming(t_serv *s)
 	addr_len = sizeof(addr);
 	if ((sock = accept(SOCK(s, 0), (t_sock *)&addr, &addr_len)) != -1)
 	{
-		if (s->conn.capacity)
-		{
-			ent = add_socket(s, sock);
-			ent->feed_time = s->time + (s->ticks * TIMEOUT);
-			sprintf(ent->addr, "%s:%hu", inet_ntoa(addr.sin_addr),
-				ntohs(addr.sin_port));
-			dprintf(sock, WELCOME);
-			info(s, "<%s> connected", ent->addr);
-		}
-		else
-			close(sock);
+		ent = add_socket(s, sock);
+		ent->feed_time = s->time + (s->ticks * TIMEOUT);
+		sprintf(ent->addr, "%s:%hu", inet_ntoa(addr.sin_addr),
+			ntohs(addr.sin_port));
+		dprintf(sock, WELCOME);
+		info(s, "<%s> connected", ent->addr);
 	}
 }
 
@@ -106,6 +101,6 @@ void			remove_socket(t_serv *s, int id)
 	memmove(ent, ent + 1, SZ(t_ent, s->conn.nsockets - id));
 	memmove(POLL(s, id), POLL(s, id + 1), SZ(t_poll, s->conn.nsockets - id));
 	--s->conn.nsockets;
-	if (s->conn.nsockets < 2 && !s->conn.capacity && !s->neggs)
+	if (!count_players(s) && !s->conn.capacity && !s->neggs)
 		end_game(s, NULL);
 }

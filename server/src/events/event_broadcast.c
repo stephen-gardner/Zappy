@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/14 19:59:26 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/23 19:07:41 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/24 14:40:18 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ static int	get_dir(t_serv *s, t_ent *pent, t_ent *cent)
 
 int			ev_broadcast(t_serv *s, int id, t_ent *ent, t_buff *buff)
 {
+	t_ent	*cent;
 	char	*msg;
 	int		k;
 	int		i;
@@ -81,8 +82,12 @@ int			ev_broadcast(t_serv *s, int id, t_ent *ent, t_buff *buff)
 	i = 1;
 	while (i < s->conn.nsockets)
 	{
-		k = get_dir(s, ent, ENT(s, i));
-		dprintf(SOCK(s, i), "message %d,%s\n", k, msg);
+		cent = ENT(s, i);
+		if (cent->type == ENT_PLAYER)
+		{
+			k = get_dir(s, ent, cent);
+			dprintf(SOCK(s, i), "message %d,%s\n", k, msg);
+		}
 		++i;
 	}
 	OK(s);

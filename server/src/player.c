@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/07 19:38:08 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/23 18:51:44 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/24 15:23:04 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,22 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include "zappy.h"
+
+int		count_players(t_serv *s)
+{
+	int	count;
+	int	i;
+
+	i = 1;
+	count = 0;
+	while (i < s->conn.nsockets)
+	{
+		if (ENT(s, i)->type == ENT_PLAYER)
+			++count;
+		++i;
+	}
+	return (count);
+}
 
 void	end_game(t_serv *s, t_team *team)
 {

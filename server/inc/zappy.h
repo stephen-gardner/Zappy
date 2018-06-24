@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:08:47 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/23 04:13:37 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/24 15:23:28 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@
 ** ./events/event.c
 */
 
-const t_evdef	*get_evdef(int type);
+const t_evdef	*get_evdef(int enttype, int evtype);
 int				preev_void(t_serv *s, int id, t_ent *ent, t_buff *buff);
 void			process_command(t_serv *s, int id, t_ent *ent, t_buff *buff);
 void			process_precommand(t_serv *s, int id, t_ent *ent, t_buff *buff);
@@ -127,6 +127,7 @@ void			validate_opt(t_serv *s);
 ** player.c
 */
 
+int				count_players(t_serv *s);
 void			end_game(t_serv *s, t_team *team);
 void			level_up(t_serv *s, t_ent *ent);
 int				starve_player(t_serv *s, t_ent *ent);

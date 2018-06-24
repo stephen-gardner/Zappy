@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/10 01:43:44 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/22 22:43:40 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/24 14:44:09 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ static int	print_players(t_serv *s, t_ent *ent, t_move *m)
 	{
 		cent = ENT(s, i++);
 		if (cent != ent
+			&& cent->type == ENT_PLAYER
 			&& cent->loc_x == m->loc_x
 			&& cent->loc_y == m->loc_y)
 		{

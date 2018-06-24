@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:32:24 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/22 22:38:13 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/24 16:25:06 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <unistd.h>
 #include "zappy.h"
 
-static void		set_eventstype(t_serv *s, t_buff *buff, int has_team)
+static void		set_eventstype(t_serv *s, t_ent *ent, t_buff *buff)
 {
 	const t_evdef	*def;
 	int				len;
@@ -27,16 +27,19 @@ static void		set_eventstype(t_serv *s, t_buff *buff, int has_team)
 		{
 			def = &g_evdef[i++];
 			len = strlen(def->label);
-			if (!strncmp(buff->data, def->label, len)
+			if (ent->type == def->enttype
+				&& !strncmp(buff->data, def->label, len)
 				&& *(buff->data + len) == ((def->args) ? ' ' : '\0'))
 			{
-				buff->type = def->type;
+				buff->type = def->evtype;
 				return ;
 			}
 		}
 	}
-	if (has_team)
+	if (ent->team)
 		KO(s);
+	else if (ent->type == ENT_GRAPHIC)
+		build_message(s, "suc\n");
 }
 
 static void		buffer_data(t_serv *s, t_ent *ent, char *sbuff, int n)
@@ -61,7 +64,7 @@ static void		buffer_data(t_serv *s, t_ent *ent, char *sbuff, int n)
 		*buff->data = '\0';
 	if (nl)
 	{
-		set_eventstype(s, buff, ent->team != NULL);
+		set_eventstype(s, ent, buff);
 		++evs->nevs;
 	}
 }
