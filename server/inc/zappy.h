@@ -6,17 +6,12 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:08:47 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/24 23:21:53 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/25 01:37:57 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef ZAPPY_H
 # define ZAPPY_H
-# include <arpa/inet.h>
-# include <err.h>
-# include <poll.h>
-# include <time.h>
-# include <uuid/uuid.h>
 # include "zappy_def.h"
 # include "zappy_structs.h"
 # include "zappy_gfx.h"

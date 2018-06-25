@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/28 18:46:04 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/24 23:29:35 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/25 01:31:35 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,11 +61,8 @@ void			process_command(t_serv *s, int id, t_ent *ent, t_buff *buff)
 
 	if (ent->type == ENT_UNDEFINED)
 	{
-		if (!strcmp("GRAPHIC", buff->data))
-		{
-			ent->type = ENT_GRAPHIC;
-			send_response(s, id);
-		}
+		if (!strcmp(AUTH_GRAPHIC, buff->data))
+			add_gfx_client(s, id, ent);
 		else
 			add_player(s, id, ent, buff);
 		return ;

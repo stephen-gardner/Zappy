@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/24 09:34:14 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/24 23:30:18 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/25 01:49:10 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ static void	set_location(t_serv *s, t_ent *ent)
 
 	if ((egg = find_egg(s, ent->team)))
 	{
-		memcpy(ent->uuid, egg->uuid, sizeof(uuid_t));
 		ent->inv[FOOD] = egg->food;
 		ent->feed_time = egg->scheduled;
 		ent->loc_x = egg->loc_x;
@@ -30,7 +29,6 @@ static void	set_location(t_serv *s, t_ent *ent)
 	}
 	else
 	{
-		uuid_generate(ent->uuid);
 		ent->inv[FOOD] = 9;
 		ent->feed_time = s->time + HUNGER;
 		ent->loc_x = rand() % s->map.width;
@@ -50,11 +48,11 @@ void		add_player(t_serv *s, int id, t_ent *ent, t_buff *buff)
 		return (remove_socket(s, id));
 	}
 	ev_connect(s, team, 1);
+	ent->type = ENT_PLAYER;
+	ent->team = team;
 	send_response(s, id);
 	if (!team->authorized)
 		return (remove_socket(s, id));
-	ent->type = ENT_PLAYER;
-	ent->team = team;
 	ent->level = 1;
 	set_location(s, ent);
 	++team->members[0];

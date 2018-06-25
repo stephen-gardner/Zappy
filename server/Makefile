@@ -15,6 +15,7 @@ OBJ_DIR = obj
 
 SRC = \
 	egg\
+	gfx\
 	main\
 	map\
 	opt\
@@ -25,18 +26,20 @@ SRC = \
 	util\
 	write
 
-# [ EVENTS ]
+# [ EVENTS: CORE ]
 
 SRC += \
 	events/event\
-	events/event_broadcast\
-	events/event_connect_nbr\
-	events/event_fork\
-	events/event_incantation\
-	events/event_inventory\
-	events/event_kick\
-	events/event_move\
-	events/event_see
+	events/ai/event_broadcast\
+	events/ai/event_connect_nbr\
+	events/ai/event_fork\
+	events/ai/event_incantation\
+	events/ai/event_inventory\
+	events/ai/event_kick\
+	events/ai/event_move\
+	events/ai/event_see
+
+# [ EVENTS: GFX ]
 
 OBJ = $(patsubst %, $(OBJ_DIR)/%.o, $(SRC))
 

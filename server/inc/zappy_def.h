@@ -6,12 +6,16 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/19 03:24:13 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/24 23:24:04 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/25 01:36:35 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef ZAPPY_DEF_H
 # define ZAPPY_DEF_H
+# include <arpa/inet.h>
+# include <err.h>
+# include <poll.h>
+# include <time.h>
 
 /*
 ** #############################################################################
@@ -60,6 +64,15 @@ typedef unsigned short		t_ushrt;
 ** #############################################################################
 */
 
+# define WELCOME			"WELCOME\n"
+# define ELEVATING			"elevation in progress\n"
+# define CURR_LEVEL			"current level : %d\n"
+# define DEATH				"death\n"
+# define PLAYER				"player"
+# define FOOD_STR			"food"
+
+# define AUTH_GRAPHIC		"GRAPHIC"
+
 # define ADV_STR			"advance"
 # define BRO_STR			"broadcast"
 # define CON_STR			"connect_nbr"
@@ -73,14 +86,14 @@ typedef unsigned short		t_ushrt;
 # define SEE_STR			"see"
 # define TAK_STR			"take"
 
-# define WELCOME			"WELCOME\n"
-# define ELEVATING			"elevation in progress\n"
-# define CURR_LEVEL			"current level : %d\n"
-# define DEATH				"death\n"
-# define PLAYER				"player"
-# define FOOD_STR			"food"
-
 /*
+** # define WELCOME			"BIENVENUE\n"
+** # define ELEVATING			"elevation en cours\n"
+** # define CURR_LEVEL			"niveau actuel : %d\n"
+** # define DEATH				"mort\n"
+** # define PLAYER				"joueur"
+** # define FOOD_STR			"nourriture"
+**
 ** # define ADV_STR			"avance"
 ** # define BRO_STR			"broadcast"
 ** # define CON_STR			"connect_nbr"
@@ -93,13 +106,6 @@ typedef unsigned short		t_ushrt;
 ** # define RIG_STR			"droite"
 ** # define SEE_STR			"voir"
 ** # define TAK_STR			"prend"
-**
-** # define WELCOME			"BIENVENUE\n"
-** # define ELEVATING			"elevation en cours\n"
-** # define CURR_LEVEL			"niveau actuel : %d\n"
-** # define DEATH				"mort\n"
-** # define PLAYER				"joueur"
-** # define FOOD_STR			"nourriture"
 */
 
 /*
