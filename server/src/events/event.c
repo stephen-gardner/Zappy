@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/28 18:46:04 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/25 05:14:36 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/25 05:58:35 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ const t_evdef	g_evdef[] = {
 	{ EV_RIG, ENT_PLAYER, preev_void, ev_right, RIG_STR, RIG_DEL, 0 },
 	{ EV_SEE, ENT_PLAYER, preev_void, ev_see, SEE_STR, SEE_DEL, 0 },
 	{ EV_TAK, ENT_PLAYER, preev_take, ev_take, TAK_STR, TAK_DEL, 1 },
+	{ EV_BCT, ENT_GRAPHIC, preev_void, ev_bct, BCT_STR, BCT_DEL, 2 },
 	{ EV_MSZ, ENT_GRAPHIC, preev_void, ev_msz, MSZ_STR, MSZ_DEL, 0 },
 	{ EV_SGT, ENT_GRAPHIC, preev_void, ev_sgt, SGT_STR, SGT_DEL, 0 },
 	{ EV_SST, ENT_GRAPHIC, preev_void, ev_sst, SST_STR, SST_DEL, 1 },

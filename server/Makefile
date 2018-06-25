@@ -42,6 +42,7 @@ SRC += \
 # [ EVENTS: GFX ]
 
 SRC += \
+	events/gfx/event_bct\
 	events/gfx/event_msz\
 	events/gfx/event_sgt\
 	events/gfx/event_sst\

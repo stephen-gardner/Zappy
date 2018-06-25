@@ -6,13 +6,34 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:32:24 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/25 03:49:51 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/25 05:56:02 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <string.h>
 #include <unistd.h>
 #include "zappy.h"
+
+static int		count_args(char *str, int has_args)
+{
+	int	args;
+	int	i;
+
+	if ((has_args && *str != ' ') || (!has_args && *str))
+		return (-1);
+	i = 0;
+	args = 0;
+	while (str[i])
+	{
+		while (str[i] == ' ')
+			++i;
+		if (str[i])
+			++args;
+		while (str[i] && str[i] != ' ')
+			++i;
+	}
+	return (args);
+}
 
 static void		set_eventstype(t_serv *s, t_ent *ent, t_buff *buff)
 {
@@ -30,7 +51,7 @@ static void		set_eventstype(t_serv *s, t_ent *ent, t_buff *buff)
 			if (ent->type == def->enttype
 				&& !strncmp(buff->data, def->label, len))
 			{
-				if (*(buff->data + len) != ((def->args) ? ' ' : '\0'))
+				if (count_args(buff->data + len, def->args) != def->args)
 					break ;
 				buff->type = def->evtype;
 				return ;

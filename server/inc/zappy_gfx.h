@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/20 22:40:13 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/25 05:15:20 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/25 06:34:49 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,13 @@
 ** # EVENT FUNCTIONS                                                           #
 ** #############################################################################
 */
+
+/*
+** ./events/gfx/event_bct.c
+*/
+
+void	bct(t_serv *s, int x, int y);
+int		ev_bct(t_serv *s, int id, t_ent *ent, t_buff *buff);
 
 /*
 ** ./events/gfx/event_msz.c
