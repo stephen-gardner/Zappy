@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:32:24 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/25 00:23:16 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/25 03:49:51 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,10 @@ static void		set_eventstype(t_serv *s, t_ent *ent, t_buff *buff)
 			def = &g_evdef[i++];
 			len = strlen(def->label);
 			if (ent->type == def->enttype
-				&& !strncmp(buff->data, def->label, len)
-				&& *(buff->data + len) == ((def->args) ? ' ' : '\0'))
+				&& !strncmp(buff->data, def->label, len))
 			{
+				if (*(buff->data + len) != ((def->args) ? ' ' : '\0'))
+					break ;
 				buff->type = def->evtype;
 				return ;
 			}
@@ -39,7 +40,7 @@ static void		set_eventstype(t_serv *s, t_ent *ent, t_buff *buff)
 	if (ent->team)
 		KO(s);
 	else if (ent->type == ENT_GRAPHIC)
-		build_message(s, "suc\n");
+		build_message(s, (i <= g_evdef_count) ? "sbp\n" : "suc\n");
 }
 
 static void		buffer_data(t_serv *s, t_ent *ent, char *sbuff, int n)

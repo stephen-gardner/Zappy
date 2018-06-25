@@ -26,7 +26,7 @@ SRC = \
 	util\
 	write
 
-# [ EVENTS: CORE ]
+# [ EVENTS: AI ]
 
 SRC += \
 	events/event\
@@ -37,9 +37,13 @@ SRC += \
 	events/ai/event_inventory\
 	events/ai/event_kick\
 	events/ai/event_move\
-	events/ai/event_see
+	events/ai/event_see\
 
 # [ EVENTS: GFX ]
+
+SRC += \
+	events/gfx/event_sgt\
+	events/gfx/event_sst
 
 OBJ = $(patsubst %, $(OBJ_DIR)/%.o, $(SRC))
 

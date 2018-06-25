@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:08:47 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/25 01:37:57 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/25 02:26:07 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,33 +32,33 @@ void			process_command(t_serv *s, int id, t_ent *ent, t_buff *buff);
 void			process_precommand(t_serv *s, int id, t_ent *ent, t_buff *buff);
 
 /*
-** ./events/event_broadcast.c
+** ./events/ai/event_broadcast.c
 */
 
 int				ev_broadcast(t_serv *s, int id, t_ent *ent, t_buff *buff);
 
 /*
-** ./events/event_connect_nbr.c
+** ./events/ai/event_connect_nbr.c
 */
 
 void			ev_connect(t_serv *s, t_team *team, int dimen);
 int				ev_connect_nbr(t_serv *s, int id, t_ent *ent, t_buff *buff);
 
 /*
-** ./events/event_fork.c
+** ./events/ai/event_fork.c
 */
 
 int				ev_fork(t_serv *s, int id, t_ent *ent, t_buff *buff);
 
 /*
-** ./events/event_incantation.c
+** ./events/ai/event_incantation.c
 */
 
 int				ev_incant(t_serv *s, int id, t_ent *ent, t_buff *buff);
 int				preev_incant(t_serv *s, int id, t_ent *ent, t_buff *buff);
 
 /*
-** ./events/event_inventory.c
+** ./events/ai/event_inventory.c
 */
 
 int				ev_inventory(t_serv *s, int id, t_ent *ent, t_buff *buff);
@@ -68,13 +68,13 @@ int				preev_take(t_serv *s, int id, t_ent *ent, t_buff *buff);
 int				preev_put(t_serv *s, int id, t_ent *ent, t_buff *buff);
 
 /*
-** ./events/event_kick.c
+** ./events/ai/event_kick.c
 */
 
 int				ev_kick(t_serv *s, int id, t_ent *ent, t_buff *buff);
 
 /*
-** ./events/event_move.c
+** ./events/ai/event_move.c
 */
 
 int				ev_advance(t_serv *s, int id, t_ent *ent, t_buff *buff);
@@ -83,7 +83,7 @@ int				ev_right(t_serv *s, int id, t_ent *ent, t_buff *buff);
 void			move_dir(t_serv *s, t_ent *ent, int dir);
 
 /*
-** ./events/event_see.c
+** ./events/ai/event_see.c
 */
 
 int				ev_see(t_serv *s, int id, t_ent *ent, t_buff *buff);

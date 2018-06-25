@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/28 18:46:04 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/25 01:31:35 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/25 03:05:04 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,17 @@ const t_evdef	g_evdef[] = {
 	{ EV_ADV, ENT_PLAYER, preev_void, ev_advance, ADV_STR, ADV_DEL, 0 },
 	{ EV_BRO, ENT_PLAYER, preev_void, ev_broadcast, BRO_STR, BRO_DEL, 1 },
 	{ EV_CON, ENT_PLAYER, preev_void, ev_connect_nbr, CON_STR, CON_DEL, 0 },
+	{ EV_FOR, ENT_PLAYER, preev_void, ev_fork, FOR_STR, FOR_DEL, 0 },
 	{ EV_INC, ENT_PLAYER, preev_incant, ev_incant, INC_STR, INC_DEL, 0 },
 	{ EV_INV, ENT_PLAYER, preev_void, ev_inventory, INV_STR, INV_DEL, 0 },
 	{ EV_KIC, ENT_PLAYER, preev_void, ev_kick, KIC_STR, KIC_DEL, 0 },
-	{ EV_FOR, ENT_PLAYER, preev_void, ev_fork, FOR_STR, FOR_DEL, 0 },
 	{ EV_LEF, ENT_PLAYER, preev_void, ev_left, LEF_STR, LEF_DEL, 0 },
 	{ EV_PUT, ENT_PLAYER, preev_put, ev_put, PUT_STR, PUT_DEL, 1 },
 	{ EV_RIG, ENT_PLAYER, preev_void, ev_right, RIG_STR, RIG_DEL, 0 },
 	{ EV_SEE, ENT_PLAYER, preev_void, ev_see, SEE_STR, SEE_DEL, 0 },
-	{ EV_TAK, ENT_PLAYER, preev_take, ev_take, TAK_STR, TAK_DEL, 1 }
+	{ EV_TAK, ENT_PLAYER, preev_take, ev_take, TAK_STR, TAK_DEL, 1 },
+	{ EV_SGT, ENT_GRAPHIC, preev_void, ev_sgt, SGT_STR, SGT_DEL, 0 },
+	{ EV_SST, ENT_GRAPHIC, preev_void, ev_sst, SST_STR, SST_DEL, 1 }
 };
 
 const int		g_evdef_count = sizeof(g_evdef) / sizeof(t_evdef);
