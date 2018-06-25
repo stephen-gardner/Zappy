@@ -6,14 +6,34 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/24 09:57:10 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/25 03:28:15 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/25 07:51:21 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <getopt.h>
 #include <limits.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include "zappy.h"
+
+void			init_server(t_serv *s)
+{
+	int	i;
+	int	authorized;
+
+	printf("%s starting...\n", g_pname);
+	i = 0;
+	authorized = s->conn.capacity / s->nteams;
+	while (i < s->nteams)
+		s->teams[i++].authorized = authorized;
+	if (!(s->conn.ents = calloc(s->conn.user_max + 1, sizeof(t_ent)))
+		|| !(s->conn.polls = calloc(s->conn.user_max + 1, sizeof(t_poll)))
+		|| !(s->map.data = calloc(s->map.size, sizeof(t_ull))))
+		err(1, NULL);
+	printf("Generating resources...\n");
+	populate_map(s);
+	init_listener(s);
+}
 
 static int		parse_int(char *opt, char *arg)
 {

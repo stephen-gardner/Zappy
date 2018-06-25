@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/28 18:46:04 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/25 05:58:35 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/25 08:00:34 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ const t_evdef	g_evdef[] = {
 	{ EV_TAK, ENT_PLAYER, preev_take, ev_take, TAK_STR, TAK_DEL, 1 },
 	{ EV_BCT, ENT_GRAPHIC, preev_void, ev_bct, BCT_STR, BCT_DEL, 2 },
 	{ EV_MSZ, ENT_GRAPHIC, preev_void, ev_msz, MSZ_STR, MSZ_DEL, 0 },
+	{ EV_PPO, ENT_GRAPHIC, preev_void, ev_ppo, PPO_STR, PPO_DEL, 1 },
 	{ EV_SGT, ENT_GRAPHIC, preev_void, ev_sgt, SGT_STR, SGT_DEL, 0 },
 	{ EV_SST, ENT_GRAPHIC, preev_void, ev_sst, SST_STR, SST_DEL, 1 },
 	{ EV_TNA, ENT_GRAPHIC, preev_void, ev_tna, TNA_STR, TNA_DEL, 0 }
@@ -90,6 +91,14 @@ void			process_precommand(t_serv *s, int id, t_ent *ent, t_buff *buff)
 {
 	const t_evdef	*def;
 
+	if (buff->type == UNDEFINED)
+	{
+		if (ent->team)
+			KO(s);
+		else if (ent->type == ENT_GRAPHIC)
+			build_message(s, "suc\n");
+		return ;
+	}
 	def = get_evdef(ent->type, buff->type);
 	if (def->pre(s, id, ent, buff) == -1)
 	{

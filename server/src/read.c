@@ -14,13 +14,15 @@
 #include <unistd.h>
 #include "zappy.h"
 
-static int		count_args(char *str, int has_args)
+static int		count_args(char *str, const t_evdef *def)
 {
 	int	args;
 	int	i;
 
-	if ((has_args && *str != ' ') || (!has_args && *str))
+	if ((def->args && *str != ' ') || (!def->args && *str))
 		return (-1);
+	if (def->evtype == EV_BRO)
+		return (def->args);
 	i = 0;
 	args = 0;
 	while (str[i])
@@ -35,7 +37,7 @@ static int		count_args(char *str, int has_args)
 	return (args);
 }
 
-static void		set_eventstype(t_serv *s, t_ent *ent, t_buff *buff)
+static void		set_eventstype(t_ent *ent, t_buff *buff)
 {
 	const t_evdef	*def;
 	int				len;
@@ -51,20 +53,16 @@ static void		set_eventstype(t_serv *s, t_ent *ent, t_buff *buff)
 			if (ent->type == def->enttype
 				&& !strncmp(buff->data, def->label, len))
 			{
-				if (count_args(buff->data + len, def->args) != def->args)
+				if (count_args(buff->data + len, def) != def->args)
 					break ;
 				buff->type = def->evtype;
 				return ;
 			}
 		}
 	}
-	if (ent->team)
-		KO(s);
-	else if (ent->type == ENT_GRAPHIC)
-		build_message(s, (i <= g_evdef_count) ? "sbp\n" : "suc\n");
 }
 
-static void		buffer_data(t_serv *s, t_ent *ent, char *sbuff, int n)
+static void		buffer_data(t_ent *ent, char *sbuff, int n)
 {
 	t_events	*evs;
 	t_buff		*buff;
@@ -86,7 +84,7 @@ static void		buffer_data(t_serv *s, t_ent *ent, char *sbuff, int n)
 		*buff->data = '\0';
 	if (nl)
 	{
-		set_eventstype(s, ent, buff);
+		set_eventstype(ent, buff);
 		++evs->nevs;
 	}
 }
@@ -109,7 +107,7 @@ int				read_socket(t_serv *s, int id, t_ent *ent)
 			++n;
 		if (start[n])
 			++n;
-		buffer_data(s, ent, start, n);
+		buffer_data(ent, start, n);
 		start += n;
 	}
 	return (bytes);

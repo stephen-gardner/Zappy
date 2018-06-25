@@ -6,13 +6,11 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/07 19:38:08 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/24 15:23:04 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/25 07:32:34 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
 #include "zappy.h"
 
 int		count_players(t_serv *s)
@@ -31,18 +29,19 @@ int		count_players(t_serv *s)
 	return (count);
 }
 
-void	end_game(t_serv *s, t_team *team)
+t_ent	*find_player(t_serv *s, intmax_t uid)
 {
-	int	i;
+	t_ent	*ent;
+	int		i;
 
-	if (team)
-		info(s, "[%s] wins the game! :)", team->name);
-	else
-		info(s, "All players have died. Game over. :(");
-	i = 0;
+	i = 1;
 	while (i < s->conn.nsockets)
-		close(SOCK(s, i++));
-	exit(1);
+	{
+		ent = ENT(s, i++);
+		if (ent->type == ENT_PLAYER && ent->uid == uid)
+			return (ent);
+	}
+	return (NULL);
 }
 
 void	kill_hatchling(t_serv *s, t_egg *egg)

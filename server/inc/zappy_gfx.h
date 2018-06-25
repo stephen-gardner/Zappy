@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/20 22:40:13 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/25 06:34:49 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/25 08:06:56 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,13 @@ int		ev_bct(t_serv *s, int id, t_ent *ent, t_buff *buff);
 */
 
 int		ev_msz(t_serv *s, int id, t_ent *ent, t_buff *buff);
+
+/*
+** ./events/gfx/event_player.c
+*/
+
+void	ppo(t_serv *s, t_ent *ent);
+int		ev_ppo(t_serv *s, int id, t_ent *ent, t_buff *buff);
 
 /*
 ** ./events/gfx/event_sgt.c

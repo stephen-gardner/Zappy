@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/19 03:30:44 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/25 01:34:21 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/25 07:31:54 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ typedef struct	s_team
 typedef struct	s_ent
 {
 	t_events	evs;
+	intmax_t	uid;
 	char		addr[32];
 	t_team		*team;
 	t_ushrt		inv[NRES];
@@ -67,6 +68,7 @@ typedef struct	s_conn
 
 typedef struct	s_egg
 {
+	intmax_t	uid;
 	uintmax_t	scheduled;
 	t_team		*team;
 	int			loc_x;
@@ -89,6 +91,7 @@ typedef struct	s_serv
 	t_map		map;
 	t_sockin	addr;
 	t_timespec	tickrate;
+	intmax_t	uid;
 	uintmax_t	time;
 	t_egg		*eggs;
 	t_team		*teams;

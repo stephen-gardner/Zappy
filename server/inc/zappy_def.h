@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/19 03:24:13 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/25 05:58:00 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/25 07:58:15 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ typedef struct sockaddr		t_sock;
 typedef struct sockaddr_in	t_sockin;
 typedef struct pollfd		t_poll;
 typedef struct timespec		t_timespec;
-typedef unsigned long long	t_ull;
-typedef unsigned short		t_ushrt;
+typedef uint64_t			t_ull;
+typedef uint16_t			t_ushrt;
 
 /*
 ** #############################################################################
@@ -60,6 +60,7 @@ typedef unsigned short		t_ushrt;
 
 # define BCT_DEL			0
 # define MSZ_DEL			0
+# define PPO_DEL			0
 # define SGT_DEL			0
 # define SST_DEL			0
 # define TNA_DEL			0
@@ -94,6 +95,7 @@ typedef unsigned short		t_ushrt;
 
 # define BCT_STR			"bct"
 # define MSZ_STR			"msz"
+# define PPO_STR			"ppo"
 # define SGT_STR			"sgt"
 # define SST_STR			"sst"
 # define TNA_STR			"tna"
@@ -186,6 +188,7 @@ enum	e_evtype
 	EV_TAK,
 	EV_BCT,
 	EV_MSZ,
+	EV_PPO,
 	EV_SGT,
 	EV_SST,
 	EV_TNA,

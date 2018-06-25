@@ -6,33 +6,28 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/21 05:50:28 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/25 00:22:12 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/25 07:53:37 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include "zappy.h"
 
 const char	*g_pname;
 
-static void	init_server(t_serv *s)
+void		end_game(t_serv *s, t_team *team)
 {
 	int	i;
-	int	authorized;
 
-	printf("%s starting...\n", g_pname);
+	if (team)
+		info(s, "[%s] wins the game! :)", team->name);
+	else
+		info(s, "All players have died. Game over. :(");
 	i = 0;
-	authorized = s->conn.capacity / s->nteams;
-	while (i < s->nteams)
-		s->teams[i++].authorized = authorized;
-	if (!(s->conn.ents = calloc(s->conn.user_max + 1, sizeof(t_ent)))
-		|| !(s->conn.polls = calloc(s->conn.user_max + 1, sizeof(t_poll)))
-		|| !(s->map.data = calloc(s->map.size, sizeof(t_ull))))
-		err(1, NULL);
-	printf("Generating resources...\n");
-	populate_map(s);
-	init_listener(s);
+	while (i < s->conn.nsockets)
+		close(SOCK(s, i++));
+	exit(1);
 }
 
 static int	process_entity(t_serv *s, int id, t_ent *ent)
@@ -51,7 +46,7 @@ static int	process_entity(t_serv *s, int id, t_ent *ent)
 	while (ent->evs.nevs)
 	{
 		buff = EV_NEXT(&ent->evs);
-		if (buff->type != UNDEFINED && !buff->pre)
+		if (!buff->pre)
 			process_precommand(s, id, ent, buff);
 		if ((ent->team || ent->type == ENT_GRAPHIC)
 			&& buff->scheduled != s->time

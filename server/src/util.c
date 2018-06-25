@@ -6,10 +6,11 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/03 00:34:00 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/20 12:48:17 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/25 08:09:17 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <inttypes.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -51,6 +52,17 @@ void		info(t_serv *s, char *fmt, ...)
 	vprintf(fmt, ap);
 	printf("\n");
 	va_end(ap);
+}
+
+intmax_t	parse_uid(char *arg)
+{
+	char		*endptr;
+	intmax_t	uid;
+
+	uid = strtoimax(arg, &endptr, 10);
+	if (*endptr || uid < 0)
+		return (-1);
+	return (uid);
 }
 
 t_timespec	time_diff(t_timespec t1, t_timespec t2)

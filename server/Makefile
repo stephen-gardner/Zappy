@@ -44,6 +44,7 @@ SRC += \
 SRC += \
 	events/gfx/event_bct\
 	events/gfx/event_msz\
+	events/gfx/event_ppo\
 	events/gfx/event_sgt\
 	events/gfx/event_sst\
 	events/gfx/event_tna

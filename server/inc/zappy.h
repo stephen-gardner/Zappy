@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:08:47 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/25 02:26:07 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/25 07:56:52 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,12 @@ void			incubate(t_serv *s);
 void			remove_egg(t_serv *s, t_egg *egg);
 
 /*
+** main.c
+*/
+
+void			end_game(t_serv *s, t_team *team);
+
+/*
 ** map.c
 */
 
@@ -116,6 +122,7 @@ void			replenish(t_serv *s, int type, int amount);
 ** opt.c
 */
 
+void			init_server(t_serv *s);
 void			parse_opt(t_serv *s, int ac, char *const av[], char *optstr);
 void			validate_opt(t_serv *s);
 
@@ -124,7 +131,7 @@ void			validate_opt(t_serv *s);
 */
 
 int				count_players(t_serv *s);
-void			end_game(t_serv *s, t_team *team);
+t_ent			*find_player(t_serv *s, intmax_t uid);
 void			level_up(t_serv *s, t_ent *ent);
 int				starve_player(t_serv *s, t_ent *ent);
 
@@ -157,6 +164,7 @@ void			kill_hatchling(t_serv *s, t_egg *egg);
 
 int				get_item_id(char *name);
 void			info(t_serv *s, char *fmt, ...);
+intmax_t		parse_uid(char *arg);
 t_timespec		time_diff(t_timespec t1, t_timespec t2);
 void			usage_error(char *msg);
 
