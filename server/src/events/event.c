@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/28 18:46:04 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/24 16:27:17 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/24 23:29:35 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void			process_command(t_serv *s, int id, t_ent *ent, t_buff *buff)
 {
 	const t_evdef	*def;
 
-	if (!ent->team && ent->type == ENT_PLAYER)
+	if (ent->type == ENT_UNDEFINED)
 	{
 		if (!strcmp("GRAPHIC", buff->data))
 		{

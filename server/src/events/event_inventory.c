@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/04 19:33:25 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/22 22:43:27 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/24 23:00:02 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int			ev_put(t_serv *s, int id, t_ent *ent, t_buff *buff)
 	(void)id;
 	item_id = get_item_id(strchr(buff->data, ' ') + 1);
 	loc = GET_LOC(s, ent->loc_x, ent->loc_y);
-	if (!ent->inv[item_id] || modify_resource(loc, item_id, 1) < 0)
+	if (!ent->inv[item_id] || modify_resource(loc, item_id, 1) == -1)
 		return (-1);
 	--ent->inv[item_id];
 	OK(s);
@@ -75,7 +75,8 @@ int			ev_take(t_serv *s, int id, t_ent *ent, t_buff *buff)
 	(void)id;
 	item_id = get_item_id(strchr(buff->data, ' ') + 1);
 	loc = GET_LOC(s, ent->loc_x, ent->loc_y);
-	if (ent->inv[item_id] == USHRT_MAX || modify_resource(loc, item_id, -1) < 0)
+	if (ent->inv[item_id] == USHRT_MAX
+		|| modify_resource(loc, item_id, -1) == -1)
 		return (-1);
 	++ent->inv[item_id];
 	OK(s);

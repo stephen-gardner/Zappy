@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/24 09:34:14 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/22 20:46:07 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/24 23:30:18 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ void		add_player(t_serv *s, int id, t_ent *ent, t_buff *buff)
 	send_response(s, id);
 	if (!team->authorized)
 		return (remove_socket(s, id));
+	ent->type = ENT_PLAYER;
 	ent->team = team;
 	ent->level = 1;
 	set_location(s, ent);

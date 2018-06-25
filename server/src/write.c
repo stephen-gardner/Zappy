@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/20 04:58:26 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/24 16:12:19 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/24 23:32:12 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	send_response(t_serv *s, int id)
 	buff = &evs->buffs[evs->start];
 	write(SOCK(s, id), s->resp, s->resp_len);
 	info(s, "<%s[%s]> %s", ent->addr,
-		(ent->type == ENT_PLAYER) ? ent->team->name : "GFX", buff->data);
+		(ent->type != ENT_GRAPHIC) ? ent->team->name : "GFX", buff->data);
 	pos = s->resp;
 	while (pos && *pos && (nl = strchr(pos, '\n')))
 	{

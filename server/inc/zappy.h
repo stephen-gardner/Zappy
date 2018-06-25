@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 03:08:47 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/24 15:23:28 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/24 23:21:53 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <uuid/uuid.h>
 # include "zappy_def.h"
 # include "zappy_structs.h"
+# include "zappy_gfx.h"
 
 /*
 ** #############################################################################

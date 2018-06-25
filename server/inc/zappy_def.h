@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/19 03:24:13 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/24 16:25:27 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/24 23:24:04 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,6 +145,7 @@ typedef unsigned short		t_ushrt;
 
 enum	e_enttype
 {
+	ENT_UNDEFINED,
 	ENT_PLAYER,
 	ENT_GRAPHIC,
 	NENTTYPES
