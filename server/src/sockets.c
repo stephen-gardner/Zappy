@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/22 07:45:32 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/24 15:29:54 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/24 22:06:08 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,36 +48,38 @@ void			accept_incoming(t_serv *s)
 	socklen_t	addr_len;
 	t_ent		*ent;
 	int			sock;
+	int			opt;
 
+	opt = 1;
 	addr_len = sizeof(addr);
-	if ((sock = accept(SOCK(s, 0), (t_sock *)&addr, &addr_len)) != -1)
-	{
-		ent = add_socket(s, sock);
-		ent->feed_time = s->time + (s->ticks * TIMEOUT);
-		sprintf(ent->addr, "%s:%hu", inet_ntoa(addr.sin_addr),
-			ntohs(addr.sin_port));
-		dprintf(sock, WELCOME);
-		info(s, "<%s> connected", ent->addr);
-	}
+	if ((sock = accept(SOCK(s, 0), (t_sock *)&addr, &addr_len)) == -1
+		|| setsockopt(sock, SOL_SOCKET, SO_NOSIGPIPE, &opt, sizeof(opt)) == -1)
+		return ;
+	ent = add_socket(s, sock);
+	ent->feed_time = s->time + (s->ticks * TIMEOUT);
+	sprintf(ent->addr, "%s:%hu", inet_ntoa(addr.sin_addr),
+		ntohs(addr.sin_port));
+	dprintf(sock, WELCOME);
+	info(s, "<%s> connected", ent->addr);
 }
 
 void			init_listener(t_serv *s)
 {
-	int			fd;
+	int			sock;
 	int			opt;
 
 	opt = 1;
 	s->addr.sin_family = AF_INET;
 	s->addr.sin_addr.s_addr = INADDR_ANY;
-	fd = socket(PF_INET, SOCK_STREAM, getprotobyname("TCP")->p_proto);
-	if (fd < 0
-		|| setsockopt(fd, SOL_SOCKET, SO_REUSEPORT, &opt, sizeof(opt)) < 0
-		|| bind(fd, (t_sock *)&s->addr, sizeof(t_sockin)) < 0
-		|| listen(fd, SOMAXCONN) < 0)
+	sock = socket(PF_INET, SOCK_STREAM, getprotobyname("TCP")->p_proto);
+	if (sock == -1
+		|| setsockopt(sock, SOL_SOCKET, SO_REUSEPORT, &opt, sizeof(opt)) == -1
+		|| bind(sock, (t_sock *)&s->addr, sizeof(t_sockin)) == -1
+		|| listen(sock, SOMAXCONN) == -1)
 		err(1, NULL);
 	printf("Listening on tcp://%s:%hu\nUse Ctrl-C to stop\n\n",
 		inet_ntoa(s->addr.sin_addr), ntohs(s->addr.sin_port));
-	add_socket(s, fd);
+	add_socket(s, sock);
 }
 
 void			remove_socket(t_serv *s, int id)
