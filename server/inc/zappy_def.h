@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/19 03:24:13 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/25 03:28:38 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/25 04:18:59 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,10 @@ typedef unsigned short		t_ushrt;
 # define SEE_DEL			7
 # define TAK_DEL			7
 
+# define MSZ_DEL			0
 # define SGT_DEL			0
 # define SST_DEL			0
+# define TNA_DEL			0
 
 /*
 ** #############################################################################
@@ -89,8 +91,10 @@ typedef unsigned short		t_ushrt;
 
 # define AUTH_GRAPHIC		"GRAPHIC"
 
-# define SGT_STR			"Sgt"
+# define MSZ_STR			"msz"
+# define SGT_STR			"sgt"
 # define SST_STR			"sst"
+# define TNA_STR			"tna"
 
 /*
 ** # define WELCOME			"BIENVENUE\n"
@@ -178,8 +182,10 @@ enum	e_evtype
 	EV_RIG,
 	EV_SEE,
 	EV_TAK,
+	EV_MSZ,
 	EV_SGT,
 	EV_SST,
+	EV_TNA,
 	NEVENTS
 };
 

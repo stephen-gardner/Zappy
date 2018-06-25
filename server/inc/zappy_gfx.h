@@ -6,7 +6,7 @@
 /*   By: sgardner <stephenbgardner@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/20 22:40:13 by sgardner          #+#    #+#             */
-/*   Updated: 2018/06/25 03:19:01 by sgardner         ###   ########.fr       */
+/*   Updated: 2018/06/25 05:15:20 by sgardner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,12 @@
 */
 
 /*
+** ./events/gfx/event_msz.c
+*/
+
+int		ev_msz(t_serv *s, int id, t_ent *ent, t_buff *buff);
+
+/*
 ** ./events/gfx/event_sgt.c
 */
 
@@ -33,6 +39,12 @@ int		ev_sgt(t_serv *s, int id, t_ent *ent, t_buff *buff);
 
 int		ev_sst(t_serv *s, int id, t_ent *ent, t_buff *buff);
 void	set_tickrate(t_serv *s, int n);
+
+/*
+** ./events/gfx/event_tna.c
+*/
+
+int		ev_tna(t_serv *s, int id, t_ent *ent, t_buff *buff);
 
 /*
 ** #############################################################################

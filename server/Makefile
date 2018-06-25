@@ -42,8 +42,10 @@ SRC += \
 # [ EVENTS: GFX ]
 
 SRC += \
+	events/gfx/event_msz\
 	events/gfx/event_sgt\
-	events/gfx/event_sst
+	events/gfx/event_sst\
+	events/gfx/event_tna
 
 OBJ = $(patsubst %, $(OBJ_DIR)/%.o, $(SRC))
 
